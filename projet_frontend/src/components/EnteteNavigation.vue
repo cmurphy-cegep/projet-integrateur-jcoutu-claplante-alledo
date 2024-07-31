@@ -2,10 +2,12 @@
     <header>
         <div class="container">
             <div class="title">
-                <h1 class="black-title">Les recettes de Rodrigo</h1>
+                <router-link to="/">
+                    <h1 class="black-title">Les recettes de Rodrigo</h1>
+                </router-link>
             </div>
             <div class="nav">
-                <span v-if="session.user && session.user.isAdmin"> | 
+                <span v-if="session.user && session.user.isAdmin"> |
                     <router-link to="/admin/new-product">Nouvelle recette</router-link>
                     <!-- rajouter image pour admin -->
                 </span>
@@ -26,7 +28,7 @@
 import session from '../session';
 
 export default {
-    data: function() {
+    data: function () {
         return {
             session: session
         };
@@ -55,10 +57,6 @@ export default {
     padding: 0.3rem;
 }
 
-.panier {
-    flex-basis: 15%;
-    padding: 0.3rem;
-}
 
 .connexion {
     flex-basis: 15%;
