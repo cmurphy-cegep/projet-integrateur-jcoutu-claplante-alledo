@@ -4,7 +4,7 @@
             <div><label for="nomCompte">Compte utilisateur: </label><input id="nomCompte" v-model="nomCompte" /></div>
             <div><label for="motDePasse">Mot de passe: </label><input id="motDePasse" type="password"
                     v-model="motDePasse" /></div>
-            <button>Se connecter</button>
+            <button>Connexion</button>
         </form>
     </div>
 </template>
