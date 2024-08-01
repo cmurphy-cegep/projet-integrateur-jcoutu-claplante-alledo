@@ -15,6 +15,9 @@ const crypto = require('crypto');
 // const productRouter = require('./routes/productRouter');
 // const cartRouter = require('./routes/cartRouter');
 // const orderRouter = require('./routes/orderRouter');
+const recetteRouter = require('./routes/recetteRouter');
+const ingredientRouter = require('./routes/ingredientRouter');
+const etapeRouter = require('./routes/etapeRouter');
 
 const app = express();
 
@@ -74,6 +77,9 @@ passport.use(new BasicStrategyModified((username, password, authResult) =>{
 // app.use('/products', productRouter);
 // app.use('/cart', cartRouter);
 // app.use('/orders', orderRouter);
+app.use('/recettes', recetteRouter);
+app.use('/ingredients', ingredientRouter);
+app.use('/etapes', etapeRouter);
 
 
  app.get('/login',
