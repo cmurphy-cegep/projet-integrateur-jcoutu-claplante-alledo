@@ -1,7 +1,7 @@
 <template>
     <!-- ajouter code pour l'image -->
     <div class="recette-detaillee" v-if="!edition">
-        <div class="recette-desc-longue"> {{ recette.desc }}</div>
+        <div class="recette-desc-longue"> {{ recette.description }}</div>
         <div class="recette-titre"> {{ recette.nom }}</div>
         <div class="recette-preparation"> {{ recette.preparation }}</div>
         <div class="recette-cuisson"> {{ recette.cuisson }}</div>
@@ -23,9 +23,9 @@
 import ListeEtapes from './ListeEtapes.vue';
 import ListeIngredients from './ListeIngredients.vue';
 import { fetchRecette, fetchIngredients, fetchEtapes } from '../../RecetteService';
-import { addApiPrefixToPath } from '../api_utils';
-import LoadingSpinner from '../components/LoadingSpinner.vue';
-import session from '../session';
+import { addApiPrefixToPath } from '../../api_utils';
+import LoadingSpinner from '../../components/LoadingSpinner.vue';
+import session from '../../session';
 
 export default {
     components: {
@@ -98,9 +98,6 @@ export default {
         }
     },
     computed: {
-        formattedPrice() {
-            return formatCurrency(this.product.price);
-        },
         imageSrc() {
             return addApiPrefixToPath(this.product.image);
         }

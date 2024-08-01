@@ -53,13 +53,14 @@ const getRecetteById = async (recetteId) => {
         const recette = {
             id: row.recette_id,
             nom: row.nom,
-            desc: row.desc,
-            preparation: row.preparation,
-            cuisson: row.cuisson,
-            portions: row.portions
+            description: row.description,
+            preparation: row.temps_preparation,
+            cuisson: row.temps_cuisson,
+            portions: row.nombre_portions
         };
 
-        return addImagePathToRecette(recette);
+        //return addImagePathToRecette(recette);
+        return recette;
     }
     return undefined;
 };

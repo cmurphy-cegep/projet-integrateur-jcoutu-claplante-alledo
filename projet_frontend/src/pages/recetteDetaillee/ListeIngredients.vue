@@ -11,7 +11,8 @@ import session from '../../session';
 
 export default {
     props: {
-        id: Number,
+        id: String,
+        idIngredient: Number,
         nom: String,
         quantite: Number,
         uniteMesure: String
