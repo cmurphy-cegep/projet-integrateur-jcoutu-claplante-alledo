@@ -1,7 +1,7 @@
 <template>
     <li class="etape">
-        <div>{{ uniteMesure }}</div>
-        <div>{{ nom }}</div>
+        <div>{{ description }}</div>
+        <div>{{ ordre }}</div>
     </li>
 </template>
 
@@ -10,7 +10,8 @@ import session from '../../session';
 
 export default {
     props: {
-        id: Number,
+        id: String,
+        idEtape: Number,
         description: String,
         ordre: Number
     },

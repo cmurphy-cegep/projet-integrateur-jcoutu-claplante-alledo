@@ -1,17 +1,18 @@
 <template>
     <!-- ajouter code pour l'image -->
     <div class="recette-detaillee" v-if="!edition">
-        <div class="recette-desc-longue"> {{ recette.description }}</div>
+        <div class="recette-desc-longue"> {{ recette.desc }}</div>
         <div class="recette-titre"> {{ recette.nom }}</div>
         <div class="recette-preparation"> {{ recette.preparation }}</div>
         <div class="recette-cuisson"> {{ recette.cuisson }}</div>
         <div class="recette-portions"> {{ recette.portions }}</div>
+        
         <ul class="recette-ingredients">
-        <ListeIngredients v-if="!loading" v-for="ingredient in ingredients" :id="ingredient.id"
+        <ListeIngredients v-if="!loading" v-for="ingredient in ingredients" :id="ingredient.idIngredient"
         :nom="ingredient.nom" :quantite="ingredient.quantite" :uniteMesure="ingredient.uniteMesure" />
         </ul>
         <ul class="recette-etapes">
-        <ListeEtapes v-if="!loading" v-for="etape in etapes" :id="etape.id"
+        <ListeEtapes v-if="!loading" v-for="etape in etapes" :id="etape.idEtape"
         :description="etape.description" :ordre="etape.ordre" />
         </ul>
         <button type="button" v-if="session.user && session.user.estAdmin" @click="enableEdit">Éditer</button>

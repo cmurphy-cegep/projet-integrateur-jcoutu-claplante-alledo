@@ -4,7 +4,7 @@ const convertirEnRecette = jsonRecette => {
     return {
         id: jsonRecette.id,
         nom: jsonRecette.nom,
-        desc: jsonRecette.desc,
+        desc: jsonRecette.description,
         preparation: jsonRecette.preparation,
         cuisson: jsonRecette.cuisson,
         portions: jsonRecette.portions,
@@ -14,7 +14,7 @@ const convertirEnRecette = jsonRecette => {
 
 const convertirEnIngredient = jsonIngredient => {
     return {
-        id: jsonIngredient.id,
+        idIngredient: jsonIngredient.id,
         nom: jsonIngredient.nom,
         quantite: jsonIngredient.quantite,
         uniteMesure: jsonIngredient.uniteMesure,
@@ -23,7 +23,7 @@ const convertirEnIngredient = jsonIngredient => {
 
 const convertirEnEtape = jsonEtape => {
     return {
-        id: jsonEtape.id,
+        idEtape: jsonEtape.id,
         description: jsonEtape.description,
         ordre: jsonEtape.ordre,
     };
