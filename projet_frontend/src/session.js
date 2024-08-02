@@ -44,7 +44,7 @@ const session = reactive({
         this.clearCredentials();
     },
     async fetchUser() {
-        const response = await fetch("/api/login", {
+        const response = await fetch("/api/connexion", {
             method: "GET",
             headers: {
                 ... this.getAuthHeaders()

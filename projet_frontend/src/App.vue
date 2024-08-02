@@ -4,9 +4,9 @@
 </template>
 
 <script>
+import { computed } from 'vue';
 
 import EnteteNavigation from './components/EnteteNavigation.vue';
-
 
 export default {
     components: {

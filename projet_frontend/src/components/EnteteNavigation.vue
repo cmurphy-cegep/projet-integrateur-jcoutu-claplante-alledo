@@ -18,7 +18,7 @@
                     <div>Bienvenue, {{ session.user.userFullName }}</div>
                     <div><a href="" @click.prevent="session.disconnect()">Déconnexion</a></div>
                 </div>
-                <div v-else><router-link to="/login">Se connecter</router-link></div>
+                <div v-else><router-link to="/connexion">Se connecter</router-link></div>
             </div>
         </div>
     </header>
