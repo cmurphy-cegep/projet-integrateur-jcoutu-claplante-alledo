@@ -1,44 +1,37 @@
+const fs = require('fs');
 const pool = require('./DBPool');
 
-const getImagePathForRecetteId = recetteId => `/recettes/${recetteId}/image`;
-exports.getImagePathForRecetteId = getImagePathForRecetteId;
+const transformImageTo64 = (imageName) => {
+    const imagePath = `./images/recettes/${imageName}`
+    let base64;
+    try {
+        base64 = fs.readFileSync(imagePath, 'base64');
+    }
+    catch {
+        base64 = "";
+    }
+    return base64;
+}
 
-const addImagePathToRecette = recette => {
-    return {
-        id: recette.id,
-        nom: recette.nom,
-        desc: recette.desc,
-        preparation: recette.preparation,
-        cuisson: recette.cuisson,
-        portions: recette.portions,
-        image: getImagePathForRecetteId(recette.id),
-    };
+const getAllRecettes = async () => {
+    const result = await pool.query(
+        `SELECT *
+        FROM recette`
+    );
+
+    return result.rows.map(row => {
+        return {
+            id: row.recette_id,
+            nom: row.nom,
+            desc: row.description,
+            preparation: row.temps_preparation,
+            cuisson: row.temps_cuisson,
+            portions: row.nombre_portions,
+            image: transformImageTo64(row.image)
+        };
+    });
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+exports.getAllRecettes = getAllRecettes;
 
 const getRecetteById = async (recetteId) => {
     const result = await pool.query(
