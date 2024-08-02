@@ -109,14 +109,13 @@ const getIngredientsSelonRecetteId = async (recetteId) => {
     );
 
     return result.rows.map(row => {
-        return {
-            ingredient: {
-                id: row.ingredient_id,
-                nom: row.nom,
-                quantite: row.quantite,
-                unite_mesure: row.unite_mesure
-            }
+        const ingredient = {
+            id: row.ingredient_id,
+            nom: row.nom,
+            quantite: row.quantite,
+            uniteMesure: row.unite_mesure
         };
+        return ingredient;
     });
 };
 exports.getIngredientsSelonRecetteId = getIngredientsSelonRecetteId;
@@ -131,13 +130,12 @@ const getEtapesSelonRecetteId = async (recetteId) => {
     );
 
     return result.rows.map(row => {
-        return {
-            etape: {
-                id: row.etape_id,
-                description: row.description,
-                ordre: row.ordre
-            }
+        const etape = {
+            id: row.etape_id,
+            description: row.description,
+            ordre: row.ordre
         };
+        return etape;
     });
 };
 exports.getEtapesSelonRecetteId = getEtapesSelonRecetteId;

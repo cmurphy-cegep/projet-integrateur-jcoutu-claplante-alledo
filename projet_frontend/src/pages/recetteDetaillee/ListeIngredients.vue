@@ -1,8 +1,8 @@
 <template>
     <li class="ingredient">
-        <div>{{ quantite }}</div>
-        <div>{{ uniteMesure }}</div>
-        <div>{{ nom }}</div>
+        {{ quantite }}
+        {{ uniteMesure }}
+        {{ nom }}
     </li>
 </template>
 
@@ -11,7 +11,6 @@ import session from '../../session';
 
 export default {
     props: {
-        id: String,
         idIngredient: Number,
         nom: String,
         quantite: Number,

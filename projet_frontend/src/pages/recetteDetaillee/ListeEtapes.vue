@@ -1,7 +1,7 @@
 <template>
     <li class="etape">
-        <div>{{ description }}</div>
-        <div>{{ ordre }}</div>
+        {{ description }}
+        {{ ordre }}
     </li>
 </template>
 
@@ -10,7 +10,6 @@ import session from '../../session';
 
 export default {
     props: {
-        id: String,
         idEtape: Number,
         description: String,
         ordre: Number
