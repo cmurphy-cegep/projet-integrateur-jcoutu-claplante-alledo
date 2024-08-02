@@ -9,10 +9,10 @@ const BasicStrategy = require('passport-http').BasicStrategy;
 const crypto = require('crypto');
 
 // TODO : CREER UTILISATEUR QUERIES
-// const userAccountQueries = require("./queries/UserAccountQueries");
+const compteUtilisateurQueries = require("./queries/CompteUtilisateurQueries");
 
 // TODO : CREER ROUTEUR SELON ROUTES
-// const productRouter = require('./routes/productRouter');
+const recetteRouter = require('./routes/recetteRouter');
 // const cartRouter = require('./routes/cartRouter');
 // const orderRouter = require('./routes/orderRouter');
 
@@ -36,59 +36,58 @@ class BasicStrategyModified extends BasicStrategy {
 }
 
 
-passport.use(new BasicStrategyModified((username, password, authResult) =>{
+passport.use(new BasicStrategyModified((nomUtilisateur, motDePasse, authResult) =>{
     // TODO : UTILISATEUR QUERIES
-    // userAccountQueries.getLoginByUserAccountId(username).then(utilisateur => {
-    //     if(!utilisateur){
-    //         return authResult(null, false);
-    //     }
-    //     if(!utilisateur.isActive){
-    //         return authResult(null, false);
-    //     }
-        
-    //     const iterations = 100000;
-    //     const keylen = 64;
-    //     const digest = "sha512";
-
-    //     crypto.pbkdf2(password, utilisateur.passwordSalt, iterations, keylen, digest, (err, hashedPassword) => {
-    //         if (err) {
-    //           return authResult(err);
-    //         }
-
-    //         const utilisateurMdpHashBuffer = Buffer.from(utilisateur.passwordHash, "base64");
+     compteUtilisateurQueries.getConnexionSelonCompteUtilisateurId(nomUtilisateur).then(utilisateur => {
+         if(!utilisateur){
+             return authResult(null, false);
+         }
     
-    //         if(!crypto.timingSafeEqual(utilisateurMdpHashBuffer, hashedPassword)){
-    //             authResult(null, false);
-    //         }
+        
+         const iterations = 100000;
+         const keylen = 64;
+         const digest = "sha512";
 
-    //         return authResult(null, utilisateur);
-    //     });
+         crypto.pbkdf2(motDePasse, utilisateur.motDePasseSale, iterations, keylen, digest, (err, motDePasseHash) => {
+             if (err) {
+               return authResult(err);
+             }
 
-    // }).catch(err => {
-    //     return authResult(err);
-    // });
+             const utilisateurMdpHashBuffer = Buffer.from(utilisateur.motDePasseHash, "base64");
+    
+             if(!crypto.timingSafeEqual(utilisateurMdpHashBuffer, motDePasseHash)){
+                 authResult(null, false);
+             }
+
+             return authResult(null, utilisateur);
+         });
+
+     }).catch(err => {
+         return authResult(err);
+     });
     
 }));
 
 // TODO: CHANGER LES ROUTES
-// app.use('/products', productRouter);
+ app.use('/recettes', recetteRouter);
 // app.use('/cart', cartRouter);
 // app.use('/orders', orderRouter);
 
 
- app.get('/login',
+ app.get('/connexion',
     passport.authenticate('basic', {session: false}),
     (req, res, next) => {
         if(req.user){
             // TODO : CHANGER LES NOMS DES VARIABLES
-            // const userDetails = {
-            //     userAccount: req.user.userAccountId,
-            //     userFullName: req.user.userFullName,
-            //     isAdmin: req.user.isAdmin,
-            //     isActive: req.user.isActive
-            // };
+             const utilisateurDetails = {
+                compteUtilisateurId: row.utilisateur_id,
+                utilisateurNomComplet: row.nom_complet,
+                motDePasseHash: row.mot_de_passe_hash,
+                motDePasseSale: row.mot_de_passe_sale,
+                estAdmin: row.est_admin
+             };
             
-            res.json(userDetails);
+            res.json(utilisateurDetails);
         }else{
             return next({status: 500, message: "Propriété user absente"})
         }
