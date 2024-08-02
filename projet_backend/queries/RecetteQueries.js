@@ -1,19 +1,17 @@
+const fs = require('fs');
 const pool = require('./DBPool');
 
-const getImagePathForRecetteId = recetteId => `/recettes/${recetteId}/image`;
-exports.getImagePathForRecetteId = getImagePathForRecetteId;
-
-const addImagePathToRecette = recette => {
-    return {
-        id: recette.id,
-        nom: recette.nom,
-        desc: recette.desc,
-        preparation: recette.preparation,
-        cuisson: recette.cuisson,
-        portions: recette.portions,
-        image: getImagePathForRecetteId(recette.id),
-    };
-};
+const transformImageTo64 = (imageName) => {
+    const imagePath = `./images/recettes/${imageName}`
+    let base64;
+    try {
+        base64 = fs.readFileSync(imagePath, 'base64');
+    }
+    catch {
+        base64 = "";
+    }
+    return base64;
+}
 
 const getAllRecettes = async () => {
     const result = await pool.query(
@@ -30,7 +28,7 @@ const getAllRecettes = async () => {
             preparation: row.temps_preparation,
             cuisson: row.temps_cuisson,
             portions: row.nombre_portions,
-            image: row.image
+            image:  transformImageTo64(row.image)
         };
     });
 };
@@ -38,9 +36,9 @@ exports.getAllRecettes = getAllRecettes;
 
 const getRecetteById = async (recetteId) => {
     const result = await pool.query(
-        `SELECT recette_id, nom, description, temps_preparation, temps_cuisson, nombre_portions 
-        FROM recette
-        WHERE recette_id = $1`,
+        `SELECT recette_id, nom, description, temps_preparation, temps_cuisson, nombre_portions
+         FROM recette
+         WHERE recette_id = $1`,
         [recetteId]
     );
 

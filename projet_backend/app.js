@@ -12,7 +12,6 @@ const crypto = require('crypto');
 const compteUtilisateurQueries = require("./queries/CompteUtilisateurQueries");
 
 // TODO : CREER ROUTEUR SELON ROUTES
- const recetteRouter = require('./routes/recetteRouter');
 const recetteRouter = require('./routes/recetteRouter');
 // const cartRouter = require('./routes/cartRouter');
 // const orderRouter = require('./routes/orderRouter');
@@ -69,9 +68,8 @@ passport.use(new BasicStrategyModified((nomUtilisateur, motDePasse, authResult) 
 }));
 
 // TODO: CHANGER LES ROUTES
-app.use('/recette', recetteRouter);
+app.use('/recettes', recetteRouter);
 // app.use('/products', productRouter);
- app.use('/recettes', recetteRouter);
 // app.use('/cart', cartRouter);
 // app.use('/orders', orderRouter);
 
