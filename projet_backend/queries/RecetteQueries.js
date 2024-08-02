@@ -15,30 +15,26 @@ const addImagePathToRecette = recette => {
     };
 };
 
+const getAllRecettes = async () => {
+    const result = await pool.query(
+        `SELECT *
+         FROM recette
+        `
+    );
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    return result.rows.map(row => {
+        return {
+            id: row.recette_id,
+            nom: row.nom,
+            desc: row.description,
+            preparation: row.temps_preparation,
+            cuisson: row.temps_cuisson,
+            portions: row.nombre_portions,
+            image: row.image
+        };
+    });
+};
+exports.getAllRecettes = getAllRecettes;
 
 const getRecetteById = async (recetteId) => {
     const result = await pool.query(

@@ -12,18 +12,16 @@ const HttpError = require("../HttpError");
 const recetteQueries = require("../queries/RecetteQueries");
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+router.get('/', (req, res, next) => {
+    console.log("1");
+    recetteQueries.getAllRecettes().then(recettes => {
+        console.log("2");
+        res.json(recettes);
+    }).catch(err => {
+        console.log("3");
+        return next(err);
+    });
+});
 
 router.get('/:id', (req, res, next) => {
     const id = req.params.id;
@@ -38,3 +36,5 @@ router.get('/:id', (req, res, next) => {
         return next(err);
     });
 });
+
+module.exports = router;
