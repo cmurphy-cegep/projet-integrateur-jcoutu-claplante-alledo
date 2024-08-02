@@ -18,7 +18,8 @@ const router = createRouter({
        // { path: '/etapes/:id', component: ListeEtapes, props: true },
         { path: '/connexion', component: FormulaireLogin },
         { path: '/recettes', component: CatalogueRecettes },
-        // Redirection vers /contacts
+        //{ path: '/admin/nouvelle-recette', component: A determiner },
+        
         { path: '/', redirect: '/recettes' }
     ]
 });
