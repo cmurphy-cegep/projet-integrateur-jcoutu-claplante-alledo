@@ -69,7 +69,7 @@ exports.getRecetteById = getRecetteById;
 const getRecetteAllById = async (recetteId) => {
     const result = await pool.query(
         `SELECT r.recette_id, r.nom, r.description, temps_preparation, temps_cuisson, nombre_portions,
-        i.ingredient_id, i.nom, quantite, unite_mesure
+        i.ingredient_id, i.nom, quantite, unite_mesure,
         etape_id, e.description, ordre
         FROM recette r
         JOIN recette_ingredient ri ON r.recette_id = ri.recette_id

@@ -1,23 +1,26 @@
 <template>
-    <!-- ajouter code pour l'image -->
-    <div class="recette-detaillee" v-if="!edition">
-        <div class="recette-desc-longue"> {{ recette.desc }}</div>
-        <div class="recette-titre"> {{ recette.nom }}</div>
-        <div class="recette-preparation"> {{ recette.preparation }}</div>
-        <div class="recette-cuisson"> {{ recette.cuisson }}</div>
-        <div class="recette-portions"> {{ recette.portions }}</div>
-        
-        <ul class="recette-ingredients">
-        <ListeIngredients v-if="!loading" v-for="ingredient in ingredients" :id="ingredient.idIngredient"
-        :nom="ingredient.nom" :quantite="ingredient.quantite" :uniteMesure="ingredient.uniteMesure" />
-        </ul>
-        <ul class="recette-etapes">
-        <ListeEtapes v-if="!loading" v-for="etape in etapes" :id="etape.idEtape"
-        :description="etape.description" :ordre="etape.ordre" />
-        </ul>
-        <button type="button" v-if="session.user && session.user.estAdmin" @click="enableEdit">Éditer</button>
+    <LoadingSpinner :loading="loading" :error="loadError" :errorMessage="errorMessage" />
+    <div v-if="recette" class="recette">
+        <!-- ajouter code pour l'image -->
+        <div class="recette-detaillee" v-if="!edition">
+            <div class="recette-desc-longue"> {{ recette.desc }}</div>
+            <div class="recette-titre"> {{ recette.nom }}</div>
+            <div class="recette-preparation"> {{ recette.preparation }}</div>
+            <div class="recette-cuisson"> {{ recette.cuisson }}</div>
+            <div class="recette-portions"> {{ recette.portions }}</div>
+
+            <ul v-if="ingredients" class="recette-ingredients">
+                <ListeIngredients v-if="!loading" v-for="ingredient in ingredients" :id="ingredient.idIngredient"
+                    :nom="ingredient.nom" :quantite="ingredient.quantite" :uniteMesure="ingredient.uniteMesure" />
+            </ul>
+            <ul class="recette-etapes">
+                <ListeEtapes v-if="!loading" v-for="etape in etapes" :id="etape.idEtape"
+                    :description="etape.description" :ordre="etape.ordre" />
+            </ul>
+            <button type="button" v-if="session.user && session.user.estAdmin" @click="enableEdit">Éditer</button>
+        </div>
+        <!-- Ajouter l'affichage d'édition de la recette -->
     </div>
-    <!-- Ajouter l'affichage d'édition de la recette -->
 </template>
 
 <script>
@@ -39,13 +42,13 @@ export default {
     },
     data() {
         return {
+            recette: null,
             ingredients: [],
             etapes: [],
             session: session,
             loading: true,
             loadError: false,
             errorMessage: null,
-            product: null,
             edition: false
         };
     },
@@ -65,71 +68,35 @@ export default {
                 this.loading = false;
                 this.errorMessage = err.message;
             });
-        },
-        enableEdit() {
-            this.edition = true;
-        },
-        cancelEdit() {
-            this.edition = false;
-            this.rafraichirRecette(this.id);
-        },
-        async submitUpdatedProduct() {
-            try {
-                await updateProduct(this.product);
-                this.edition = false;
-                this.rafraichirRecette(this.id);
-            } catch (err) {
-                console.error(err);
-                alert(err.message);
-            }
-        },
-        async submitImage() {
-            const formData = new FormData();
-            const fileField = document.querySelector("input[id='product-image']");
-            formData.append('product-image', fileField.files[0]);
 
-            try {
-                await updateProductImage(this.id, formData);
-                this.edition = false;
-                this.rafraichirRecette(this.id);
-            } catch (err) {
+            fetchIngredients().then(ingredients => {
+                this.ingredients = ingredients;
+                this.loading = false;
+                this.loadError = false;
+            }).catch(err => {
                 console.error(err);
-                alert(err.message);
-            }
-        }
-    },
-    computed: {
-        imageSrc() {
-            return addApiPrefixToPath(this.product.image);
-        }
+                this.loading = false;
+                this.loadError = true;
+            }),
+
+                fetchEtapes().then(etapes => {
+                    this.etapes = etapes;
+                    this.loading = false;
+                    this.loadError = false;
+                }).catch(err => {
+                    console.error(err);
+                    this.loading = false;
+                    this.loadError = true;
+                });
+        },
     },
     watch: {
-        id(newId) {
+        id(nouvelId) {
             this.rafraichirRecette(nouvelId);
         }
     },
     mounted() {
-        this.rafraichirRecette(this.id),
-
-        fetchIngredients().then(ingredients => {
-            this.ingredients = ingredients;
-            this.loading = false;
-            this.loadError = false;
-        }).catch(err => {
-            console.error(err);
-            this.loading = false;
-            this.loadError = true;
-        }),
-
-        fetchEtapes().then(etapes => {
-            this.etapes = etapes;
-            this.loading = false;
-            this.loadError = false;
-        }).catch(err => {
-            console.error(err);
-            this.loading = false;
-            this.loadError = true;
-        });
+        this.rafraichirRecette(this.id)
     }
 }
 </script>
