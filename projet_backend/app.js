@@ -13,9 +13,6 @@ const compteUtilisateurQueries = require("./queries/CompteUtilisateurQueries");
 
 // TODO : CREER ROUTEUR SELON ROUTES
 const recetteRouter = require('./routes/recetteRouter');
-// const cartRouter = require('./routes/cartRouter');
-// const orderRouter = require('./routes/orderRouter');
-const recetteRouter = require('./routes/recetteRouter');
 const ingredientRouter = require('./routes/ingredientRouter');
 const etapeRouter = require('./routes/etapeRouter');
 
