@@ -68,9 +68,6 @@ passport.use(new BasicStrategyModified((nomUtilisateur, motDePasse, authResult) 
 }));
 
 // TODO: CHANGER LES ROUTES
- app.use('/recettes', recetteRouter);
-// app.use('/cart', cartRouter);
-// app.use('/orders', orderRouter);
 app.use('/recettes', recetteRouter);
 app.use('/ingredients', ingredientRouter);
 app.use('/etapes', etapeRouter);
