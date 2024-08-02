@@ -4,7 +4,8 @@
             <div><label for="nomCompte">Compte utilisateur: </label><input id="nomCompte" v-model="nomCompte" /></div>
             <div><label for="motDePasse">Mot de passe: </label><input id="motDePasse" type="password"
                     v-model="motDePasse" /></div>
-            <button>Connexion</button>
+            <button>Se connecter</button>
+            <div><router-link to="/creationCompte">Créer un compte</router-link></div>
         </form>
     </div>
 </template>
@@ -23,7 +24,7 @@
     methods: {
         login() {
             session.login(this.nomCompte, this.motDePasse).then(user => {
-               alert("Bienvenue, " + user.userFullName + (user.isAdmin ? ".\nVous êtes administrateur." : "."));
+               alert("Bienvenue, " + user.utilisateurNomComplet + (user.estAdmin ? ".\nVous êtes administrateur." : "."));
                 this.$router.push('/');
             }).catch(authError => {
                 alert(authError.message);

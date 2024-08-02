@@ -79,11 +79,9 @@ app.use('/etapes', etapeRouter);
         if(req.user){
             // TODO : CHANGER LES NOMS DES VARIABLES
              const utilisateurDetails = {
-                compteUtilisateurId: req.utilisateur_id,
-                utilisateurNomComplet: req.nom_complet,
-                motDePasseHash: req.mot_de_passe_hash,
-                motDePasseSale: req.mot_de_passe_sale,
-                estAdmin: req.est_admin
+                compteUtilisateurId: req.user.compteUtilisateurId,
+                utilisateurNomComplet: req.user.utilisateurNomComplet,
+                estAdmin: req.user.estAdmin
              };
             
             res.json(utilisateurDetails);

@@ -16,6 +16,7 @@
             <div class="connexion">
                 <div v-if="session.user">
                     <div>Bienvenue, {{ session.user.utilisateurNomComplet }}</div>
+                    <div v-if="session.user.estAdmin" class="admin">ADMINISTRATEUR</div>
                     <div><a href="" @click.prevent="session.disconnect()">Déconnexion</a></div>
                 </div>
                 <div v-else><router-link to="/connexion">Se connecter</router-link></div>
