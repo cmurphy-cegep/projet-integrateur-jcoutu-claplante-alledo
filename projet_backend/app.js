@@ -36,35 +36,34 @@ class BasicStrategyModified extends BasicStrategy {
 }
 
 
-passport.use(new BasicStrategyModified((nomUtilisateur, motDePasse, authResult) =>{
+passport.use(new BasicStrategyModified((nomUtilisateur, motDePasse, authResult) => {
     // TODO : UTILISATEUR QUERIES
-     compteUtilisateurQueries.getConnexionSelonCompteUtilisateurId(nomUtilisateur).then(utilisateur => {
-         if(!utilisateur){
+    compteUtilisateurQueries.getConnexionSelonCompteUtilisateurId(nomUtilisateur).then(utilisateur => {
+         if(!utilisateur) {
              return authResult(null, false);
-         }
-    
-        
-         const iterations = 100000;
-         const keylen = 64;
-         const digest = "sha512";
+        }
+            
+        const iterations = 100000;
+        const keylen = 64;
+        const digest = "sha512";
 
-         crypto.pbkdf2(motDePasse, utilisateur.motDePasseSale, iterations, keylen, digest, (err, motDePasseHash) => {
-             if (err) {
+        crypto.pbkdf2(motDePasse, utilisateur.motDePasseSale, iterations, keylen, digest, (err, motDePasseHash) => {
+            if (err) {
                return authResult(err);
-             }
+            }
 
-             const utilisateurMdpHashBuffer = Buffer.from(utilisateur.motDePasseHash, "base64");
+            const utilisateurMdpHashBuffer = Buffer.from(utilisateur.motDePasseHash, "base64");
     
-             if(!crypto.timingSafeEqual(utilisateurMdpHashBuffer, motDePasseHash)){
+            if(!crypto.timingSafeEqual(utilisateurMdpHashBuffer, motDePasseHash)){
                  authResult(null, false);
-             }
+            }
 
-             return authResult(null, utilisateur);
-         });
+            return authResult(null, utilisateur);
+        });
 
-     }).catch(err => {
-         return authResult(err);
-     });
+    }).catch(err => {
+        return authResult(err);
+    });
     
 }));
 
@@ -80,11 +79,11 @@ passport.use(new BasicStrategyModified((nomUtilisateur, motDePasse, authResult) 
         if(req.user){
             // TODO : CHANGER LES NOMS DES VARIABLES
              const utilisateurDetails = {
-                compteUtilisateurId: row.utilisateur_id,
-                utilisateurNomComplet: row.nom_complet,
-                motDePasseHash: row.mot_de_passe_hash,
-                motDePasseSale: row.mot_de_passe_sale,
-                estAdmin: row.est_admin
+                compteUtilisateurId: req.utilisateur_id,
+                utilisateurNomComplet: req.nom_complet,
+                motDePasseHash: req.mot_de_passe_hash,
+                motDePasseSale: req.mot_de_passe_sale,
+                estAdmin: req.est_admin
              };
             
             res.json(utilisateurDetails);
