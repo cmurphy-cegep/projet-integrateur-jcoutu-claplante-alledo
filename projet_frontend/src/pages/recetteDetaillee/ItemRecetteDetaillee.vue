@@ -1,7 +1,7 @@
 <template>
     <LoadingSpinner :loading="loading" :error="loadError" :errorMessage="errorMessage" />
     <div v-if="recette && ingredients && etapes" class="recette">
-        <!-- ajouter code pour l'image -->
+        <img v-bind:src="imageSrc" />
         <div class="recette-detaillee" v-if="!edition">
             <div class="recette-desc-longue"> {{ recette.desc }}</div>
             <div class="recette-titre"> {{ recette.nom }}</div>
@@ -29,7 +29,6 @@
 import ListeEtapes from './ListeEtapes.vue';
 import ListeIngredients from './ListeIngredients.vue';
 import { fetchRecette, fetchIngredients, fetchEtapes } from '../../RecetteService';
-import { addApiPrefixToPath } from '../../api_utils';
 import LoadingSpinner from '../../components/LoadingSpinner.vue';
 import session from '../../session';
 
@@ -89,6 +88,11 @@ export default {
                 this.errorMessage = err.message;
             });
         },
+    },
+    computed: {
+    imageSrc() {
+      return `data:image/png;base64,${this.recette.image}`;
+    }
     },
     watch: {
         id(nouvelId) {

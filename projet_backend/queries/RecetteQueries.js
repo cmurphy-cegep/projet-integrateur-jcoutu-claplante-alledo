@@ -35,7 +35,7 @@ exports.getAllRecettes = getAllRecettes;
 
 const getRecetteById = async (recetteId) => {
     const result = await pool.query(
-        `SELECT recette_id, nom, description, temps_preparation, temps_cuisson, nombre_portions
+        `SELECT recette_id, nom, description, temps_preparation, temps_cuisson, nombre_portions, image
         FROM recette
         WHERE recette_id = $1`,
         [recetteId]
@@ -49,10 +49,9 @@ const getRecetteById = async (recetteId) => {
             description: row.description,
             preparation: row.temps_preparation,
             cuisson: row.temps_cuisson,
-            portions: row.nombre_portions
+            portions: row.nombre_portions,
+            image: transformImageTo64(row.image),
         };
-
-        //return addImagePathToRecette(recette);
         return recette;
     }
     return undefined;
