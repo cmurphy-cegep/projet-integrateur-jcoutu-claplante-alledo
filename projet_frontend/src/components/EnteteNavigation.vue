@@ -13,10 +13,12 @@
                 </span>
             </div>
 
+            <div v-if="session.user && session.user.estAdmin">
+                <img class="admin-image" src="../../imageAdmin/admin.jpg" alt="Administrateur">
+            </div>
             <div class="connexion">
                 <div v-if="session.user">
                     <div>Bienvenue, {{ session.user.utilisateurNomComplet }}</div>
-                    <div v-if="session.user.estAdmin" class="admin">ADMINISTRATEUR</div>
                     <div><a href="" @click.prevent="session.disconnect()">Déconnexion</a></div>
                 </div>
                 <div v-else><router-link to="/connexion">Se connecter</router-link></div>
@@ -37,7 +39,11 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped>  
+.admin-image {
+  width: 50px;
+  height: auto;
+}
 .black-title {
     color: black;
 }
@@ -63,11 +69,5 @@ export default {
     flex-basis: 15%;
     padding: 0.3rem;
     text-align: right;
-}
-
-.admin {
-    background-color: darkred;
-    color: white;
-    text-align: center;
 }
 </style>
