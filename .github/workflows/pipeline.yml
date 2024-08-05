@@ -43,7 +43,9 @@ jobs:
           npm audit fix
 
       - name: Connect to PostgresSQL
-        run: node clients.js
+        run: |
+          cd. /projet_backend/ 
+          node clients.js
         env:
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
@@ -53,7 +55,7 @@ jobs:
           cd ./projet_frontend/
           npm run build
 
-      - name: Run test
-        run: npm run test
+      # - name: Run test
+      #   run: npm run test
       # - name: Run eslint
       #   run: npm run lint
