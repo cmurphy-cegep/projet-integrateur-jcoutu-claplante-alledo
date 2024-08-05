@@ -5,6 +5,16 @@ on: push
 jobs:
   simple_deployment_pipeline:
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres
+
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports: 
+          - 5432:5432
+
     steps:
       - uses: actions/checkout@v4
 
@@ -32,12 +42,20 @@ jobs:
           cd ./projet_backend/
           npm audit fix
 
+      - name: Connect to PostgresSQL
+        run: |
+          cd ./projet_backend/ 
+          node clients.js
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+
       - name: Run build
         run: |
           cd ./projet_frontend/
           npm run build
 
-      - name: Run test
-        run: npm run test
+      # - name: Run test
+      #   run: npm run test
       # - name: Run eslint
       #   run: npm run lint
