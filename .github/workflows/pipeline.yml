@@ -44,7 +44,7 @@ jobs:
 
       - name: Connect to PostgresSQL
         run: |
-          cd. /projet_backend/ 
+          cd ./projet_backend/ 
           node clients.js
         env:
           POSTGRES_HOST: localhost
