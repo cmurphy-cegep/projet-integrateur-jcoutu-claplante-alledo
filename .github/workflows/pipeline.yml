@@ -14,28 +14,28 @@ jobs:
 
       - name: Install frontend dependencies
         run: |
-        cd ./projet_frontend/
-        npm install
+          cd ./projet_frontend/
+          npm install
 
       - name: Install backend dependencies
         run: |
-        cd ./projet_backend/
-        npm install
+          cd ./projet_backend/
+          npm install
 
       - name: Fix frontend vulnerabilities
         run: |
-        cd ./projet_frontend/
-        npm audit fix
+          cd ./projet_frontend/
+          npm audit fix
 
       - name: Fix backend vulnerabilities
         run: |
-        cd ./projet_backend/
-        npm audit fix
+          cd ./projet_backend/
+          npm audit fix
 
       - name: Run build
         run: |
-        cd ./projet_frontend/
-        npm run build
+          cd ./projet_frontend/
+          npm run build
 
       - name: Run test
         run: npm run test
