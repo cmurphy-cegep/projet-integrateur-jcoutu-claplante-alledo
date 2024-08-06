@@ -10,8 +10,8 @@ jobs:
       postgres:
         image: postgres
 
-        env:
-          POSTGRES_PASSWORD: postgres
+        # env:
+        #   POSTGRES_PASSWORD: postgres
         ports: 
           - 5432:5432
 
@@ -55,7 +55,9 @@ jobs:
           cd ./projet_frontend/
           npm run build
 
-      # - name: Run test
-      #   run: npm run test
+      - name: Jest test
+        run: |
+          cd ./projet_backend/
+          npm run test
       # - name: Run eslint
       #   run: npm run lint
