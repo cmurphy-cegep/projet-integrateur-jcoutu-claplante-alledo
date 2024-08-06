@@ -11,7 +11,9 @@ jobs:
         image: postgres
 
         env:
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: 'backend_user'
+          POSTGRES_PASSWORD: '12345'
+          POSTGRES_DB: recettes
         ports: 
           - 5432:5432
 
@@ -42,16 +44,19 @@ jobs:
           cd ./projet_backend/
           npm audit fix
 
-      - name: Connect to PostgresSQL
+      - name: Migrate PostgreSQL
         run: |
-          cd ./projet_backend/ 
-          node clients.js
+          psql -h localhost -U backend_user -d recettes -f projet_bdd/01_creer_bd.sql
+          psql -h localhost -U backend_user -d recettes -f projet_bdd/02_creer_user.sql
+          psql -h localhost -U backend_user -d recettes -f projet_bdd/03_recettes.sql
+          psql -h localhost -U backend_user -d recettes -f projet_bdd/04_recettes_insertion_donnees.sql
+          psql -h localhost -U backend_user -d recettes -f projet_bdd/05_grant_backend_user.sql
+          psql -h localhost -U backend_user -d recettes -f projet_bdd/06_creer_utilisateurs.sql
         env:
+          POSTGRES_USER: 'backend_user'
+          POSTGRES_PASSWORD: '12345'
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: Miriam10.
-          POSTGRES_DB: recettes
 
       - name: Run build
         run: |
