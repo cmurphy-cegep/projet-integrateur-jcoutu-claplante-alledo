@@ -16,5 +16,9 @@
     "passport": "~0.6.0",
     "passport-http": "~0.3.0",
     "pg": "~8.11.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
   }
 }
