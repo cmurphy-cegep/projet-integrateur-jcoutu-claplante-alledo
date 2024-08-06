@@ -10,8 +10,8 @@ jobs:
       postgres:
         image: postgres
 
-        # env:
-        #   POSTGRES_PASSWORD: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
         ports: 
           - 5432:5432
 
@@ -49,6 +49,9 @@ jobs:
         env:
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: Miriam10.
+          POSTGRES_DB: recettes
 
       - name: Run build
         run: |
