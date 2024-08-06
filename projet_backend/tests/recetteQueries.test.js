@@ -1,4 +1,5 @@
 jest.mock('../queries/DBPool');
+const { request } = require('../app');
 const mockPool = require('../queries/DBPool');
 const { getEtapesSelonRecetteId } = require('../queries/RecetteQueries');
 
@@ -27,3 +28,4 @@ test('getEtapesSelonRecetteId devrait retourner un tableau d\'étapes selon la r
     expect(Array.isArray(etapes)).toBe(true);
     expect(etapes).toEqual(ExpectedmockEtapes);
 });
+
