@@ -46,12 +46,12 @@ jobs:
 
       - name: Migrate PostgreSQL
         run: |
-          psql -h localhost -U backend_user -d recettes -f projet_bdd/01_creer_bd.sql
-          psql -h localhost -U backend_user -d recettes -f projet_bdd/02_creer_user.sql
-          psql -h localhost -U backend_user -d recettes -f projet_bdd/03_recettes.sql
-          psql -h localhost -U backend_user -d recettes -f projet_bdd/04_recettes_insertion_donnees.sql
-          psql -h localhost -U backend_user -d recettes -f projet_bdd/05_grant_backend_user.sql
-          psql -h localhost -U backend_user -d recettes -f projet_bdd/06_creer_utilisateurs.sql
+          PGPASSWORD=12345 psql -h localhost -U backend_user -d recettes -f projet_bdd/01_creer_bd.sql
+          PGPASSWORD=12345 psql -h localhost -U backend_user -d recettes -f projet_bdd/02_creer_user.sql
+          PGPASSWORD=12345 psql -h localhost -U backend_user -d recettes -f projet_bdd/03_recettes.sql
+          PGPASSWORD=12345 psql -h localhost -U backend_user -d recettes -f projet_bdd/04_recettes_insertion_donnees.sql
+          PGPASSWORD=12345 psql -h localhost -U backend_user -d recettes -f projet_bdd/05_grant_backend_user.sql
+          PGPASSWORD=12345 psql -h localhost -U backend_user -d recettes -f projet_bdd/06_creer_utilisateurs.sql
         env:
           POSTGRES_USER: 'backend_user'
           POSTGRES_PASSWORD: 12345
