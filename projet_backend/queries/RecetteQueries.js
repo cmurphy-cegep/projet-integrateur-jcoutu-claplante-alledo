@@ -33,6 +33,7 @@ const getAllRecettes = async () => {
 };
 exports.getAllRecettes = getAllRecettes;
 
+
 const getRecetteById = async (recetteId) => {
     const result = await pool.query(
         `SELECT recette_id, nom, description, temps_preparation, temps_cuisson, nombre_portions, image
@@ -57,38 +58,6 @@ const getRecetteById = async (recetteId) => {
     return undefined;
 };
 exports.getRecetteById = getRecetteById;
-
-const getRecetteAllById = async (recetteId) => {
-    const result = await pool.query(
-        `SELECT r.recette_id, r.nom, r.description, temps_preparation, temps_cuisson, nombre_portions,
-        i.ingredient_id, i.nom, quantite, unite_mesure,
-        etape_id, e.description, ordre
-        FROM recette r
-        JOIN recette_ingredient ri ON r.recette_id = ri.recette_id
-        JOIN ingredient i ON ri.ingredient_id = i.ingredient_id
-        JOIN etape e ON r.recette_id = e.recette_id
-        WHERE r.recette_id = $1`,
-        [recetteId]
-    );
-
-    const row = result.rows[0];
-    if (row) {
-        const recette = {
-            id: row.recette_id,
-            nom: row.nom,
-            desc: row.desc,
-            preparation: row.preparation,
-            cuisson: row.cuisson,
-            portions: row.portions
-        };
-
-        return addImagePathToRecette(recette);
-    }
-    return undefined;
-};
-exports.getRecetteById = getRecetteById;
-
-
 
 
 const getIngredientsSelonRecetteId = async (recetteId) => {

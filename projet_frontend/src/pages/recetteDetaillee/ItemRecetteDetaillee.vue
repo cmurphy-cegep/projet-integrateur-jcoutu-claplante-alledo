@@ -3,11 +3,26 @@
     <div v-if="recette && ingredients && etapes" class="recette">
         <img v-bind:src="imageSrc" />
         <div class="recette-detaillee" v-if="!edition">
-            <div class="recette-desc-longue"> {{ recette.desc }}</div>
+
+            <div class="recette-desc-longue" v-html = "recette.desc" ></div>
+
             <div class="recette-titre"> {{ recette.nom }}</div>
-            <div class="recette-preparation"> {{ recette.preparation }}</div>
-            <div class="recette-cuisson"> {{ recette.cuisson }}</div>
-            <div class="recette-portions"> {{ recette.portions }}</div>
+
+            <div class="recette-preparation">
+                <label for="recette-cuisson">Préparation : </label>
+                {{ recette.preparation }}
+            </div>
+
+            <div class="recette-cuisson">
+                <label for="recette-cuisson">Cuisson : </label> 
+                {{ recette.cuisson }}
+            </div>
+
+            <div class="recette-portions">
+                <label for="recette-portions">Portions : </label> 
+                {{ recette.portions }}
+            </div>
+
         </div>
 
         <ul class="recette-ingredients">
