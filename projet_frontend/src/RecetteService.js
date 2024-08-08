@@ -69,7 +69,8 @@ export async function fetchEtapes(recetteId) {
 
     if (reponse.ok) {
         const repJson = await reponse.json();
-        return repJson.map(e => convertirEnEtape(e));
+        const repJsonTriee = repJson.sort((a,b) => a.ordre - b.ordre);
+        return repJsonTriee.map(e => convertirEnEtape(e));
     } else {
         throw new Error(`Liste d'étapes pour la recette ${recetteId} introuvable`);
     }
