@@ -120,7 +120,6 @@ const getEtapesSelonRecetteId = async (recetteId) => {
         WHERE recette_id = $1`,
         [recetteId]
     );
-
     return result.rows.map(row => {
         const etape = {
             id: row.etape_id,

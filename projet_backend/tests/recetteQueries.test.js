@@ -15,7 +15,6 @@ test('getEtapesSelonRecetteId devrait retourner un tableau d\'étapes selon la r
     
     const recetteId = 'lasagnes';
     const etapes = await getEtapesSelonRecetteId(recetteId);
-    console.log(etapes);
 
     // Doit rechanger le nom pour avoir le bon nom de variable comme dans le return de la fonction
     const ExpectedmockEtapes = [
