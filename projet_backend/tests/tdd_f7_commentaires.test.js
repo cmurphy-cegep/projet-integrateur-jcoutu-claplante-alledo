@@ -46,13 +46,29 @@ describe("tests commentaires", function () {
             ];
 
             mockPool.query.mockResolvedValueOnce({ rows: mockCommentaire });
-            
+
             const recetteId = 'spaghetti_carbonara';
             const commentaires = await getCommentairesSelonRecetteId(recetteId);
-        
+
             expect(Array.isArray(commentaires)).toBe(true);
             expect(commentaires).toEqual(mockCommentaire);
         });
+
+        it('ajouterCommentaire', async () => {
+            const mockNouveauCommentaire = {
+                texte: 'Est ce que je peux enlever le poulet dans le poulet au curry',
+                date: '2024-01-31T08:15:30.000Z',
+                utilisateur_id: 'claplante',
+                recette_id: 'poulet_au_curry'
+            }
+
+
+            mockPool.query.mockResolvedValueOnce({ rows: [mockNouveauCommentaire] });
+
+            const commentaire = await ajouterCommentaire(mockNouveauCommentaire);
+
+            expect(commentaire).toEqual(mockCommentaire);
+        })
 
     })
 });
