@@ -22,11 +22,11 @@ describe("tests routes commentaires", function () {
         it('Devrait retourner erreur 404', () => {
             mockReponseError = {
                 status: 404,
-                message: "Liste de commentaire recette-id-nexiste-pas-pour-test introuvable"
+                message: "Liste de commentaires pour la recette spaghetti_carbonara-id-nexiste-pas-pour-test introuvable"
 
             }
             return requete(app)
-                .get("/comments/spaghetti_carbonara")
+                .get("/comments/spaghetti_carbonara-id-nexiste-pas-pour-test")
                 .then((res) => {
                     expect(res.statusCode).toBe(404);
                     expect(res.body).toEqual(mockReponseError);
