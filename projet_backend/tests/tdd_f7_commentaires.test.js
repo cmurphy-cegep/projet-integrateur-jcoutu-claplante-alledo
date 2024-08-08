@@ -46,7 +46,6 @@ describe("tests commentaires", function () {
             }
             return requete(app)
                 .post("/comments/poulet_au_curry/claplante")
-                .send(ajouterCommentaire(mockNouveauCommentaire))
                 .then((res) => {
                     expect(res.statusCode).toBe(201);
                     expect(res.body).toEqual(mockNouveauCommentaire);
