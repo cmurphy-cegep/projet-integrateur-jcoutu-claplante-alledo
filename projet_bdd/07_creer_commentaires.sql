@@ -2,6 +2,8 @@ INSERT INTO Commentaire (texte, date_publication, utilisateur_id, recette_id) VA
 
 ('Ce spaghetti carbonara était vraiment délicieux! La recette est facile à suivre, et le résultat est digne d’un restaurant italien. Le mélange de la pancetta croustillante avec le parmesan et les œufs crée une sauce riche et onctueuse. J’ai ajouté un peu de poivre noir frais pour rehausser le goût. C’est définitivement une recette que je referai!', '2024-08-01 10:15:30+02', 'claplante', 'spaghetti_carbonara'),
 
+('TRES BON!!!', '2024-08-01 10:15:30+02', 'jscoutu', 'spaghetti_carbonara'),
+
 ('Le poulet Alfredo était crémeux et savoureux, mais j’ai trouvé que la sauce manquait un peu de punch. J’ai ajouté un peu de muscade et de poivre pour donner plus de profondeur au plat. Le poulet était tendre et bien cuit, et les pâtes avaient la texture parfaite. C’est une bonne recette pour un dîner en semaine.', '2024-08-03 18:25:10+02', 'alledo', 'poulet_alfredo'),
 
 ('La salade grecque est rafraîchissante et légère, parfaite pour un déjeuner d’été. Les ingrédients sont simples mais de bonne qualité, ce qui fait toute la différence. J’ai particulièrement aimé l’ajout de l’origan frais et des olives Kalamata. J’ai légèrement modifié la recette en ajoutant un peu de feta supplémentaire. Un vrai régal!', '2024-08-05 12:45:55+02', 'jscoutu', 'salade_grecque'),
