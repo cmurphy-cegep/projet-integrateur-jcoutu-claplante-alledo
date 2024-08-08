@@ -133,3 +133,13 @@ const getEtapesSelonRecetteId = async (recetteId) => {
 exports.getEtapesSelonRecetteId = getEtapesSelonRecetteId;
 
 
+const getCommentairesSelonRecetteId = async (recetteId) => {
+    const result = await pool.query(
+        `SELECT commentaire_id, texte, date_publication AS date, utilisateur_id, recette_id 
+        FROM commentaire
+        WHERE recette_id = $1`,
+        [recetteId]
+    );
+    return result.rows
+};
+exports.getCommentairesSelonRecetteId = getCommentairesSelonRecetteId;
