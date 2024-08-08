@@ -18,5 +18,19 @@ describe("tests routes commentaires", function () {
                     expect(res.body).toEqual(mockCommentaire);
                 })
         });
+
+        it('Devrait retourner erreur 404', () => {
+            mockReponseError = {
+                status: 404,
+                message: "Liste de commentaire recette-id-nexiste-pas-pour-test introuvable"
+
+            }
+            return requete(app)
+                .get("/comments/spaghetti_carbonara")
+                .then((res) => {
+                    expect(res.statusCode).toBe(404);
+                    expect(res.body).toEqual(mockReponseError);
+                })
+        })
     });
 });
