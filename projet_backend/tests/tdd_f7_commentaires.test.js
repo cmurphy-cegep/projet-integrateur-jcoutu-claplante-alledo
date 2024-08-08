@@ -36,6 +36,22 @@ describe("tests commentaires", function () {
                     expect(res.body).toEqual(mockReponseError);
                 })
         });
+
+        it('POST/ commentaire', async () => {
+            const mockNouveauCommentaire = {
+                texte: 'Est ce que je peux enlever le poulet dans le poulet au curry',
+                date_publication: '2024-01-31T08:15:30.000Z',
+                utilisateur_id: 'claplante',
+                recette_id: 'poulet_au_curry'
+            }
+            return requete(app)
+                .post("/comments/poulet_au_curry/claplante")
+                .send(ajouterCommentaire(mockNouveauCommentaire))
+                .then((res) => {
+                    expect(res.statusCode).toBe(201);
+                    expect(res.body).toEqual(mockNouveauCommentaire);
+                })
+        });
     });
 
     describe('tests queries commentaires', () => {
