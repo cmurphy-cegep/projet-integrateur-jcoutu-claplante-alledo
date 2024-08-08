@@ -1,5 +1,4 @@
 jest.mock('../queries/DBPool');
-const { request } = require('../app');
 const mockPool = require('../queries/DBPool');
 const { getEtapesSelonRecetteId } = require('../queries/RecetteQueries');
 
