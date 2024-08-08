@@ -1,8 +1,6 @@
 INSERT INTO Commentaire (texte, date_publication, utilisateur_id, recette_id) VALUES
 
-('Ce spaghetti carbonara était vraiment délicieux! La recette est facile à suivre, et le résultat est digne d’un restaurant italien. Le mélange de la pancetta croustillante avec le parmesan et les œufs crée une sauce riche et onctueuse. J’ai ajouté un peu de poivre noir frais pour rehausser le goût. C’est définitivement une recette que je referai!', '2024-08-01 10:15:30+02', 'claplante', 'spaghetti_carbonara'),
-
-('TRES BON!!!', '2024-08-01 10:15:30+02', 'jscoutu', 'spaghetti_carbonara'),
+('Ce spaghetti carbonara était vraiment délicieux! La recette est facile à suivre, et le résultat est digne d’un restaurant italien. Le mélange de la pancetta croustillante avec le parmesan et les œufs crée une sauce riche et onctueuse. J’ai ajouté un peu de poivre noir frais pour rehausser le goût. C’est définitivement une recette que je referai!', '2024-08-01T08:15:30.000Z', 'claplante', 'spaghetti_carbonara'),
 
 ('Le poulet Alfredo était crémeux et savoureux, mais j’ai trouvé que la sauce manquait un peu de punch. J’ai ajouté un peu de muscade et de poivre pour donner plus de profondeur au plat. Le poulet était tendre et bien cuit, et les pâtes avaient la texture parfaite. C’est une bonne recette pour un dîner en semaine.', '2024-08-03 18:25:10+02', 'alledo', 'poulet_alfredo'),
 
@@ -14,4 +12,6 @@ INSERT INTO Commentaire (texte, date_publication, utilisateur_id, recette_id) VA
 
 ('J’ai préparé la ratatouille pour un dîner entre amis et c’était un succès! Les légumes étaient parfaitement cuits, fondants mais encore légèrement croquants. Le mélange de thym, d’ail et d’huile d’olive apporte un goût méditerranéen authentique. Servie avec du pain croustillant, c’est un plat sain et délicieux que je referai sans hésiter.', '2024-08-09 20:10:45+02', 'jscoutu', 'ratatouille'),
 
-('Le poulet au curry était incroyable! La sauce était riche, crémeuse et parfaitement épicée, avec un bel équilibre entre le lait de coco et les épices. Le poulet était tendre et bien imprégné des saveurs. J’ai ajouté un peu de coriandre fraîche pour plus de fraîcheur, et servi avec du riz basmati. C’est devenu un de mes plats préférés!', '2024-08-10 14:22:10+02', 'claplante', 'poulet_au_curry');
+('Le poulet au curry était incroyable! La sauce était riche, crémeuse et parfaitement épicée, avec un bel équilibre entre le lait de coco et les épices. Le poulet était tendre et bien imprégné des saveurs. J’ai ajouté un peu de coriandre fraîche pour plus de fraîcheur, et servi avec du riz basmati. C’est devenu un de mes plats préférés!', '2024-08-10 14:22:10+02', 'claplante', 'poulet_au_curry'),
+
+('TRES BON!!!', '2024-09-21T08:15:30.000Z', 'jscoutu', 'spaghetti_carbonara');
