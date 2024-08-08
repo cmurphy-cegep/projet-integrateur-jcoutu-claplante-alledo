@@ -143,3 +143,17 @@ const getCommentairesSelonRecetteId = async (recetteId) => {
     return result.rows
 };
 exports.getCommentairesSelonRecetteId = getCommentairesSelonRecetteId;
+
+const ajouterCommentaire = async (commentaire) => {
+
+    const date_publication = DateTime.now().toString();
+
+    const result = await pool.query(
+        `INSERT INTO commentaire (texte, date_publication, utilisateur_id, recette_id ) 
+        VALUES ($1, $2, $3, $4)`,
+        [commentaire.texte, date_publication, commentaire.utilisateur_id, commentaire.recette_id]
+    );
+
+    return result.rows[0];
+};
+exports.ajouterCommentaire = ajouterCommentaire;

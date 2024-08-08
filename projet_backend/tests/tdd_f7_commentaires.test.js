@@ -3,6 +3,7 @@ const requete = require('supertest');
 const app = require('../app');
 const mockPool = require('../queries/DBPool');
 const { getCommentairesSelonRecetteId } = require('../queries/RecetteQueries');
+const { ajouterCommentaire } = require('../queries/RecetteQueries');
 
 describe("tests commentaires", function () {
 
@@ -57,7 +58,7 @@ describe("tests commentaires", function () {
         it('ajouterCommentaire', async () => {
             const mockNouveauCommentaire = {
                 texte: 'Est ce que je peux enlever le poulet dans le poulet au curry',
-                date: '2024-01-31T08:15:30.000Z',
+                date_publication: '2024-01-31T08:15:30.000Z',
                 utilisateur_id: 'claplante',
                 recette_id: 'poulet_au_curry'
             }
@@ -66,8 +67,11 @@ describe("tests commentaires", function () {
             mockPool.query.mockResolvedValueOnce({ rows: [mockNouveauCommentaire] });
 
             const commentaire = await ajouterCommentaire(mockNouveauCommentaire);
+            console.log(commentaire);
+            console.log("--------------------------------------");
+            console.log(mockNouveauCommentaire);
 
-            expect(commentaire).toEqual(mockCommentaire);
+            expect(commentaire).toEqual(mockNouveauCommentaire);
         })
 
     })
