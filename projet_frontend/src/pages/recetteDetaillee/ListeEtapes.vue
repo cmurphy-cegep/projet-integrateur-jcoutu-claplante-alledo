@@ -1,7 +1,6 @@
 <template>
     <li class="etape">
         {{ description }}
-        {{ ordre }}
     </li>
 </template>
 
