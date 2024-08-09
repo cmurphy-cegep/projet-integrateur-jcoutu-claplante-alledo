@@ -13,7 +13,6 @@ router.get('/:id', (req, res, next) => {
     const id = req.params.id;
     recetteQueries.getCommentairesSelonRecetteId(id).then(commentaires => {
         if (commentaires.length > 0) {
-            // Array vide = true donc if(etapes) et etapes == {} = true
             res.json(commentaires);
         } else {
             return next(new HttpError(404, `Liste de commentaires pour la recette ${id} introuvable`));
@@ -23,27 +22,26 @@ router.get('/:id', (req, res, next) => {
     });
 });
 
-router.post('/:recetteId/:utilisateurId',
+router.post('/:recetteId',
     passport.authenticate('basic', { session: false }),
     (req, res, next) => {
-        const utilisateur = req.utilisateur;
-        const id = req.params.id;
-
+        const utilisateur = req.user;
+        console.log(req.params);
         if (!utilisateur) {
-            return next({ status: 403, message: "Droit d`accès requis" });
+            return next(new HttpError (403, "Droit d`accès requis" ));
         }
-        if (req.body.utilisateur_id !== req.utilisateur.utilisateurId) {
-            return next({ status: 403, message: "Vous ne pouvez pas envoyer des commentaires sous un autre utilisateur id" });
+        if (req.body.utilisateur_id !== utilisateur.compteUtilisateurId) {
+            return next(new HttpError (403, "Vous ne pouvez pas envoyer des commentaires sous un autre utilisateur id" ));
         }
-        const idRecette = req.body.id_recette;
+        const idRecette = req.body.recette_id;
         if (!idRecette || idRecette === '') {
             return next(new HttpError(400, 'Le champ idRecette est requis'));
         }
 
         const nouveauCommentaire = {
             texte: "" + req.body.texte,
-            utilisateur_id: "" + req.body.utilisateur_id,
-            recette_id: "" + req.body.recette_id,
+            utilisateurId: "" + req.body.utilisateur_id,
+            recetteId: "" + req.body.recette_id
         };
 
         recetteQueries.ajouterCommentaire(nouveauCommentaire).then(result => {

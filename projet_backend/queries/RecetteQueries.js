@@ -59,39 +59,6 @@ const getRecetteById = async (recetteId) => {
 };
 exports.getRecetteById = getRecetteById;
 
-const getRecetteAllById = async (recetteId) => {
-    const result = await pool.query(
-        `SELECT r.recette_id, r.nom, r.description, temps_preparation, temps_cuisson, nombre_portions,
-        i.ingredient_id, i.nom, quantite, unite_mesure,
-        etape_id, e.description, ordre
-        FROM recette r
-        JOIN recette_ingredient ri ON r.recette_id = ri.recette_id
-        JOIN ingredient i ON ri.ingredient_id = i.ingredient_id
-        JOIN etape e ON r.recette_id = e.recette_id
-        WHERE r.recette_id = $1`,
-        [recetteId]
-    );
-
-    const row = result.rows[0];
-    if (row) {
-        const recette = {
-            id: row.recette_id,
-            nom: row.nom,
-            desc: row.desc,
-            preparation: row.preparation,
-            cuisson: row.cuisson,
-            portions: row.portions
-        };
-
-        return addImagePathToRecette(recette);
-    }
-    return undefined;
-};
-exports.getRecetteById = getRecetteById;
-
-
-
-
 const getIngredientsSelonRecetteId = async (recetteId) => {
     const result = await pool.query(
         `SELECT r.ingredient_id, nom, quantite, unite_mesure 
@@ -135,12 +102,21 @@ exports.getEtapesSelonRecetteId = getEtapesSelonRecetteId;
 
 const getCommentairesSelonRecetteId = async (recetteId) => {
     const result = await pool.query(
-        `SELECT commentaire_id, texte, date_publication AS date, utilisateur_id, recette_id 
+        `SELECT commentaire_id, texte, date_publication, utilisateur_id, recette_id 
         FROM commentaire
         WHERE recette_id = $1`,
         [recetteId]
     );
-    return result.rows
+    return result.rows.map(row => {
+        const commentaire = {
+            id: row.commentaire_id,
+            texte: row.texte,
+            date: row.date_publication.toISOString(),
+            utilisateurId: row.utilisateur_id,
+            recetteId: row.recette_id
+        };
+        return commentaire;
+    });
 };
 exports.getCommentairesSelonRecetteId = getCommentairesSelonRecetteId;
 
@@ -150,10 +126,19 @@ const ajouterCommentaire = async (commentaire) => {
 
     const result = await pool.query(
         `INSERT INTO commentaire (texte, date_publication, utilisateur_id, recette_id ) 
-        VALUES ($1, $2, $3, $4)`,
-        [commentaire.texte, date_publication, commentaire.utilisateur_id, commentaire.recette_id]
+         VALUES ($1, $2, $3, $4)
+         RETURNING *`,
+        [commentaire.texte, date_publication, commentaire.utilisateurId, commentaire.recetteId]
     );
 
-    return result.rows[0];
+    const row = result.rows[0];
+    if (row) {
+        const commentaire = {
+            texte: row.texte,
+            utilisateurId: row.utilisateur_id,
+            recetteId: row.recette_id
+        };
+        return commentaire;
+    }
 };
 exports.ajouterCommentaire = ajouterCommentaire;

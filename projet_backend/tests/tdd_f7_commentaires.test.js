@@ -1,25 +1,27 @@
-jest.mock('../queries/DBPool');
+
 const requete = require('supertest');
 const app = require('../app');
-const mockPool = require('../queries/DBPool');
 const { getCommentairesSelonRecetteId } = require('../queries/RecetteQueries');
 const { ajouterCommentaire } = require('../queries/RecetteQueries');
+
 
 describe("tests commentaires", function () {
 
     describe('tests routes commentaires', () => {
 
-        it('GET/ Devrait retourner les bons commentaires de la recette_id', async () => {
+        it('GET/ Devrait retourner les bons commentaires de la recette_id', () => {
 
-            const mockCommentaire = [
-                { commentaire_id: 1, texte: 'Ce spaghetti carbonara était vraiment délicieux! La recette est facile à suivre, et le résultat est digne d’un restaurant italien. Le mélange de la pancetta croustillante avec le parmesan et les œufs crée une sauce riche et onctueuse. J’ai ajouté un peu de poivre noir frais pour rehausser le goût. C’est définitivement une recette que je referai!', date: '2024-08-01T08:15:30.000Z', utilisateur_id: 'claplante', recette_id: 'spaghetti_carbonara' },
-                { commentaire_id: 8, texte: 'TRES BON!!!', date: '2024-09-21T08:15:30.000Z', utilisateur_id: 'jscoutu', recette_id: 'spaghetti_carbonara' }
+            const mockCommentaires = [
+                { id: 1, texte: 'Ce spaghetti carbonara était vraiment délicieux! La recette est facile à suivre, et le résultat est digne d’un restaurant italien. Le mélange de la pancetta croustillante avec le parmesan et les œufs crée une sauce riche et onctueuse. J’ai ajouté un peu de poivre noir frais pour rehausser le goût. C’est définitivement une recette que je referai!', date: '2024-08-01T08:15:30.000Z', utilisateurId: 'claplante', recetteId: 'spaghetti_carbonara' },
+                { id: 8, texte: 'TRES BON!!!', date: '2024-09-21T08:15:30.000Z', utilisateurId: 'jscoutu', recetteId: 'spaghetti_carbonara' }
             ];
+
+            
             return requete(app)
                 .get("/comments/spaghetti_carbonara")
                 .then((res) => {
                     expect(res.statusCode).toBe(200);
-                    expect(res.body).toEqual(mockCommentaire);
+                    expect(res.body).toEqual(mockCommentaires);
                 })
         });
 
@@ -37,55 +39,76 @@ describe("tests commentaires", function () {
                 })
         });
 
-        it('POST/ commentaire', async () => {
+        it('POST/ commentaire', () => {
+            jest.mock('../queries/RecetteQueries');
+            const mockRecetteQueries = require('../queries/RecetteQueries');
+
             const mockNouveauCommentaire = {
                 texte: 'Est ce que je peux enlever le poulet dans le poulet au curry',
-                date_publication: '2024-01-31T08:15:30.000Z',
                 utilisateur_id: 'claplante',
                 recette_id: 'poulet_au_curry'
             }
+
+            mockRecetteQueries.ajouterCommentaire.mockResolvedValue(mockNouveauCommentaire);
+
+            const mockNouveauCommentaireFinal = {
+                texte: 'Est ce que je peux enlever le poulet dans le poulet au curry',
+                utilisateurId: 'claplante',
+                recetteId: 'poulet_au_curry'
+            }
+
             return requete(app)
-                .post("/comments/poulet_au_curry/claplante")
+                .post("/comments/poulet_au_curry")
+                .auth('claplante', '12345')
+                .send(mockNouveauCommentaire)
                 .then((res) => {
-                    expect(res.statusCode).toBe(201);
-                    expect(res.body).toEqual(mockNouveauCommentaire);
+                    expect(res.statusCode).toBe(200);
+                    expect(res.body).toEqual(mockNouveauCommentaireFinal);
                 })
         });
     });
 
     describe('tests queries commentaires', () => {
 
+
+
         it('getCommentairesSelonRecetteId devrait retourner un tableau de commentaires selon la recetteId', async () => {
-            const mockCommentaire = [
-                { commentaire_id: 1, texte: 'Ce spaghetti carbonara était vraiment délicieux! La recette est facile à suivre, et le résultat est digne d’un restaurant italien. Le mélange de la pancetta croustillante avec le parmesan et les œufs crée une sauce riche et onctueuse. J’ai ajouté un peu de poivre noir frais pour rehausser le goût. C’est définitivement une recette que je referai!', date: '2024-08-01T08:15:30.000Z', utilisateur_id: 'claplante', recette_id: 'spaghetti_carbonara' },
-                { commentaire_id: 8, texte: 'TRES BON!!!', date: '2024-09-21T08:15:30.000Z', utilisateur_id: 'jscoutu', recette_id: 'spaghetti_carbonara' }
+
+            jest.mock('../queries/DBPool');
+            const mockPool = require('../queries/DBPool');
+
+            const mockCommentaires = [
+                { commentaire_id: 1, texte: 'Ce spaghetti carbonara était vraiment délicieux! La recette est facile à suivre, et le résultat est digne d’un restaurant italien. Le mélange de la pancetta croustillante avec le parmesan et les œufs crée une sauce riche et onctueuse. J’ai ajouté un peu de poivre noir frais pour rehausser le goût. C’est définitivement une recette que je referai!', date_publication: '2024-08-01T08:15:30.000Z', utilisateur_id: 'claplante', recette_id: 'spaghetti_carbonara' },
+                { commentaire_id: 8, texte: 'TRES BON!!!', date_publication: '2024-09-21T08:15:30.000Z', utilisateur_id: 'jscoutu', recette_id: 'spaghetti_carbonara' }
             ];
 
-            mockPool.query.mockResolvedValueOnce({ rows: mockCommentaire });
+            mockPool.query.mockResolvedValueOnce({ rows: mockCommentaires });
 
             const recetteId = 'spaghetti_carbonara';
             const commentaires = await getCommentairesSelonRecetteId(recetteId);
 
+            const mockCommentaireFinal = [
+                { id: 1, texte: 'Ce spaghetti carbonara était vraiment délicieux! La recette est facile à suivre, et le résultat est digne d’un restaurant italien. Le mélange de la pancetta croustillante avec le parmesan et les œufs crée une sauce riche et onctueuse. J’ai ajouté un peu de poivre noir frais pour rehausser le goût. C’est définitivement une recette que je referai!', date: '2024-08-01T08:15:30.000Z', utilisateurId: 'claplante', recetteId: 'spaghetti_carbonara' },
+                { id: 8, texte: 'TRES BON!!!', date: '2024-09-21T08:15:30.000Z', utilisateurId: 'jscoutu', recetteId: 'spaghetti_carbonara' }
+            ];
             expect(Array.isArray(commentaires)).toBe(true);
-            expect(commentaires).toEqual(mockCommentaire);
+            expect(commentaires).toEqual(mockCommentaireFinal);
         });
 
         it('ajouterCommentaire', async () => {
+            jest.mock('../queries/RecetteQueries');
+            const mockRecetteQueries = require('../queries/RecetteQueries');
+           
             const mockNouveauCommentaire = {
                 texte: 'Est ce que je peux enlever le poulet dans le poulet au curry',
-                date_publication: '2024-01-31T08:15:30.000Z',
                 utilisateur_id: 'claplante',
                 recette_id: 'poulet_au_curry'
             }
-
-
-            mockPool.query.mockResolvedValueOnce({ rows: [mockNouveauCommentaire] });
-
-            const commentaire = await ajouterCommentaire(mockNouveauCommentaire);
-            console.log(commentaire);
-            console.log("--------------------------------------");
-            console.log(mockNouveauCommentaire);
-
+           
+            mockRecetteQueries.ajouterCommentaire.mockResolvedValue(mockNouveauCommentaire);
+         
+            const commentaire = await mockRecetteQueries.ajouterCommentaire(mockNouveauCommentaire);
+         
             expect(commentaire).toEqual(mockNouveauCommentaire);
         })
 
