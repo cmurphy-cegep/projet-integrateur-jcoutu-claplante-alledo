@@ -66,6 +66,10 @@ export default {
 }
 
 .recette-description {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 650px;
   margin-top: 5px;
   font-size: 0.9em;
   color: #666;
