@@ -1,4 +1,4 @@
-
+const nock = require('nock');
 const requete = require('supertest');
 const app = require('../app');
 const { getCommentairesSelonRecetteId } = require('../queries/RecetteQueries');
@@ -16,6 +16,9 @@ describe("tests commentaires", function () {
                 { id: 8, texte: 'TRES BON!!!', date: '2024-09-21T08:15:30.000Z', utilisateurId: 'jscoutu', recetteId: 'spaghetti_carbonara' }
             ];
 
+            nock('http://localhost:3000')
+            .get('/comments/spaghetti_carbonara')
+            .reply(200, mockCommentaires);
             
             return requete(app)
                 .get("/comments/spaghetti_carbonara")
@@ -85,7 +88,7 @@ describe("tests commentaires", function () {
             mockPool.query.mockResolvedValueOnce({ rows: mockCommentaires });
 
             const recetteId = 'spaghetti_carbonara';
-            const commentaires = await getCommentairesSelonRecetteId(recetteId);
+            const commentaires = await getCommentairesSelonRecetteId(recetteId); // mock
 
             const mockCommentaireFinal = [
                 { id: 1, texte: 'Ce spaghetti carbonara était vraiment délicieux! La recette est facile à suivre, et le résultat est digne d’un restaurant italien. Le mélange de la pancetta croustillante avec le parmesan et les œufs crée une sauce riche et onctueuse. J’ai ajouté un peu de poivre noir frais pour rehausser le goût. C’est définitivement une recette que je referai!', date: '2024-08-01T08:15:30.000Z', utilisateurId: 'claplante', recetteId: 'spaghetti_carbonara' },
