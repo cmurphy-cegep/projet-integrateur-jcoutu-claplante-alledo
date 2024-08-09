@@ -12,7 +12,8 @@ router.get('/:id', (req, res, next) => {
     const id = req.params.id;
     console.log("idRecette:", id);
     recetteQueries.getEtapesSelonRecetteId(id).then(etapes => {
-        if (etapes) {
+        if (etapes.length > 0) {
+            // Array vide = true donc if(etapes) et etapes == {} = true
             res.json(etapes);
         } else {
             return next(new HttpError(404, `Liste d'étapes ${id} introuvable`));
