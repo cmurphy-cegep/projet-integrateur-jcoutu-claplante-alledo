@@ -8,9 +8,9 @@
 </template>
 
 <script>
-import ItemCatalogue from "@/pages/itemCatalogue.vue";
+import ItemCatalogue from './ItemCatalogue.vue';
 import LoadingSpinner from '../components/LoadingSpinner.vue';
-import {fetchRecettes} from '../RecetteService';
+import { fetchRecettes } from '../RecetteService';
 
 export default {
   components: {

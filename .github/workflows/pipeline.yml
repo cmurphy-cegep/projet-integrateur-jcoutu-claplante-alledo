@@ -1,0 +1,61 @@
+name: Deployement pipeline
+
+on: push
+
+jobs:
+  simple_deployment_pipeline:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres
+
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports: 
+          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install frontend dependencies
+        run: |
+          cd ./projet_frontend/
+          npm install
+
+      - name: Install backend dependencies
+        run: |
+          cd ./projet_backend/
+          npm install
+
+      - name: Fix frontend vulnerabilities
+        run: |
+          cd ./projet_frontend/
+          npm audit fix
+
+      - name: Fix backend vulnerabilities
+        run: |
+          cd ./projet_backend/
+          npm audit fix
+
+      - name: Connect to PostgresSQL
+        run: |
+          cd ./projet_backend/ 
+          node clients.js
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+
+      - name: Run build
+        run: |
+          cd ./projet_frontend/
+          npm run build
+
+      # - name: Run test
+      #   run: npm run test
+      # - name: Run eslint
+      #   run: npm run lint
