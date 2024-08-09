@@ -63,6 +63,11 @@ jobs:
           cd ./projet_frontend/
           npm run build
 
+      -name: Install superstest
+        run: |
+          cd ./projet_backend/
+          npm install supertest --save-dev
+
       - name: Jest test
         run: |
           cd ./projet_backend/
