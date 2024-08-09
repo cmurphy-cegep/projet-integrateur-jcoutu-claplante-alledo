@@ -63,6 +63,9 @@ jobs:
           cd ./projet_frontend/
           npm run build
 
+      -name: Install nock
+        run: npm install nock --save-dev
+
       - name: Jest test
         run: |
           cd ./projet_backend/
