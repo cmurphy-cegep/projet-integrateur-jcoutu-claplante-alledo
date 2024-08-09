@@ -10,6 +10,7 @@ const recetteQueries = require("../queries/RecetteQueries");
 
 router.get('/:id', (req, res, next) => {
     const id = req.params.id;
+    console.log("idRecette:", id);
     recetteQueries.getIngredientsSelonRecetteId(id).then(ingredients => {
         if (ingredients) {
             res.json(ingredients);
