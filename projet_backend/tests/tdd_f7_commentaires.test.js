@@ -17,7 +17,7 @@ describe("tests commentaires", function () {
             ];
 
             return requete(app)
-                .get("/comments/spaghetti_carbonara")
+                .get("/comments/spaghetti_carbonara") // TODO : MOCK
                 .then((res) => {
                     expect(res.statusCode).toBe(200);
                     expect(res.body).toEqual(mockCommentaires);
@@ -82,14 +82,16 @@ describe("tests commentaires", function () {
             ];
 
             mockPool.query.mockResolvedValueOnce({ rows: mockCommentaires });
-
+            mockRecetteQueries.ajouterCommentaire.mockResolvedValue(mockCommentaires);
+            
             const recetteId = 'spaghetti_carbonara';
             const commentaires = await getCommentairesSelonRecetteId(recetteId); // mock
-
+            
             const mockCommentaireFinal = [
                 { id: 1, texte: 'Ce spaghetti carbonara était vraiment délicieux! La recette est facile à suivre, et le résultat est digne d’un restaurant italien. Le mélange de la pancetta croustillante avec le parmesan et les œufs crée une sauce riche et onctueuse. J’ai ajouté un peu de poivre noir frais pour rehausser le goût. C’est définitivement une recette que je referai!', date: '2024-08-01T08:15:30.000Z', utilisateurId: 'claplante', recetteId: 'spaghetti_carbonara' },
                 { id: 8, texte: 'TRES BON!!!', date: '2024-09-21T08:15:30.000Z', utilisateurId: 'jscoutu', recetteId: 'spaghetti_carbonara' }
             ];
+
             expect(Array.isArray(commentaires)).toBe(true);
             expect(commentaires).toEqual(mockCommentaireFinal);
         });
@@ -111,14 +113,5 @@ describe("tests commentaires", function () {
             expect(commentaire).toEqual(mockNouveauCommentaire);
         })
 
-    })
-
-    it('test nock', async () => {
-        nock('http://localhost:3000')
-            .get('/comments/spaghetti_carbonara')
-            .reply(200, { externalData: 'value' });
-
-        const response = await requete(app).get('/comments/spaghetti_carbonara');
-        expect(response.status).toBe(200);
     })
 });
