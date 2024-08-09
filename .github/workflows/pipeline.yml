@@ -58,6 +58,11 @@ jobs:
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
 
+      -name: Install superstest
+        run: |
+          cd ./projet_backend/
+          npm install supertest --save-dev
+
       - name: Run build
         run: |
           cd ./projet_frontend/

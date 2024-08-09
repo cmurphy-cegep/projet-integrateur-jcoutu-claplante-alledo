@@ -26,7 +26,6 @@ router.post('/:recetteId',
     passport.authenticate('basic', { session: false }),
     (req, res, next) => {
         const utilisateur = req.user;
-        console.log(req.params);
         if (!utilisateur) {
             return next(new HttpError (403, "Droit d`accès requis" ));
         }
