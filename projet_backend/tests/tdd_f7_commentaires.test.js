@@ -16,10 +16,6 @@ describe("tests commentaires", function () {
                 { id: 8, texte: 'TRES BON!!!', date: '2024-09-21T08:15:30.000Z', utilisateurId: 'jscoutu', recetteId: 'spaghetti_carbonara' }
             ];
 
-            nock('http://localhost:3000')
-            .get('/comments/spaghetti_carbonara')
-            .reply(200, mockCommentaires);
-            
             return requete(app)
                 .get("/comments/spaghetti_carbonara")
                 .then((res) => {
@@ -101,19 +97,28 @@ describe("tests commentaires", function () {
         it('ajouterCommentaire', async () => {
             jest.mock('../queries/RecetteQueries');
             const mockRecetteQueries = require('../queries/RecetteQueries');
-           
+
             const mockNouveauCommentaire = {
                 texte: 'Est ce que je peux enlever le poulet dans le poulet au curry',
                 utilisateur_id: 'claplante',
                 recette_id: 'poulet_au_curry'
             }
-           
+
             mockRecetteQueries.ajouterCommentaire.mockResolvedValue(mockNouveauCommentaire);
-         
+
             const commentaire = await mockRecetteQueries.ajouterCommentaire(mockNouveauCommentaire);
-         
+
             expect(commentaire).toEqual(mockNouveauCommentaire);
         })
 
+    })
+
+    it('test nock', async () => {
+        nock('http://localhost:3000')
+            .get('/comments/spaghetti_carbonara')
+            .reply(200, { externalData: 'value' });
+
+        const response = await requete(app).get('/comments/spaghetti_carbonara');
+        expect(response.status).toBe(200);
     })
 });
