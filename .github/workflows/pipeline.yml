@@ -63,9 +63,9 @@ jobs:
           cd ./projet_frontend/
           npm run build
 
-      # - name: Jest test
-      #   run: |
-      #     cd ./projet_backend/
-      #     npm run test
+      - name: Jest test
+        run: |
+          cd ./projet_backend/
+          npm run test
       # - name: Run eslint
       #   run: npm run lint
