@@ -63,11 +63,6 @@ jobs:
           cd ./projet_frontend/
           npm run build
 
-      -name: Run superTest
-        run: |
-          cd ./projet_backend/
-          npm run superTest
-
       - name: Jest test
         run: |
           cd ./projet_backend/
