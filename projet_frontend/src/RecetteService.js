@@ -37,12 +37,6 @@ const convertirEnEtape = jsonEtape => {
     };
 };
 
-/**
- * Récupère depuis l'API back-end une recette individuelle
- * 
- * @param {String} recetteId L'identifiant du produit à récupérer
- * @returns Promesse permettant d'obtenir le produit demandé
- */
 export async function fetchRecette(recetteId) {
     const reponse = await fetch(`/api/recettes/${recetteId}`);
 
