@@ -82,20 +82,38 @@ describe("tests commentaires", function () {
 
         it("POST /:id devrait retourner 404 mauvais RecetteID", async () => {
 
+            const Mockcommentaire =
+            {
+                id: "lasagnes",
+                texte: "allo",
+                date: "2004",
+                utilisateur_id: "alledo",
+                recette_id: ""
+            };
+
+            mockRecetteQueries.ajouterCommentaire.mockResolvedValue(Mockcommentaire);
+
+            const response = await requete(app).post('/comments/lasagnes')
+                .auth('alledo', '12345')
+                .send(Mockcommentaire);
+
+            expect(response.status).toBe(400);
         })
+    
 
-        it("POST /:id devrait retourner 404 not found", async () => {
-
-        })
-
-        it("POST /:id devrait retourner 404 Impossible d'ajouter le commentaire", async () => {
-
-        })
-
-    });
-
-    describe('tests queries commentaires', () => {
-
+    it("POST /:id devrait retourner 404 not found", async () => {
 
     })
+
+    it("POST /:id devrait retourner 404 Impossible d'ajouter le commentaire", async () => {
+
+    })
+
+})
+    
+    describe('tests queries commentaires', () => {
+    
+    
+    });
+
 });
