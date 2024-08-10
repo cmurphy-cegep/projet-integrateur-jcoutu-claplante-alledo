@@ -13,13 +13,16 @@ describe("tests commentaires", function () {
     describe('tests routes commentaires', () => {
         jest.mock('../queries/RecetteQueries');
 
-        it("GET / devrait retourner 200", async () => {
-            const response = await requete(app).get('/comments');
+        it("GET /:id devrait retourner 200", async () => {
+            const Mockcommentaire = {
+                id: row.commentaire_id,
+                texte: row.texte,
+                date: row.date_publication.toISOString(),
+                utilisateurId: row.utilisateur_id,
+                recetteId: row.recette_id
+            };
+            const response = await requete(app).get('/comments/lasagnes');
             expect(response.status).toBe(200);
-        })
-
-        it("GET /:id devrait retourner 200", () => {
-
         })
 
         it("GET /:id devrait retourner 404 ID not found", () => {
