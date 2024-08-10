@@ -17,13 +17,14 @@ describe("tests commentaires", function () {
 
             const Mockcommentaire = [
                 {
-                    id: "lasagnes",
+                    id: "1",
                     texte: "allo",
                     date: "2004",
                     utilisateur_id: "alex",
                     recette_id: "lasagnes"
                 }];
 
+            
             mockRecetteQueries.getCommentairesSelonRecetteId.mockResolvedValue(Mockcommentaire);
 
             const response = await requete(app).get('/comments/lasagnes');
@@ -33,7 +34,6 @@ describe("tests commentaires", function () {
         it("GET /:id devrait retourner 404 ID not found", async () => {
 
             const Mockcommentaire = [];
-            console.log(mockRecetteQueries);
             mockRecetteQueries.getCommentairesSelonRecetteId.mockResolvedValue(Mockcommentaire);
 
             const response = await requete(app).get('/comments/lasagnes');
@@ -44,13 +44,14 @@ describe("tests commentaires", function () {
 
             const Mockcommentaire =
             {
-                id: "lasagnes",
+                id: "1",
                 texte: "allo",
                 date: "2004",
                 utilisateur_id: "alledo",
                 recette_id: "lasagnes"
             };
 
+            mockRecetteQueries.getRecetteById.mockResolvedValue(Mockcommentaire);
             mockRecetteQueries.ajouterCommentaire.mockResolvedValue(Mockcommentaire);
 
             const response = await requete(app).post('/comments/lasagnes')
@@ -64,7 +65,7 @@ describe("tests commentaires", function () {
 
             const Mockcommentaire =
             {
-                id: "lasagnes",
+                id: "1",
                 texte: "allo",
                 date: "2004",
                 utilisateur_id: "asd",
@@ -84,7 +85,7 @@ describe("tests commentaires", function () {
 
             const Mockcommentaire =
             {
-                id: "lasagnes",
+                id: "1",
                 texte: "allo",
                 date: "2004",
                 utilisateur_id: "alledo",
@@ -99,21 +100,32 @@ describe("tests commentaires", function () {
 
             expect(response.status).toBe(400);
         })
-    
 
-    it("POST /:id devrait retourner 404 not found", async () => {
+
+        it("POST /:id devrait retourner 404 not found", async () => {
+            const Mockcommentaire =
+            {
+                id: "1",
+                texte: "allo",
+                date: "2004",
+                utilisateur_id: "alledo",
+                recette_id: "lasagnes"
+            };
+
+            mockRecetteQueries.getRecetteById.mockResolvedValue(undefined);
+
+            const response = await requete(app).post('/comments/lasagnes')
+                .auth('alledo', '12345')
+                .send(Mockcommentaire);
+
+            expect(response.status).toBe(404);
+        })
 
     })
 
-    it("POST /:id devrait retourner 404 Impossible d'ajouter le commentaire", async () => {
-
-    })
-
-})
-    
     describe('tests queries commentaires', () => {
-    
-    
+
+
     });
 
 });
