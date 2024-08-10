@@ -28,6 +28,7 @@ router.post('/:recetteId',
     (req, res, next) => {
         const utilisateur = req.user;
         console.log(req.params);
+        console.log(req.user);
         if (!utilisateur) {
             return next(new HttpError (403, "Droit d`accès requis" ));
         }
@@ -50,7 +51,7 @@ router.post('/:recetteId',
                 return next(new HttpError(404, `Impossible d'ajouter le commentaire`));
             }
  
-            res.json(result);
+            res.type('json').json(result);
         }).catch(err => {
             return next(err);
         });

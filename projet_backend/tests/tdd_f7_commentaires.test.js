@@ -17,25 +17,47 @@ describe("tests commentaires", function () {
 
             const Mockcommentaire = [
                 {
-                id: "lasagnes",
-                texte: "allo",
-                date: "2004",
-                utilisateurId: "alex",
-                recetteId: "lasagnes"
-            }];
-            console.log(mockRecetteQueries);
+                    id: "lasagnes",
+                    texte: "allo",
+                    date: "2004",
+                    utilisateur_id: "alex",
+                    recette_id: "lasagnes"
+                }];
+
             mockRecetteQueries.getCommentairesSelonRecetteId.mockResolvedValue(Mockcommentaire);
 
             const response = await requete(app).get('/comments/lasagnes');
             expect(response.status).toBe(200);
         })
 
-        it("GET /:id devrait retourner 404 ID not found", () => {
+        it("GET /:id devrait retourner 404 ID not found", async () => {
 
+            const Mockcommentaire = [];
+            console.log(mockRecetteQueries);
+            mockRecetteQueries.getCommentairesSelonRecetteId.mockResolvedValue(Mockcommentaire);
+
+            const response = await requete(app).get('/comments/lasagnes');
+            expect(response.status).toBe(404);
         })
 
-        it("POST /:id devrait retourner 200", () => {
+        it("POST /:id devrait retourner 200", async () => {
 
+            const Mockcommentaire =
+            {
+                id: "lasagnes",
+                texte: "allo",
+                date: "2004",
+                utilisateur_id: "alledo",
+                recette_id: "lasagnes"
+            };
+
+            mockRecetteQueries.ajouterCommentaire.mockResolvedValue(Mockcommentaire);
+
+            const response = await requete(app).post('/comments/lasagnes')
+                .auth('alledo', '12345')
+                .send(Mockcommentaire);
+
+            expect(response.status).toBe(200);
         })
 
         it("POST /:id devrait retourner 403 Droit acces", () => {
@@ -61,7 +83,6 @@ describe("tests commentaires", function () {
     });
 
     describe('tests queries commentaires', () => {
-        jest.mock('../queries/DBPool');
 
 
     })

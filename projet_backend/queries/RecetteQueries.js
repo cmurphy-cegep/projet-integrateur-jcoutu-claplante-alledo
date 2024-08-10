@@ -131,7 +131,7 @@ const ajouterCommentaire = async (commentaire) => {
          RETURNING *`,
         [commentaire.texte, date_publication, commentaire.utilisateurId, commentaire.recetteId]
     );
-
+    console.log(result);
     const row = result.rows[0];
     if (row) {
         const commentaire = {
