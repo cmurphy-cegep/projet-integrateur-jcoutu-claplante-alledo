@@ -1,7 +1,8 @@
-const requete = require('supertest');
 const app = require('../app');
+const requete = require('supertest');
+jest.mock('../queries/RecetteQueries');
+const mockRecetteQueries = require('../queries/RecetteQueries');
 const { getCommentairesSelonRecetteId } = require('../queries/RecetteQueries');
-const { ajouterCommentaire } = require('../queries/RecetteQueries');
 
 
 describe("tests commentaires", function () {
@@ -11,16 +12,19 @@ describe("tests commentaires", function () {
     });
     
     describe('tests routes commentaires', () => {
-        jest.mock('../queries/RecetteQueries');
 
+        
         it("GET /:id devrait retourner 200", async () => {
             const Mockcommentaire = {
-                id: row.commentaire_id,
-                texte: row.texte,
-                date: row.date_publication.toISOString(),
-                utilisateurId: row.utilisateur_id,
-                recetteId: row.recette_id
+                id: "lasagnes",
+                texte: "allo",
+                utilisateurId: "alex",
+                recetteId: "lasagnes"
             };
+            
+            
+            mockRecetteQueries.getCommentairesSelonRecetteId.mockResolvedValue(Mockcommentaire);
+
             const response = await requete(app).get('/comments/lasagnes');
             expect(response.status).toBe(200);
         })
