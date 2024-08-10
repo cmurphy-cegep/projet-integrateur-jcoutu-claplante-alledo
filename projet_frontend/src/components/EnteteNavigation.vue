@@ -45,6 +45,7 @@ export default {
 }
 
 .black-title {
+    font-size: 2.25vw;
     color: black;
 }
 
