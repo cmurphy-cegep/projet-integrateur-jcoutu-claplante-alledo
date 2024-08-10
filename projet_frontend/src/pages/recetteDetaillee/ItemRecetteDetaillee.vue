@@ -1,8 +1,8 @@
 <template>
     <LoadingSpinner :loading="loading" :error="loadError" :errorMessage="errorMessage" />
     <div v-if="recette && ingredients && etapes" class="recette">
-        <div class="recette-main-container">
-            <div class="recette-container1">
+        <div class="recette-conteneur-principal">
+            <div class="recette-conteneur">
                 <div class="image-redimensionnee">
                     <img v-bind:src="imageSrc" />
                 </div>
@@ -10,9 +10,9 @@
                     <div class="recette-desc-longue" v-html="recette.desc"></div>
                 </div>
             </div>
-            <div class="recette-container2">
+            <div class="recette-conteneur2">
                 <h2 class="recette-titre"> {{ recette.nom }}</h2>
-                <div class="recette-container3">
+                <div class="recette-conteneur3">
                     <div class="recette-preparation">
                         <label for="recette-cuisson">Préparation : </label>
                         {{ recette.preparation }}
@@ -132,7 +132,7 @@ export default {
 }
 </script>
 <style scoped>
-.recette-main-container {
+.recette-conteneur-principal {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
@@ -141,7 +141,7 @@ export default {
     /* Utilisez la hauteur de la fenêtre */
 }
 
-.recette-container1 {
+.recette-conteneur {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -151,7 +151,7 @@ export default {
     /* Utilisez des unités relatives pour le padding */
 }
 
-.recette-container2 {
+.recette-conteneur2 {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -161,7 +161,7 @@ export default {
     /* Utilisez des unités relatives pour le padding */
 }
 
-.recette-container3 {
+.recette-conteneur3 {
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -184,9 +184,8 @@ export default {
 .image-redimensionnee img {
     width: 100%;
     height: auto;
-    /* Ajoutez ces styles pour s'assurer que l'image se redimensionne correctement */
     display: block;
-    object-fit: cover; /* Ajustez cette propriété selon vos besoins (cover, contain, etc.) */
+    object-fit: cover;
 }
 .recette-desc-longue {
     margin-top: 2vh;
