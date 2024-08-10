@@ -60,23 +60,35 @@ describe("tests commentaires", function () {
             expect(response.status).toBe(200);
         })
 
-        it("POST /:id devrait retourner 403 Droit acces", () => {
+        it("POST /:id devrait retourner 403 mauvais UtilisateurID", async () => {
+
+            const Mockcommentaire =
+            {
+                id: "lasagnes",
+                texte: "allo",
+                date: "2004",
+                utilisateur_id: "asd",
+                recette_id: "lasagnes"
+            };
+
+            mockRecetteQueries.ajouterCommentaire.mockResolvedValue(Mockcommentaire);
+
+            const response = await requete(app).post('/comments/lasagnes')
+                .auth('alledo', '12345')
+                .send(Mockcommentaire);
+
+            expect(response.status).toBe(403);
+        })
+
+        it("POST /:id devrait retourner 404 mauvais RecetteID", async () => {
 
         })
 
-        it("POST /:id devrait retourner 403 mauvais UtilisateurID", () => {
+        it("POST /:id devrait retourner 404 not found", async () => {
 
         })
 
-        it("POST /:id devrait retourner 404 mauvais RecetteID", () => {
-
-        })
-
-        it("POST /:id devrait retourner 404 not found", () => {
-
-        })
-
-        it("POST /:id devrait retourner 404 Impossible d'ajouter le commentaire", () => {
+        it("POST /:id devrait retourner 404 Impossible d'ajouter le commentaire", async () => {
 
         })
 
