@@ -19,7 +19,6 @@ describe("tests commentaires", function () {
                 {
                     id: "1",
                     texte: "allo",
-                    date: "2004",
                     utilisateur_id: "alex",
                     recette_id: "lasagnes"
                 }];
@@ -46,7 +45,6 @@ describe("tests commentaires", function () {
             {
                 id: "1",
                 texte: "allo",
-                date: "2004",
                 utilisateur_id: "alledo",
                 recette_id: "lasagnes"
             };
@@ -67,7 +65,6 @@ describe("tests commentaires", function () {
             {
                 id: "1",
                 texte: "allo",
-                date: "2004",
                 utilisateur_id: "asd",
                 recette_id: "lasagnes"
             };
@@ -81,7 +78,7 @@ describe("tests commentaires", function () {
             expect(response.status).toBe(403);
         })
 
-        it("POST /:id devrait retourner 404 mauvais RecetteID", async () => {
+        it("POST /:id devrait retourner 400 RecetteId requis", async () => {
 
             const Mockcommentaire =
             {
@@ -124,6 +121,7 @@ describe("tests commentaires", function () {
     })
 
     describe('tests queries commentaires', () => {
+        jest.mock('../queries/DBPool');
 
 
     });
