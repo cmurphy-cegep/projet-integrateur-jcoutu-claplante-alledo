@@ -174,10 +174,10 @@ export default {
 }
 
 .image-redimensionnee {
-    max-width: 95%;
+    max-width: 100%;
     height: auto;
     flex: 0 0 auto;
-    margin-right: 2vw;
+    
     /* Utilisez des unités relatives pour la marge */
 }
 
@@ -192,7 +192,11 @@ export default {
     /* Utilisez des unités relatives pour la marge */
     margin-bottom: 2vh;
     /* Utilisez des unités relatives pour la marge */
-    max-width: 95%;
+    max-width: 100%;
+}
+.recette-desc-longue br {
+    margin-bottom: 1em !important; /* Ajustez cette valeur selon l'espace souhaité */
+    display: block !important; /* Assurez-vous que le br est traité comme un élément de bloc */
 }
 
 .recette-titre {
