@@ -12,6 +12,7 @@ const recetteQueries = require("../queries/RecetteQueries");
 router.get('/:id', (req, res, next) => {
     const id = req.params.id;
     recetteQueries.getCommentairesSelonRecetteId(id).then(commentaires => {
+        console.log(commentaires);
         if (commentaires.length > 0) {
             res.json(commentaires);
         } else {
