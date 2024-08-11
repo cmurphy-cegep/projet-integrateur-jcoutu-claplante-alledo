@@ -112,7 +112,7 @@ const getCommentairesSelonRecetteId = async (recetteId) => {
         const commentaire = {
             id: row.commentaire_id,
             texte: row.texte,
-            date: row.date_publication.toISOString(),
+            date: row.date_publication,
             utilisateurId: row.utilisateur_id,
             recetteId: row.recette_id
         };
@@ -136,6 +136,7 @@ const ajouterCommentaire = async (commentaire) => {
     if (row) {
         const commentaire = {
             texte: row.texte,
+            date: row.date_publication,
             utilisateurId: row.utilisateur_id,
             recetteId: row.recette_id
         };
