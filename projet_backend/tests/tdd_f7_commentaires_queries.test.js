@@ -64,7 +64,6 @@ describe('tests queries commentaires', () => {
         mockPool.query.mockResolvedValue({ rows: [mockNouveauCommentaire] });
 
         const commentaire = await ajouterCommentaire(mockNouveauCommentaire);
-        console.log(commentaire);
 
         expect(commentaire.texte).toEqual(mockNouveauCommentaire.texte);
         expect(commentaire.date).toBeDefined();
