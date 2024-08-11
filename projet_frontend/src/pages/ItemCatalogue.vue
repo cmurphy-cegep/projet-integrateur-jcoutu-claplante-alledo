@@ -32,7 +32,8 @@ export default {
     },
     imageSrc() {
       return `data:image/png;base64,${this.image}`;
-    }
+    },
+    
   }
 }
 </script>

@@ -15,6 +15,7 @@ const compteUtilisateurQueries = require("./queries/CompteUtilisateurQueries");
 const recetteRouter = require('./routes/recetteRouter');
 const ingredientRouter = require('./routes/ingredientRouter');
 const etapeRouter = require('./routes/etapeRouter');
+const commentaireRouter = require('./routes/commentaireRouter');
 
 const app = express();
 
@@ -71,6 +72,7 @@ passport.use(new BasicStrategyModified((nomUtilisateur, motDePasse, authResult) 
 app.use('/recettes', recetteRouter);
 app.use('/ingredients', ingredientRouter);
 app.use('/etapes', etapeRouter);
+app.use('/comments', commentaireRouter);
 
 
  app.get('/connexion',

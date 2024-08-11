@@ -1,5 +1,6 @@
 const fs = require('fs');
 const pool = require('./DBPool');
+const { DateTime } = require('luxon');
 
 const transformImageTo64 = (imageName) => {
     const imagePath = `./images/recettes/${imageName}`
@@ -59,7 +60,6 @@ const getRecetteById = async (recetteId) => {
 };
 exports.getRecetteById = getRecetteById;
 
-
 const getIngredientsSelonRecetteId = async (recetteId) => {
     const result = await pool.query(
         `SELECT r.ingredient_id, nom, quantite, unite_mesure 
@@ -89,7 +89,6 @@ const getEtapesSelonRecetteId = async (recetteId) => {
         WHERE recette_id = $1`,
         [recetteId]
     );
-
     return result.rows.map(row => {
         const etape = {
             id: row.etape_id,
@@ -100,3 +99,48 @@ const getEtapesSelonRecetteId = async (recetteId) => {
     });
 };
 exports.getEtapesSelonRecetteId = getEtapesSelonRecetteId;
+
+
+const getCommentairesSelonRecetteId = async (recetteId) => {
+    const result = await pool.query(
+        `SELECT commentaire_id, texte, date_publication, utilisateur_id, recette_id 
+        FROM commentaire
+        WHERE recette_id = $1`,
+        [recetteId]
+    );
+    return result.rows.map(row => {
+        const commentaire = {
+            id: row.commentaire_id,
+            texte: row.texte,
+            date: row.date_publication,
+            utilisateurId: row.utilisateur_id,
+            recetteId: row.recette_id
+        };
+        return commentaire;
+    });
+};
+exports.getCommentairesSelonRecetteId = getCommentairesSelonRecetteId;
+
+const ajouterCommentaire = async (commentaire) => {
+
+    const date_publication = DateTime.now().toString();
+
+    const result = await pool.query(
+        `INSERT INTO commentaire (texte, date_publication, utilisateur_id, recette_id ) 
+         VALUES ($1, $2, $3, $4)
+         RETURNING *`,
+        [commentaire.texte, date_publication, commentaire.utilisateurId, commentaire.recetteId]
+    );
+
+    const row = result.rows[0];
+    if (row) {
+        const commentaire = {
+            texte: row.texte,
+            date: row.date_publication,
+            utilisateurId: row.utilisateur_id,
+            recetteId: row.recette_id
+        };
+        return commentaire;
+    }
+};
+exports.ajouterCommentaire = ajouterCommentaire;
