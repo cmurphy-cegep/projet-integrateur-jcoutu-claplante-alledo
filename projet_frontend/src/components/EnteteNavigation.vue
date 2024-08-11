@@ -9,7 +9,6 @@
             <div class="nav">
                 <span v-if="session.user && session.user.estAdmin"> |
                     <router-link to="/admin/nouvelle-recette">Nouvelle recette</router-link>
-                    <!-- rajouter image pour admin -->
                 </span>
             </div>
 
@@ -39,11 +38,12 @@ export default {
 }
 </script>
 
-<style scoped>  
+<style scoped>
 .admin-image {
-  width: 50px;
-  height: auto;
+    width: 50px;
+    height: auto;
 }
+
 .black-title {
     color: black;
 }

@@ -1,42 +1,43 @@
 <template>
     <LoadingSpinner :loading="loading" :error="loadError" :errorMessage="errorMessage" />
     <div v-if="recette && ingredients && etapes" class="recette">
-        <img v-bind:src="imageSrc" />
         <div class="recette-detaillee" v-if="!edition">
+            <img class="image-grande" v-bind:src="imageSrc" />
+            
+            <div class="recette-desc-longue" v-html="recette.desc"></div>
 
-            <div class="recette-desc-longue" v-html = "recette.desc" ></div>
+            <div class="recette-colonne-droite">
+                <h2 class="recette-titre"> {{ recette.nom }}</h2>
 
-            <div class="recette-titre"> {{ recette.nom }}</div>
+                <table>
+                    <tr>
+                        <th>Préparation</th>
+                        <th>Cuisson</th>
+                        <th>Portions</th>
+                    </tr>
+                    <tr>
+                        <td>{{ recette.preparation }}</td>
+                        <td>{{ recette.cuisson }}</td>
+                        <td>{{ recette.portions }}</td>
+                    </tr>
+                </table>
 
-            <div class="recette-preparation">
-                <label for="recette-cuisson">Préparation : </label>
-                {{ recette.preparation }}
+                <br />
+                <label for="ingredients">Ingrédients : </label>
+                <ul class="recette-ingredients">
+                    <ListeIngredients v-if="!loading" v-for="ingredient in ingredients" :id="ingredient.idIngredient"
+                        :nom="ingredient.nom" :quantite="ingredient.quantite" :uniteMesure="ingredient.uniteMesure" />
+                </ul>
+
+                <label for="etapes">Étapes de préparation : </label>
+                <ol class="recette-etapes">
+                    <ListeEtapes v-if="!loading" v-for="etape in etapes" :id="etape.idEtape"
+                        :description="etape.description" :ordre="etape.ordre" />
+                </ol>
+                <button type="button" v-if="session.user && session.user.estAdmin" @click="enableEdit">Éditer</button>
             </div>
-
-            <div class="recette-cuisson">
-                <label for="recette-cuisson">Cuisson : </label> 
-                {{ recette.cuisson }}
-            </div>
-
-            <div class="recette-portions">
-                <label for="recette-portions">Portions : </label> 
-                {{ recette.portions }}
-            </div>
-
+            <!-- Ajouter l'affichage d'édition de la recette -->
         </div>
-
-        <ul class="recette-ingredients">
-            <ListeIngredients v-if="!loading" v-for="ingredient in ingredients" :id="ingredient.idIngredient"
-                :nom="ingredient.nom" :quantite="ingredient.quantite" :uniteMesure="ingredient.uniteMesure" />
-        </ul>
-
-        <ol class="recette-etapes">
-            <ListeEtapes v-if="!loading" v-for="etape in etapes" :id="etape.idEtape" :description="etape.description"
-                :ordre="etape.ordre" />
-        </ol>
-        <button type="button" v-if="session.user && session.user.estAdmin" @click="enableEdit">Éditer</button>
-
-        <!-- Ajouter l'affichage d'édition de la recette -->
     </div>
 </template>
 
@@ -105,9 +106,9 @@ export default {
         },
     },
     computed: {
-    imageSrc() {
-      return `data:image/png;base64,${this.recette.image}`;
-    }
+        imageSrc() {
+            return `data:image/png;base64,${this.recette.image}`;
+        }
     },
     watch: {
         id(nouvelId) {
@@ -119,3 +120,15 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.image-grande {
+    width: 45%;
+    height: auto;
+}
+
+.recette-desc-longue {
+    width: 45%;
+    height: auto;
+}
+</style>
