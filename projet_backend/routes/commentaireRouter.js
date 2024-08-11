@@ -26,12 +26,11 @@ router.post('/:recetteId',
     passport.authenticate('basic', { session: false }),
     (req, res, next) => {
         const utilisateur = req.user;
-        console.log(req.params);
         if (!utilisateur) {
-            return next(new HttpError (403, "Droit d`accès requis" ));
+            return next(new HttpError(403, "Droit d`accès requis"));
         }
         if (req.body.utilisateur_id !== utilisateur.compteUtilisateurId) {
-            return next(new HttpError (403, "Vous ne pouvez pas envoyer des commentaires sous un autre utilisateur id" ));
+            return next(new HttpError(403, "Vous ne pouvez pas envoyer des commentaires sous un autre utilisateur id"));
         }
         const idRecette = req.body.recette_id;
         if (!idRecette || idRecette === '') {
@@ -44,15 +43,23 @@ router.post('/:recetteId',
             recetteId: "" + req.body.recette_id
         };
 
-        recetteQueries.ajouterCommentaire(nouveauCommentaire).then(result => {
+        recetteQueries.getRecetteById(nouveauCommentaire.recetteId).then(result => {
             if (!result) {
-                return next(new HttpError(404, `Impossible d'ajouter le commentaire`));
+                return next(new HttpError(404, `Impossible de trouver la recette`));
             }
- 
-            res.json(result);
-        }).catch(err => {
-            return next(err);
-        });
+
+            recetteQueries.ajouterCommentaire(nouveauCommentaire).then(result => {
+                if (!result) {
+                    return next(new HttpError(404, `Impossible d'ajouter le commentaire`));
+                }
+
+                res.type('json').json(result);
+            }).catch(err => {
+                return next(err);
+            });
+
+        })
+
     });
 
 
