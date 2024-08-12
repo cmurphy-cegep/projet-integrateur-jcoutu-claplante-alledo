@@ -22,7 +22,11 @@ export default [
       "max-params": ["error", 6],
       "max-statements": ["error", 10],
       "no-var": "error",
-      "eqeqeq": ["error", "always"]
+      "eqeqeq": ["error", "always"],
+      "getter-return": "error",
+      "no-duplicate-imports": "error",
+      "require-await": "error",
+      "curly": "error"
     }
   }
 ];
