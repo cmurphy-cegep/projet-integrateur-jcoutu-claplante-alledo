@@ -15,15 +15,21 @@ const text = 'INSERT INTO student(firstname, lastname, age, address, email) VALU
 const values = ['Mona the', 'Octocat', 9, '88 Colin P Kelly Jr St, San Francisco, CA 94107, United States', 'octocat@github.com']
 
 pgclient.query(table, (err, res) => {
-    if (err) throw err
+    if (err) {
+        throw err
+    }
 });
 
 pgclient.query(text, values, (err, res) => {
-    if (err) throw err
+    if (err) {
+        throw err
+    }
 });
 
 pgclient.query('SELECT * FROM student', (err, res) => {
-    if (err) throw err
-    console.log(err, res.rows) // Print the data in student table
+    if (err) {
+        throw err
+    }
+    console.log(err, res.rows)
     pgclient.end()
 });

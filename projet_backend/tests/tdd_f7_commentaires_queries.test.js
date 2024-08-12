@@ -4,7 +4,7 @@ const { getCommentairesSelonRecetteId, ajouterCommentaire } = require('../querie
 
 
 
-describe('tests queries commentaires', () => {
+describe('tests queries commentaires', () => {  // eslint-disable-line max-lines-per-function
 
     it('getCommentairesSelonRecetteId devrait retourner un tableau de commentaires selon la recetteId', async () => {
 

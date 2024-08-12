@@ -3,7 +3,7 @@ const requete = require('supertest');
 jest.mock('../queries/RecetteQueries');
 const mockRecetteQueries = require('../queries/RecetteQueries');
 
-describe('tests routes commentaires', () => {
+describe('tests routes commentaires', () => { // eslint-disable-line max-lines-per-function
 
     beforeEach(() => {
         jest.resetAllMocks();
