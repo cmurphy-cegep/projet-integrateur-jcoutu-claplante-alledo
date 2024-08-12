@@ -66,6 +66,12 @@ jobs:
       - name: Jest test
         run: |
           cd ./projet_backend/
-          npm run test
-      # - name: Run eslint
-      #   run: npm run lint
+          npm run test --coverage
+
+      - name: Run eslint
+        run: npm run lint
+
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+          with:
+            github-token: ${{ secrets.GITHUB_TOKEN }}
