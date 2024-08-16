@@ -1,43 +1,54 @@
 <template>
     <LoadingSpinner :loading="loading" :error="loadError" :errorMessage="errorMessage" />
     <div v-if="recette && ingredients && etapes" class="recette">
-        <div class="recette-detaillee" v-if="!edition">
-            <img class="image-grande" v-bind:src="imageSrc" />
-            
-            <div class="recette-desc-longue" v-html="recette.desc"></div>
-
-            <div class="recette-colonne-droite">
-                <h2 class="recette-titre"> {{ recette.nom }}</h2>
-
-                <table>
-                    <tr>
-                        <th>Préparation</th>
-                        <th>Cuisson</th>
-                        <th>Portions</th>
-                    </tr>
-                    <tr>
-                        <td>{{ recette.preparation }}</td>
-                        <td>{{ recette.cuisson }}</td>
-                        <td>{{ recette.portions }}</td>
-                    </tr>
-                </table>
-
-                <br />
-                <label for="ingredients">Ingrédients : </label>
-                <ul class="recette-ingredients">
-                    <ListeIngredients v-if="!loading" v-for="ingredient in ingredients" :id="ingredient.idIngredient"
-                        :nom="ingredient.nom" :quantite="ingredient.quantite" :uniteMesure="ingredient.uniteMesure" />
-                </ul>
-
-                <label for="etapes">Étapes de préparation : </label>
-                <ol class="recette-etapes">
-                    <ListeEtapes v-if="!loading" v-for="etape in etapes" :id="etape.idEtape"
-                        :description="etape.description" :ordre="etape.ordre" />
-                </ol>
-                <button type="button" v-if="session.user && session.user.estAdmin" @click="enableEdit">Éditer</button>
+        <div class="recette-conteneur-principal">
+            <div class="recette-conteneur">
+                <div class="image-redimensionnee">
+                    <img v-bind:src="imageSrc" />
+                </div>
+                <div class="recette-detaillee" v-if="!edition">
+                    <div class="recette-desc-longue" v-html="recette.desc"></div>
+                </div>
             </div>
-            <!-- Ajouter l'affichage d'édition de la recette -->
+            <div class="recette-conteneur2">
+                <h2 class="recette-titre"> {{ recette.nom }}</h2>
+                <div class="recette-conteneur3">
+                    <div class="recette-preparation">
+                        <label for="recette-cuisson">Préparation : </label>
+                        {{ recette.preparation }}
+                    </div>
+                    <div class="recette-cuisson">
+                        <label for="recette-cuisson">Cuisson : </label>
+                        {{ recette.cuisson }}
+                    </div>
+                    <div class="recette-portions">
+                        <label for="recette-portions">Portions : </label>
+                        {{ recette.portions }}
+                    </div>
+                </div>
+                <h3 class="ingredient"> Ingrédients</h3>
+                <ul class="recette-ingredients">
+                    <ListeIngredients 
+                    v-if="!loading"
+                    v-for="ingredient in ingredients"
+                    :id="ingredient.idIngredient"
+                    :nom="ingredient.nom"
+                    :quantite="ingredient.quantite"
+                    :uniteMesure="ingredient.uniteMesure" />
+                </ul>
+                <h3 class="etape"> Étapes</h3>
+                <ol class="recette-etapes">
+                    <ListeEtapes
+                    v-if="!loading"
+                    v-for="etape in etapes"
+                    :id="etape.idEtape"
+                    :description="etape.description"
+                    :ordre="etape.ordre" />
+                </ol>
+            </div>
         </div>
+        <button type="button" v-if="session.user && session.user.estAdmin" @click="enableEdit">Éditer</button>
+        <!-- Ajouter l'affichage d'édition de la recette -->
     </div>
 </template>
 
@@ -120,15 +131,102 @@ export default {
     }
 }
 </script>
-
 <style scoped>
-.image-grande {
-    width: 45%;
-    height: auto;
+.recette-conteneur-principal {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    width: 100%;
+    height: 100vh;
+    /* Utilisez la hauteur de la fenêtre */
 }
 
-.recette-desc-longue {
-    width: 45%;
+.recette-conteneur {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 45vw;
+    /* Utilisez des unités relatives pour la largeur */
+    padding: 2vw;
+    /* Utilisez des unités relatives pour le padding */
+}
+
+.recette-conteneur2 {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 50vw;
+    /* Utilisez des unités relatives pour la largeur */
+    padding: 2vw;
+    /* Utilisez des unités relatives pour le padding */
+}
+
+.recette-conteneur3 {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    margin-top: 2vh;
+    /* Utilisez des unités relatives pour la marge */
+    border-bottom: 0.2vh solid black;
+    /* Utilisez des unités relatives pour la bordure */
+    border-top: 0.2vh solid black;
+    /* Utilisez des unités relatives pour la bordure */
+}
+
+.image-redimensionnee {
+    max-width: 100%;
     height: auto;
+    flex: 0 0 auto;
+    
+    /* Utilisez des unités relatives pour la marge */
+}
+
+.image-redimensionnee img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+}
+.recette-desc-longue {
+    margin-top: 2vh;
+    /* Utilisez des unités relatives pour la marge */
+    margin-bottom: 2vh;
+    /* Utilisez des unités relatives pour la marge */
+    max-width: 100%;
+}
+.recette-desc-longue br {
+    margin-bottom: 1em !important; /* Ajustez cette valeur selon l'espace souhaité */
+    display: block !important; /* Assurez-vous que le br est traité comme un élément de bloc */
+}
+
+.recette-titre {
+    font-size: 1.75vw;
+    /* Utilisez des unités relatives pour la taille de la police */
+    margin-top: 0;
+}
+
+.recette-titre-ingredient,
+.recette-titre-preparation {
+    font-size: 1.5vw;
+    /* Utilisez des unités relatives pour la taille de la police */
+}
+
+.ingredient {
+    margin-bottom: 1vh;
+    /* Utilisez des unités relatives pour la marge */
+}
+
+.etape {
+    margin-bottom: 1vh;
+    /* Utilisez des unités relatives pour la marge */
+}
+
+.recette-preparation,
+.recette-cuisson,
+.recette-portions {
+    flex: 1;
+    box-sizing: border-box;
+    padding: 2vw;
+    /* Utilisez des unités relatives pour le padding */
 }
 </style>
