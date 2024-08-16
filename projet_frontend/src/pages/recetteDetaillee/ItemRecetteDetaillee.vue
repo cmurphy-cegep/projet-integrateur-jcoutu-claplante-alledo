@@ -87,6 +87,7 @@ export default {
             recette: null,
             ingredients: [],
             etapes: [],
+            commentaires: [],
             session: session,
             loading: true,
             loadError: false,

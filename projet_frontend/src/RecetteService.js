@@ -41,7 +41,7 @@ const convertirEnCommentaire = jsonCommentaire => {
     return {
         idCommentaire: jsonCommentaire.id,
         texte: jsonCommentaire.texte,
-        date: jsonCommentaire.date.substring(0, 10),
+        date: jsonCommentaire.date,
         utilisateurId: jsonCommentaire.utilisateurId,
         recetteId: jsonCommentaire.recetteId,
         nomComplet: jsonCommentaire.nomComplet
@@ -86,8 +86,7 @@ export async function fetchCommentaires(recetteId) {
 
     if (reponse.ok) {
         const repJson = await reponse.json();
-        const repJsonTriee = repJson.sort((a,b) => b.date - a.date);
-        return repJsonTriee.map(c => convertirEnCommentaire(c));
+        return repJson.map(c => convertirEnCommentaire(c));
     } else {
         throw new Error(`Liste de commentaires pour la recette ${recetteId} introuvable`);
     }

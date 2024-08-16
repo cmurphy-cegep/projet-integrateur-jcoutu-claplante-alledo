@@ -106,7 +106,8 @@ const getCommentairesSelonRecetteId = async (recetteId) => {
         `SELECT commentaire_id, texte, date_publication, c.utilisateur_id, recette_id, nom_complet 
         FROM commentaire c
         JOIN utilisateur u ON c.utilisateur_id = u.utilisateur_id
-        WHERE recette_id = $1`,
+        WHERE recette_id = $1
+        ORDER BY date_publication DESC`,
         [recetteId]
     );
     return result.rows.map(row => {
