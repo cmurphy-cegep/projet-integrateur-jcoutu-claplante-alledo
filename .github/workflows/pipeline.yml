@@ -73,7 +73,9 @@ jobs:
           cd ./projet_backend/
           npm run lint
 
-      # - name: Coveralls
-      #   uses: coverallsapp/github-action@master
-      #   with:
-      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          base-path: ./projet_backend
+          path-to-lcov: ./projet_backend/coverage/lcov.info
