@@ -14,15 +14,15 @@
                 <h2 class="recette-titre"> {{ recette.nom }}</h2>
                 <div class="recette-conteneur3">
                     <div class="recette-preparation">
-                        <label for="recette-cuisson">Préparation : </label>
+                        <label for="recette-preparation">Préparation</label>
                         {{ recette.preparation }}
                     </div>
                     <div class="recette-cuisson">
-                        <label for="recette-cuisson">Cuisson : </label>
+                        <label for="recette-cuisson">Cuisson</label>
                         {{ recette.cuisson }}
                     </div>
                     <div class="recette-portions">
-                        <label for="recette-portions">Portions : </label>
+                        <label for="recette-portions">Portions</label>
                         {{ recette.portions }}
                     </div>
                 </div>
@@ -46,6 +46,18 @@
                     :ordre="etape.ordre" />
                 </ol>
             </div>
+            <div class="recette-conteneur4">
+                <h3>Commentaires</h3>
+                <ListeCommentaires
+                v-if="!loading"
+                    v-for="commentaire in commentaires"
+                    :id="commentaire.idCommentaire"
+                    :texte="commentaire.texte"
+                    :date="commentaire.date"
+                    :utilisateurId="commentaire.utilisateurId"
+                    :recetteId="commentaire.recetteId"
+                    :nomComplet="commentaire.nomComplet" />
+            </div>
         </div>
         <button type="button" v-if="session.user && session.user.estAdmin" @click="enableEdit">Éditer</button>
         <!-- Ajouter l'affichage d'édition de la recette -->
@@ -55,7 +67,8 @@
 <script>
 import ListeEtapes from './ListeEtapes.vue';
 import ListeIngredients from './ListeIngredients.vue';
-import { fetchRecette, fetchIngredients, fetchEtapes } from '../../RecetteService';
+import ListeCommentaires from './ListeCommentaires.vue';
+import { fetchRecette, fetchIngredients, fetchEtapes, fetchCommentaires } from '../../RecetteService';
 import LoadingSpinner from '../../components/LoadingSpinner.vue';
 import session from '../../session';
 
@@ -63,7 +76,8 @@ export default {
     components: {
         LoadingSpinner,
         ListeIngredients,
-        ListeEtapes
+        ListeEtapes,
+        ListeCommentaires
     },
     props: {
         id: String
@@ -108,6 +122,15 @@ export default {
 
             fetchEtapes(id).then(etapes => {
                 this.etapes = etapes;
+                this.loading = false;
+            }).catch(err => {
+                this.loading = false;
+                this.loadError = true;
+                this.errorMessage = err.message;
+            });
+
+            fetchCommentaires(id).then(commentaires => {
+                this.commentaires = commentaires;
                 this.loading = false;
             }).catch(err => {
                 this.loading = false;

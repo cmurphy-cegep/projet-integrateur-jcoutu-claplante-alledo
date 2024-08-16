@@ -103,8 +103,9 @@ exports.getEtapesSelonRecetteId = getEtapesSelonRecetteId;
 
 const getCommentairesSelonRecetteId = async (recetteId) => {
     const result = await pool.query(
-        `SELECT commentaire_id, texte, date_publication, utilisateur_id, recette_id 
-        FROM commentaire
+        `SELECT commentaire_id, texte, date_publication, c.utilisateur_id, recette_id, nom_complet 
+        FROM commentaire c
+        JOIN utilisateur u ON c.utilisateur_id = u.utilisateur_id
         WHERE recette_id = $1`,
         [recetteId]
     );
@@ -114,7 +115,8 @@ const getCommentairesSelonRecetteId = async (recetteId) => {
             texte: row.texte,
             date: row.date_publication,
             utilisateurId: row.utilisateur_id,
-            recetteId: row.recette_id
+            recetteId: row.recette_id,
+            nomComplet: row.nom_complet
         };
         return commentaire;
     });
