@@ -37,6 +37,17 @@ const convertirEnEtape = jsonEtape => {
     };
 };
 
+const convertirEnCommentaire = jsonCommentaire => {
+    return {
+        idCommentaire: jsonCommentaire.id,
+        texte: jsonCommentaire.texte,
+        date: jsonCommentaire.date.substring(0, 10),
+        utilisateurId: jsonCommentaire.utilisateurId,
+        recetteId: jsonCommentaire.recetteId,
+        nomComplet: jsonCommentaire.nomComplet
+    };
+};
+
 export async function fetchRecette(recetteId) {
     const reponse = await fetch(`/api/recettes/${recetteId}`);
 
@@ -67,5 +78,17 @@ export async function fetchEtapes(recetteId) {
         return repJsonTriee.map(e => convertirEnEtape(e));
     } else {
         throw new Error(`Liste d'étapes pour la recette ${recetteId} introuvable`);
+    }
+};
+
+export async function fetchCommentaires(recetteId) {
+    const reponse = await fetch(`/api/comments/${recetteId}`);
+
+    if (reponse.ok) {
+        const repJson = await reponse.json();
+        const repJsonTriee = repJson.sort((a,b) => b.date - a.date);
+        return repJsonTriee.map(c => convertirEnCommentaire(c));
+    } else {
+        throw new Error(`Liste de commentaires pour la recette ${recetteId} introuvable`);
     }
 };

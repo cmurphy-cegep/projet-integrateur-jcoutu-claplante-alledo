@@ -15,7 +15,8 @@ describe('tests queries commentaires', () => {  // eslint-disable-line max-lines
                 texte: 'Ce spaghetti carbonara était vraiment délicieux!',
                 date_publication: '2024-08-01T08:15:30.000Z',
                 utilisateur_id: 'claplante',
-                recette_id: 'spaghetti_carbonara'
+                recette_id: 'spaghetti_carbonara',
+                nom_complet: 'Catherine Laplante'
             },
 
             {
@@ -23,7 +24,8 @@ describe('tests queries commentaires', () => {  // eslint-disable-line max-lines
                 texte: 'spag bon!!!',
                 date_publication: '2024-09-21T08:15:30.000Z',
                 utilisateur_id: 'jscoutu',
-                recette_id: 'spaghetti_carbonara'
+                recette_id: 'spaghetti_carbonara',
+                nom_complet: 'Jean-Sébastien Coutu'
             }
         ];
 
@@ -33,7 +35,8 @@ describe('tests queries commentaires', () => {  // eslint-disable-line max-lines
                 texte: 'Ce spaghetti carbonara était vraiment délicieux!',
                 date: '2024-08-01T08:15:30.000Z',
                 utilisateurId: 'claplante',
-                recetteId: 'spaghetti_carbonara'
+                recetteId: 'spaghetti_carbonara',
+                nomComplet: 'Catherine Laplante'
             },
 
             {
@@ -41,7 +44,8 @@ describe('tests queries commentaires', () => {  // eslint-disable-line max-lines
                 texte: 'spag bon!!!',
                 date: '2024-09-21T08:15:30.000Z',
                 utilisateurId: 'jscoutu',
-                recetteId: 'spaghetti_carbonara'
+                recetteId: 'spaghetti_carbonara',
+                nomComplet: 'Jean-Sébastien Coutu'
             }];
 
         mockPool.query.mockResolvedValue({ rows: mockCommentaires });
