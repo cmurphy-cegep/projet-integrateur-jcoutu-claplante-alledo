@@ -13,7 +13,7 @@ describe('tests queries commentaires', () => {  // eslint-disable-line max-lines
             {
                 commentaire_id: 31,
                 texte: 'Ce spaghetti carbonara était vraiment délicieux!',
-                date_publication: '2024-08-01T08:15:30.000Z',
+                date_formatee: '2024-08-01 08:15',
                 utilisateur_id: 'claplante',
                 recette_id: 'spaghetti_carbonara',
                 nom_complet: 'Catherine Laplante'
@@ -22,7 +22,7 @@ describe('tests queries commentaires', () => {  // eslint-disable-line max-lines
             {
                 commentaire_id: 18,
                 texte: 'spag bon!!!',
-                date_publication: '2024-09-21T08:15:30.000Z',
+                date_formatee: '2024-09-21 08:15',
                 utilisateur_id: 'jscoutu',
                 recette_id: 'spaghetti_carbonara',
                 nom_complet: 'Jean-Sébastien Coutu'
