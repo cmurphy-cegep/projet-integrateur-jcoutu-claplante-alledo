@@ -33,7 +33,7 @@ describe('tests queries commentaires', () => {  // eslint-disable-line max-lines
             {
                 id: 31,
                 texte: 'Ce spaghetti carbonara était vraiment délicieux!',
-                date: '2024-08-01T08:15:30.000Z',
+                date: '2024-08-01 08:15',
                 utilisateurId: 'claplante',
                 recetteId: 'spaghetti_carbonara',
                 nomComplet: 'Catherine Laplante'
@@ -42,7 +42,7 @@ describe('tests queries commentaires', () => {  // eslint-disable-line max-lines
             {
                 id: 18,
                 texte: 'spag bon!!!',
-                date: '2024-09-21T08:15:30.000Z',
+                date: '2024-09-21 08:15',
                 utilisateurId: 'jscoutu',
                 recetteId: 'spaghetti_carbonara',
                 nomComplet: 'Jean-Sébastien Coutu'
