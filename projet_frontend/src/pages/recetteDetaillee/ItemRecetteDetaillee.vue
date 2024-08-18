@@ -68,7 +68,7 @@
 import ListeEtapes from './ListeEtapes.vue';
 import ListeIngredients from './ListeIngredients.vue';
 import ListeCommentaires from './ListeCommentaires.vue';
-import { fetchRecette, fetchIngredients, fetchEtapes, fetchCommentaires } from '../../RecetteService';
+import { fetchRecette, fetchIngredients, fetchEtapes, fetchCommentaires, fetchAppreciations } from '../../RecetteService';
 import LoadingSpinner from '../../components/LoadingSpinner.vue';
 import session from '../../session';
 
@@ -132,6 +132,15 @@ export default {
 
             fetchCommentaires(id).then(commentaires => {
                 this.commentaires = commentaires;
+                this.loading = false;
+            }).catch(err => {
+                this.loading = false;
+                this.loadError = true;
+                this.errorMessage = err.message;
+            });
+
+            fetchAppreciations(id).then(appreciation => {
+                this.appreciation = appreciation;
                 this.loading = false;
             }).catch(err => {
                 this.loading = false;
