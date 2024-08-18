@@ -41,8 +41,8 @@ describe('tests routes commentaires', () => { // eslint-disable-line max-lines-p
         {
             id: "1",
             texte: "allo",
-            utilisateur_id: "alledo",
-            recette_id: "lasagnes"
+            utilisateurId: "alledo",
+            recetteId: "lasagnes"
         };
 
         mockRecetteQueries.getRecetteById.mockResolvedValue(Mockcommentaire);
@@ -61,8 +61,8 @@ describe('tests routes commentaires', () => { // eslint-disable-line max-lines-p
         {
             id: "1",
             texte: "allo",
-            utilisateur_id: "asd",
-            recette_id: "lasagnes"
+            utilisateurId: "asd",
+            recetteId: "lasagnes"
         };
 
         mockRecetteQueries.ajouterCommentaire.mockResolvedValue(Mockcommentaire);
@@ -81,8 +81,8 @@ describe('tests routes commentaires', () => { // eslint-disable-line max-lines-p
             id: "1",
             texte: "allo",
             date: "2004",
-            utilisateur_id: "alledo",
-            recette_id: ""
+            utilisateurId: "alledo",
+            recetteId: ""
         };
 
         mockRecetteQueries.ajouterCommentaire.mockResolvedValue(Mockcommentaire);
@@ -101,8 +101,8 @@ describe('tests routes commentaires', () => { // eslint-disable-line max-lines-p
             id: "1",
             texte: "allo",
             date: "2004",
-            utilisateur_id: "alledo",
-            recette_id: "lasagnes"
+            utilisateurId: "alledo",
+            recetteId: "lasagnes"
         };
 
         mockRecetteQueries.getRecetteById.mockResolvedValue(undefined);
