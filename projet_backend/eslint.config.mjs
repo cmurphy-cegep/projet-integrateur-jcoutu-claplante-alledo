@@ -26,7 +26,8 @@ export default [
       "getter-return": "error",
       "no-duplicate-imports": "error",
       "require-await": "error",
-      "curly": "error"
+      "curly": "error",
+      "no-undef": "warn"
     }
   }
 ];

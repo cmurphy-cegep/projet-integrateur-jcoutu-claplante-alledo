@@ -1,0 +1,70 @@
+const express = require('express');
+const router = express.Router();
+const passport = require('passport');
+
+const multer = require('multer');
+const storage = multer.memoryStorage();
+
+const HttpError = require("../HttpError");
+
+const recetteQueries = require("../queries/RecetteQueries");
+
+router.get('/:recetteId', (req, res, next) => {
+    const id = req.params.recetteId;
+    recetteQueries.getMoyenneAppreciationSelonRecetteId(id).then(appreciationNbEtoiles => {
+        if (appreciationNbEtoiles !== null) {
+            res.json(appreciationNbEtoiles);
+        } else {
+            return next(new HttpError(404, `Les appreciations pour la recette ${id} sont introuvable`));
+        }
+    }).catch(err => {
+        return next(err);
+    });
+});
+
+router.post('/:recetteId',
+    passport.authenticate('basic', { session: false }),
+    (req, res, next) => {
+        const utilisateur = req.user;
+        if (!utilisateur) {
+            return next(new HttpError(403, "Droit d`accès requis"));
+        }
+        if (req.body.utilisateur_id !== utilisateur.compteUtilisateurId) {
+            return next(new HttpError(403, "Vous ne pouvez pas envoyer des commentaires sous un autre utilisateur id"));
+        }
+        const idRecette = req.body.recette_id;
+        if (!idRecette || idRecette === '') {
+            return next(new HttpError(400, 'Le champ idRecette est requis'));
+        }
+        
+        const nouvelleAppreciation = {
+            nbEtoiles: req.body.etoiles,
+            utilisateurId: "" + req.body.utilisateur_id,
+            recetteId: "" + req.body.recette_id
+        };
+
+        recetteQueries.aDejaFaitAppreciationSurRecetteId(nouvelleAppreciation).then(result => {
+            if (!result) {
+                recetteQueries.ajouterAppreciation(nouvelleAppreciation).then(result => {
+                    if (!result) {
+                        return next(new HttpError(404, `Impossible d'ajouter l'appréciation`));
+                    }
+                    res.type('json').json(result);
+                })
+            } else {
+                recetteQueries.modifierAppreciation(nouvelleAppreciation).then(result => {
+                    if (!result) {
+                        return next(new HttpError(404, `Impossible de modifier l'appréciation`));
+                    }
+                    res.type('json').json(result);
+                })
+            }
+        }).catch(err => {
+            return next(err);
+        });
+
+    });
+
+
+
+module.exports = router;

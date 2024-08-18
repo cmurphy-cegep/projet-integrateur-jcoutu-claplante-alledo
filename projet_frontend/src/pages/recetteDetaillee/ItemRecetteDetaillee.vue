@@ -7,7 +7,7 @@
             <div class="recette-desc-longue" v-html="recette.desc"></div>
 
             <div class="recette-colonne-droite">
-                <h2 class="recette-titre"> {{ recette.nom }}</h2>
+                <h2 class="recette-titre"> {{ recette.nom }} {{ appreciation ?? "?"  }}/5</h2>
 
                 <table>
                     <tr>
@@ -44,7 +44,7 @@
 <script>
 import ListeEtapes from './ListeEtapes.vue';
 import ListeIngredients from './ListeIngredients.vue';
-import { fetchRecette, fetchIngredients, fetchEtapes } from '../../RecetteService';
+import { fetchRecette, fetchIngredients, fetchEtapes, fetchAppreciations } from '../../RecetteService';
 import LoadingSpinner from '../../components/LoadingSpinner.vue';
 import session from '../../session';
 
@@ -62,6 +62,7 @@ export default {
             recette: null,
             ingredients: [],
             etapes: [],
+            appreciation: null,
             session: session,
             loading: true,
             loadError: false,
@@ -97,6 +98,15 @@ export default {
 
             fetchEtapes(id).then(etapes => {
                 this.etapes = etapes;
+                this.loading = false;
+            }).catch(err => {
+                this.loading = false;
+                this.loadError = true;
+                this.errorMessage = err.message;
+            });
+
+            fetchAppreciations(id).then(appreciation => {
+                this.appreciation = appreciation;
                 this.loading = false;
             }).catch(err => {
                 this.loading = false;

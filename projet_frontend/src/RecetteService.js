@@ -69,3 +69,14 @@ export async function fetchEtapes(recetteId) {
         throw new Error(`Liste d'étapes pour la recette ${recetteId} introuvable`);
     }
 };
+
+export async function fetchAppreciations(recetteId) {
+    const reponse = await fetch(`/api/appreciations/${recetteId}`);
+
+    if (reponse.ok) {
+        const repJson = await reponse.json();
+        return repJson;
+    } else {
+        throw new Error(`La moyenne d'appreciation pour la recette ${recetteId} est introuvable`);
+    }
+};
