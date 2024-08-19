@@ -1,3 +1,4 @@
+const HttpError = require('../HttpError');
 const pool = require('./DBPool');
 
 const getConnexionSelonCompteUtilisateurId = async (compteUtilisateurId) => {
@@ -46,13 +47,30 @@ const getCompteUtilisateur = async (utilisateurId, client) => {
 };
 exports.getCompteUtilisateur = getCompteUtilisateur;
 
-const creerCompteUtilisateur = async (utilisateurId, nom, client) => {
+const verifierExistenceUtilisateur = async (utilisateurId, client) => {
     const resultat = await (client || pool).query(
-        `INSERT INTO utilisateur (utilisateur_id, nom_complet) 
-        VALUES ($1, $2)`,
-        [utilisateurId, nom]
+        `SELECT utilisateur_id 
+        FROM utilisateur
+        WHERE utilisateur_id = $1`,
+        [utilisateurId]
     );
 
+    return resultat.rows.length > 0;
+};
+exports.verifierExistenceUtilisateur = verifierExistenceUtilisateur;
+
+const creerCompteUtilisateur = async (utilisateurId, utilisateurNomComplet, motDePasseHash, motDePasseSale, client) => {
+
+    const existe = await verifierExistenceUtilisateur(utilisateurId,client);
+    if (existe) {
+        throw new HttpError(400,`Le compte utilisateur ${utilisateurId} existe déjà`);
+    }else {
+    await (client || pool).query(
+        `INSERT INTO utilisateur (utilisateur_id, nom_complet, mot_de_passe_hash, mot_de_passe_sale) 
+        VALUES ($1, $2, $3, $4)`,
+        [utilisateurId, utilisateurNomComplet, motDePasseHash, motDePasseSale]
+        );
+    }
     return getCompteUtilisateur(utilisateurId);
 };
 exports.creerCompteUtilisateur = creerCompteUtilisateur;

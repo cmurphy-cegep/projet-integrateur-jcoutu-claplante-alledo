@@ -93,6 +93,25 @@ app.use('/comments', commentaireRouter);
     }
  );
 
+ app.post('/nouveauCompte', (req, res, next) => {
+    const { utilisateurId, utilisateurNomComplet, motDePasseHash, motDePasseSale, estAdmin } = req.body;
+
+    compteUtilisateurQueries.verifierExistenceUtilisateur(utilisateurId)
+    .then(existe => {
+        if (!existe){
+            compteUtilisateurQueries.creerCompteUtilisateur(utilisateurId, utilisateurNomComplet, motDePasseHash, motDePasseSale, estAdmin);
+        }else{
+            return next(new HttpError(err,`L\'utilisateur ${utilisateurId} existe déjà`));
+        }
+    })
+    .then(utilisateur => {
+        res.status(201).json(utilisateur);
+    })
+    .catch(err => {
+        return next(err);
+    });
+ });
+
 app.use((err, req, res, next) => {
     console.log("error handler: ", err);
     if (res.headersSent) {
