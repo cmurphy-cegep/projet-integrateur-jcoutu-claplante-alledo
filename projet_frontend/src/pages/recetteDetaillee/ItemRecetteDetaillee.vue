@@ -11,7 +11,7 @@
                 </div>
             </div>
             <div class="recette-conteneur2">
-                <h2 class="recette-titre"> {{ recette.nom }}</h2>
+                <h2 class="recette-titre"> {{ recette.nom }} {{ appreciation ? `${appreciation}/5` : "" }}</h2>
                 <div class="recette-conteneur3">
                     <div class="recette-preparation">
                         <label for="recette-preparation">Préparation</label>
@@ -88,6 +88,7 @@ export default {
             ingredients: [],
             etapes: [],
             appreciation: null,
+            commentaires: [],
             session: session,
             loading: true,
             loadError: false,
