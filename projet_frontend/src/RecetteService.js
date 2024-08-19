@@ -74,7 +74,7 @@ export async function fetchEtapes(recetteId) {
 
     if (reponse.ok) {
         const repJson = await reponse.json();
-        const repJsonTriee = repJson.sort((a,b) => a.ordre - b.ordre);
+        const repJsonTriee = repJson.sort((a, b) => a.ordre - b.ordre);
         return repJsonTriee.map(e => convertirEnEtape(e));
     } else {
         throw new Error(`Liste d'étapes pour la recette ${recetteId} introuvable`);
@@ -83,13 +83,13 @@ export async function fetchEtapes(recetteId) {
 
 export async function fetchCommentaires(recetteId) {
     const reponse = await fetch(`/api/comments/${recetteId}`);
-    
+
     if (reponse.ok) {
-        if(reponse.status === 204){
+        if (reponse.status === 204) {
             return [];
         }
         const repJson = await reponse.json();
-        const repJsonTriee = repJson.sort((a,b) => b.date - a.date);
+        const repJsonTriee = repJson.sort((a, b) => b.date - a.date);
         return repJsonTriee.map(c => convertirEnCommentaire(c));
     } else {
         throw new Error(`Liste de commentaires pour la recette ${recetteId} introuvable`);
@@ -100,7 +100,7 @@ export async function fetchAppreciations(recetteId) {
     const reponse = await fetch(`/api/appreciations/${recetteId}`);
 
     if (reponse.ok) {
-        if(reponse.status === 204){
+        if (reponse.status === 204) {
             return null;
         }
         return await reponse.json();
