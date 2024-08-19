@@ -1,3 +1,5 @@
+import session from './session';
+
 export async function fetchRecettes() {
     const response = await fetch('/api/recettes');
     if (response.ok) {
@@ -117,8 +119,9 @@ export async function ajouterAppreciation(nbEtoiles, recetteId) {
             ...session.getAuthHeaders()
         },
         body: JSON.stringify({ nbEtoiles })
+        
     });
-    console.log(body);
+
     if(reponse.ok) {
         return await reponse.json();
     } else {

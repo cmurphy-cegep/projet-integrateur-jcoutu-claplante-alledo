@@ -18,12 +18,14 @@
                 </h2>
                 <form @submit.prevent="soumettreAppreciation">
                     <p>
+                <p>Votre avis:</p>
+
                         <select v-model="selected">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
+                            <option value="1"><span style="font-size:150%;color:yellow;">&#9733;</span></option>
+                            <option value="2"><span style="font-size:150%;color:yellow;">&#9733;</span><span style="font-size:150%;color:yellow;">&#9733;</span></option>
+                            <option value="3"><span style="font-size:150%;color:yellow;">&#9733;</span><span style="font-size:150%;color:yellow;">&#9733;</span><span style="font-size:150%;color:yellow;">&#9733;</span></option>
+                            <option value="4"><span style="font-size:150%;color:yellow;">&#9733;</span><span style="font-size:150%;color:yellow;">&#9733;</span><span style="font-size:150%;color:yellow;">&#9733;</span><span style="font-size:150%;color:yellow;">&#9733;</span></option>
+                            <option value="5"><span style="font-size:150%;color:yellow;">&#9733;</span><span style="font-size:150%;color:yellow;">&#9733;</span><span style="font-size:150%;color:yellow;">&#9733;</span><span style="font-size:150%;color:yellow;">&#9733;</span><span style="font-size:150%;color:yellow;">&#9733;</span></option>
                         </select>
                     </p>
                     <button type="submit">Soumettre</button>
