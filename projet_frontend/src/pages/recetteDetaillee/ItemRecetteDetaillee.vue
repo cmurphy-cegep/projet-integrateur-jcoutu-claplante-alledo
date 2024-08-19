@@ -244,6 +244,7 @@ export default {
     object-fit: cover;
 }
 
+
 .recette-desc-longue {
     margin-top: 2vh;
     /* Utilisez des unités relatives pour la marge */
@@ -251,6 +252,7 @@ export default {
     /* Utilisez des unités relatives pour la marge */
     max-width: 100%;
 }
+
 
 .recette-desc-longue br {
     margin-bottom: 1em !important;
