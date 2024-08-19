@@ -85,6 +85,9 @@ export async function fetchCommentaires(recetteId) {
     const reponse = await fetch(`/api/comments/${recetteId}`);
     
     if (reponse.ok) {
+        if(reponse.status === 204){
+            return [];
+        }
         const repJson = await reponse.json();
         const repJsonTriee = repJson.sort((a,b) => b.date - a.date);
         return repJsonTriee.map(c => convertirEnCommentaire(c));
@@ -97,8 +100,10 @@ export async function fetchAppreciations(recetteId) {
     const reponse = await fetch(`/api/appreciations/${recetteId}`);
 
     if (reponse.ok) {
-        const repJson = await reponse.json();
-        return repJson;
+        if(reponse.status === 204){
+            return null;
+        }
+        return await reponse.json();
     } else {
         throw new Error(`La moyenne d'appreciation pour la recette ${recetteId} est introuvable`);
     }

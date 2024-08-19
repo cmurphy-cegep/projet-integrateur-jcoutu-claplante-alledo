@@ -12,9 +12,11 @@ const recetteQueries = require("../queries/RecetteQueries");
 router.get('/:recetteId', (req, res, next) => {
     const id = req.params.recetteId;
     recetteQueries.getMoyenneAppreciationSelonRecetteId(id).then(appreciationNbEtoiles => {
-        if (appreciationNbEtoiles !== null) {
+        if (appreciationNbEtoiles) {
             res.json(appreciationNbEtoiles);
-        } else {
+        } else if (appreciationNbEtoiles === null){
+            return next(new HttpError(204, `Il n'y a pas d'appreciations pour la recette ${id}`));
+        }else{
             return next(new HttpError(404, `Les appreciations pour la recette ${id} sont introuvable`));
         }
     }).catch(err => {

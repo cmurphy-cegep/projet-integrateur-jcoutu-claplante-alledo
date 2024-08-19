@@ -14,7 +14,9 @@ router.get('/:id', (req, res, next) => {
     recetteQueries.getCommentairesSelonRecetteId(id).then(commentaires => {
         if (commentaires.length > 0) {
             res.json(commentaires);
-        } else {
+        } else if (commentaires.length === 0){
+            return next(new HttpError(204, `Pas de commentaires pour la recette ${id} introuvable`));
+        }else {
             return next(new HttpError(404, `Liste de commentaires pour la recette ${id} introuvable`));
         }
     }).catch(err => {
