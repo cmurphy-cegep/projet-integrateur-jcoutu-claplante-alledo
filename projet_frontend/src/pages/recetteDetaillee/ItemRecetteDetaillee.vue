@@ -70,7 +70,7 @@
 import ListeEtapes from './ListeEtapes.vue';
 import ListeIngredients from './ListeIngredients.vue';
 import ListeCommentaires from './ListeCommentaires.vue';
-import { fetchRecette, fetchIngredients, fetchEtapes, fetchCommentaires, fetchAppreciations } from '../../RecetteService';
+import { fetchRecette, fetchIngredients, fetchEtapes, fetchCommentaires, fetchAppreciations, ajouterAppreciation } from '../../RecetteService';
 import LoadingSpinner from '../../components/LoadingSpinner.vue';
 import session from '../../session';
 
@@ -155,7 +155,7 @@ export default {
 
         async soumettreAppreciation() {
             try {
-                await ajouterAppreciation(this.selected);
+                await ajouterAppreciation(this.selected, this.id);
                 this.rafraichirRecette(this.id);
             }catch (err) {
                 console.error(err);

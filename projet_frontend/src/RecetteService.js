@@ -108,3 +108,20 @@ export async function fetchAppreciations(recetteId) {
         throw new Error(`La moyenne d'appreciation pour la recette ${recetteId} est introuvable`);
     }
 };
+
+export async function ajouterAppreciation(nbEtoiles, recetteId) {
+    const reponse = await fetch (`/api/appreciations/${recetteId}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            ...session.getAuthHeaders()
+        },
+        body: JSON.stringify({ nbEtoiles })
+    });
+    console.log(body);
+    if(reponse.ok) {
+        return await reponse.json();
+    } else {
+        throw new Error(`Impossible d'ajouter l'appreciation pour la recette ${recetteId}: ${reponse.status}`)
+    }
+}
