@@ -153,7 +153,14 @@ export default {
             });
         },
 
-        soumettreAppreciation() {
+        async soumettreAppreciation() {
+            try {
+                await ajouterAppreciation(this.selected);
+                this.rafraichirRecette(this.id);
+            }catch (err) {
+                console.error(err);
+                alert(err.message);
+            }
         }
     },
     computed: {
