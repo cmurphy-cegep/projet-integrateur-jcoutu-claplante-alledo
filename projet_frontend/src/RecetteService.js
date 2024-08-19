@@ -111,20 +111,21 @@ export async function fetchAppreciations(recetteId) {
     }
 };
 
-export async function ajouterAppreciation(nbEtoiles, recetteId) {
-    const reponse = await fetch (`/api/appreciations/${recetteId}`, {
+export async function ajouterAppreciation(appreciation) {
+    const reponse = await fetch(`/api/appreciations/${appreciation.recetteId}`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
             ...session.getAuthHeaders()
         },
-        body: JSON.stringify({ nbEtoiles })
+        body: JSON.stringify( appreciation )
         
     });
 
     if(reponse.ok) {
-        return await reponse.json();
+        const data = await reponse.json();
+        return data.etoiles;
     } else {
-        throw new Error(`Impossible d'ajouter l'appreciation pour la recette ${recetteId}: ${reponse.status}`)
+        throw new Error(`Impossible d'ajouter l'appreciation pour la recette ${appreciation.recetteId}: ${reponse.status}`)
     }
-}
+};

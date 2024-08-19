@@ -13,8 +13,7 @@
             <div class="recette-conteneur2">
                 <h2 class="recette-titre">
                     {{ recette.nom }}
-                    {{ appreciation ? `${appreciation}/5` : "/5"
-                    }} <span style="font-size:150%;color:yellow;">&#9733;</span>
+                    <div v-if="appreciation">{{ appreciation }}/5 <span style="font-size:150%;color:yellow;">&#9733;</span></div>
                 </h2>
                 <form @submit.prevent="soumettreAppreciation">
                     <p>
@@ -93,6 +92,7 @@ export default {
             etapes: [],
             appreciation: null,
             commentaires: [],
+            nouvelleAppreciation: [],
             session: session,
             loading: true,
             loadError: false,
@@ -156,8 +156,13 @@ export default {
         },
 
         async soumettreAppreciation() {
+            const nouvelleAppreciation = {
+                etoiles: parseInt(this.selected),
+                utilisateur_id: session.user.compteUtilisateurId,
+                recette_id: this.id
+            };
             try {
-                await ajouterAppreciation(this.selected, this.id);
+                await ajouterAppreciation(nouvelleAppreciation);
                 this.rafraichirRecette(this.id);
             }catch (err) {
                 console.error(err);
@@ -165,6 +170,8 @@ export default {
             }
         }
     },
+
+    
     computed: {
         imageSrc() {
             return `data:image/png;base64,${this.recette.image}`;
