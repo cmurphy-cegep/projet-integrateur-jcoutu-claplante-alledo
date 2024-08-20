@@ -31,18 +31,18 @@ router.post('/:recetteId',
         if (!utilisateur) {
             return next(new HttpError(403, "Droit d`accès requis"));
         }
-        if (req.body.utilisateur_id !== utilisateur.compteUtilisateurId) {
+        if (req.body.utilisateurId !== utilisateur.compteUtilisateurId) {
             return next(new HttpError(403, "Vous ne pouvez pas envoyer des commentaires sous un autre utilisateur id"));
         }
-        const idRecette = req.body.recette_id;
+        const idRecette = req.body.recetteId;
         if (!idRecette || idRecette === '') {
             return next(new HttpError(400, 'Le champ idRecette est requis'));
         }
 
         const nouveauCommentaire = {
             texte: "" + req.body.texte,
-            utilisateurId: "" + req.body.utilisateur_id,
-            recetteId: "" + req.body.recette_id
+            utilisateurId: "" + req.body.utilisateurId,
+            recetteId: "" + req.body.recetteId
         };
 
         recetteQueries.getRecetteById(nouveauCommentaire.recetteId).then(result => {

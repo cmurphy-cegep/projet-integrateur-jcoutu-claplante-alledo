@@ -43,7 +43,7 @@ const convertirEnCommentaire = jsonCommentaire => {
     return {
         idCommentaire: jsonCommentaire.id,
         texte: jsonCommentaire.texte,
-        date: jsonCommentaire.date.substring(0, 10),
+        date: jsonCommentaire.date,
         utilisateurId: jsonCommentaire.utilisateurId,
         recetteId: jsonCommentaire.recetteId,
         nomComplet: jsonCommentaire.nomComplet
@@ -76,7 +76,7 @@ export async function fetchEtapes(recetteId) {
 
     if (reponse.ok) {
         const repJson = await reponse.json();
-        const repJsonTriee = repJson.sort((a, b) => a.ordre - b.ordre);
+        const repJsonTriee = repJson.sort((a,b) => a.ordre - b.ordre);
         return repJsonTriee.map(e => convertirEnEtape(e));
     } else {
         throw new Error(`Liste d'étapes pour la recette ${recetteId} introuvable`);
@@ -91,10 +91,26 @@ export async function fetchCommentaires(recetteId) {
             return [];
         }
         const repJson = await reponse.json();
-        const repJsonTriee = repJson.sort((a, b) => b.date - a.date);
-        return repJsonTriee.map(c => convertirEnCommentaire(c));
+        return repJson.map(c => convertirEnCommentaire(c));
     } else {
         throw new Error(`Liste de commentaires pour la recette ${recetteId} introuvable`);
+    }
+};
+
+export async function ajouterCommentaire(commentaire) {
+    const reponse = await fetch(`/api/comments/${commentaire.recetteId}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            ...session.getAuthHeaders()
+        },
+        body: JSON.stringify(commentaire)
+    });
+    
+    if (reponse.ok) {
+        return convertirEnCommentaire(await reponse.json());
+    } else {
+        throw new Error(`Impossible d'ajouter le commentaire pour la recette ${commentaire.recetteId}: ${reponse.status}`);
     }
 };
 
