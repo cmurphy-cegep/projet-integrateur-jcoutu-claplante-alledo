@@ -61,8 +61,9 @@ CREATE TABLE etape(
 CREATE TABLE recette_ingredient(
    recette_id VARCHAR(50),
    ingredient_id INT,
-   quantite INT,
+   quantite numeric(6,2),
    unite_mesure VARCHAR(50),
+   ordre INT,
    PRIMARY KEY(recette_id, ingredient_id),
    FOREIGN KEY(recette_id) REFERENCES Recette(recette_id),
    FOREIGN KEY(ingredient_id) REFERENCES Ingredient(ingredient_id)

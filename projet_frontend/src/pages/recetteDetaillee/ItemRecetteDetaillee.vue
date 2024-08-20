@@ -59,8 +59,21 @@
                         :nomComplet="commentaire.nomComplet" />
                 </div>
             </div>
-            <button type="button" v-if="session.user && session.user.estAdmin" @click="enableEdit">Éditer</button>
-            <!-- Ajouter l'affichage d'édition de la recette -->
+            <button type="button" v-if="session.user && session.user.estAdmin" @click="activerEdition">Éditer</button>
+            <div v-if="edition">
+                <form @submit.prevent="soumettreRecetteEditee">
+                    <div>
+                        <div>
+                            <label for="recette-titre">Nom de la recette: </label>
+                        </div>
+                        <div>
+                            <input class="recette-titre" id="recette-titre" v-model="recette.nom" />
+                        </div>
+                    </div>
+                    
+                </form>
+
+            </div>
         </div>
     </div>
 </template>
@@ -69,7 +82,7 @@
 import ListeEtapes from './ListeEtapes.vue';
 import ListeIngredients from './ListeIngredients.vue';
 import ListeCommentaires from './ListeCommentaires.vue';
-import { fetchRecette, fetchIngredients, fetchEtapes, fetchCommentaires, ajouterCommentaire } from '../../RecetteService';
+import { fetchRecette, fetchIngredients, fetchEtapes, fetchCommentaires, ajouterCommentaire, mettreAJourRecette } from '../../RecetteService';
 import LoadingSpinner from '../../components/LoadingSpinner.vue';
 import session from '../../session';
 
@@ -143,6 +156,24 @@ export default {
                 this.errorMessage = err.message;
             });
         },
+        activerEdition() {
+            this.edition = true;
+        },
+        annulerEdition() {
+            this.edition = false;
+            this.rafraichirRecette(this.id);
+        },
+        async soumettreRecetteEditee() {
+            try {
+                await mettreAJourRecette(this.recette);
+                this.edition = false;
+                this.rafraichirRecette(this.id);
+            } catch (err) {
+                console.error(err);
+                alert(err.message);
+            }
+        },
+
         async soumettreCommentaire() {
             const nouveauCommentaire = {
                 texte: this.ajoutCommentaireTexte,
