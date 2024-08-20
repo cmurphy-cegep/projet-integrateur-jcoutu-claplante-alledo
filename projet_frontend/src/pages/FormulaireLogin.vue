@@ -14,7 +14,7 @@
                 </div>
             </div>
             <button v-bind:disabled="!validerBouton" >Se connecter</button>
-            <div><router-link to="/creationCompte">Créer un compte</router-link></div>
+            <div><router-link to="/nouveauCompte">Créer un compte</router-link></div>
         </form>
     </div>
 </template>
@@ -70,7 +70,6 @@
 
 <style scoped>
 .form-control.invalide input,
-
 .form-control.invalide select {
     border-color: red;
 }

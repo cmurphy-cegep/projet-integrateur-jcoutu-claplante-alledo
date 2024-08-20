@@ -91,9 +91,10 @@
                         :nomComplet="commentaire.nomComplet" />
                 </div>
             </div>
-            <button type="button" v-if="session.user && session.user.estAdmin" @click="enableEdit">Éditer</button>
-            <!-- Ajouter l'affichage d'édition de la recette -->
+
         </div>
+        <button type="button" v-if="session.user && session.user.estAdmin" @click="enableEdit">Éditer</button>
+        <!-- Ajouter l'affichage d'édition de la recette -->
     </div>
 </template>
 
@@ -139,7 +140,6 @@ export default {
             this.loading = true;
             this.errorMessage = null;
             this.recette = null;
-            this.nouveauCommentaire = null;
 
             fetchRecette(id).then(recette => {
                 this.recette = recette;

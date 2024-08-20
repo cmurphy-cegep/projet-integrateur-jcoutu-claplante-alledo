@@ -65,6 +65,7 @@ export default {
     flex-basis: 0 0 25%;
     padding: 0.3rem;
     margin-left: auto;
+    margin-right: 1.5rem;
     display: flex;
     justify-content: flex-end;
     align-items: center;
