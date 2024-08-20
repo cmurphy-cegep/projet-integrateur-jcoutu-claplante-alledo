@@ -8,6 +8,29 @@
                         <img v-bind:src="imageSrc" />
                     </div>
                     <div class="recette-desc-longue" v-html="recette.desc"></div>
+                    <div class="recette-conteneur4">
+                        <h3>Commentaires <button type="button" v-if="session.user && !voirAjoutCommentaire"
+                                @click="voirAjoutCommentaire = true">Ajouter un
+                                commentaire</button></h3>
+
+                        <div v-if=voirAjoutCommentaire>
+                            <form @submit.prevent="soumettreCommentaire">
+                                <div>
+                                    <label for="commentaire-texte">Veuillez saisir votre commentaire : </label>
+                                </div>
+                                <div>
+                                    <textarea id="commentaire-texte" v-model="ajoutCommentaireTexte" maxlength="700"
+                                        rows="7" cols="100"> </textarea>
+                                </div>
+                                <button type="submit">Soumettre le commentaire</button>
+                                <button type="button" @click="annulerAjoutCommentaire">Annuler</button>
+                            </form>
+                        </div>
+                        <ListeCommentaires v-if="!loading" v-for="commentaire in commentaires"
+                            :id="commentaire.idCommentaire" :texte="commentaire.texte" :date="commentaire.date"
+                            :utilisateurId="commentaire.utilisateurId" :recetteId="commentaire.recetteId"
+                            :nomComplet="commentaire.nomComplet" />
+                    </div>
                 </div>
                 <div class="recette-conteneur2">
                     <h2 class="recette-titre">
@@ -41,6 +64,7 @@
                         <button type="submit">Soumettre</button>
                     </form>
 
+
                     <div class="recette-conteneur3">
                         <div class="recette-preparation">
                             <label for="recette-preparation">Préparation</label>
@@ -67,29 +91,7 @@
                             :description="etape.description" :ordre="etape.ordre" />
                     </ol>
                 </div>
-                <div class="recette-conteneur4">
-                    <h3>Commentaires</h3>
-                    <button type="button" v-if="session.user && !voirAjoutCommentaire"
-                        @click="voirAjoutCommentaire = true">Ajouter un
-                        commentaire</button>
-                    <div v-if=voirAjoutCommentaire>
-                        <form @submit.prevent="soumettreCommentaire">
-                            <div>
-                                <label for="commentaire-texte">Veuillez saisir votre commentaire : </label>
-                            </div>
-                            <div>
-                                <textarea id="commentaire-texte" v-model="ajoutCommentaireTexte" maxlength="700"
-                                    rows="7" cols="100"> </textarea>
-                            </div>
-                            <button type="submit">Soumettre le commentaire</button>
-                            <button type="button" @click="annulerAjoutCommentaire">Annuler</button>
-                        </form>
-                    </div>
-                    <ListeCommentaires v-if="!loading" v-for="commentaire in commentaires"
-                        :id="commentaire.idCommentaire" :texte="commentaire.texte" :date="commentaire.date"
-                        :utilisateurId="commentaire.utilisateurId" :recetteId="commentaire.recetteId"
-                        :nomComplet="commentaire.nomComplet" />
-                </div>
+
             </div>
 
         </div>
