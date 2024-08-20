@@ -107,6 +107,9 @@ export async function fetchCommentaires(recetteId) {
     const reponse = await fetch(`/api/comments/${recetteId}`);
 
     if (reponse.ok) {
+        if (reponse.status === 204) {
+            return [];
+        }
         const repJson = await reponse.json();
         return repJson.map(c => convertirEnCommentaire(c));
     } else {
@@ -133,3 +136,34 @@ export async function ajouterCommentaire(commentaire) {
     }
 };
 
+export async function fetchAppreciations(recetteId) {
+    const reponse = await fetch(`/api/appreciations/${recetteId}`);
+
+    if (reponse.ok) {
+        if (reponse.status === 204) {
+            return null;
+        }
+        return await reponse.json();
+    } else {
+        throw new Error(`La moyenne d'appreciation pour la recette ${recetteId} est introuvable`);
+    }
+};
+
+export async function ajouterAppreciation(appreciation) {
+    const reponse = await fetch(`/api/appreciations/${appreciation.recetteId}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            ...session.getAuthHeaders()
+        },
+        body: JSON.stringify( appreciation )
+        
+    });
+
+    if(reponse.ok) {
+        const data = await reponse.json();
+        return data.etoiles;
+    } else {
+        throw new Error(`Impossible d'ajouter l'appreciation pour la recette ${appreciation.recetteId}: ${reponse.status}`)
+    }
+};

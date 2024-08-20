@@ -38,7 +38,7 @@ CREATE TABLE commentaire(
 
 CREATE TABLE appreciation(
    appreciation_id serial PRIMARY KEY,
-   etoiles INT NOT NULL,
+   etoiles INT,
    recette_id VARCHAR(50),
    utilisateur_id VARCHAR(50) NOT NULL,
    FOREIGN KEY(recette_id) REFERENCES Recette(recette_id),
