@@ -34,7 +34,7 @@ router.post('/:recetteId',
         if (req.body.utilisateurId !== utilisateur.compteUtilisateurId) {
             return next(new HttpError(403, "Vous ne pouvez pas envoyer des commentaires sous un autre utilisateur id"));
         }
-        const idRecette = req.body.recetteId;
+        const idRecette = req.body.recette_id;
         if (!idRecette || idRecette === '') {
             return next(new HttpError(400, 'Le champ idRecette est requis'));
         }

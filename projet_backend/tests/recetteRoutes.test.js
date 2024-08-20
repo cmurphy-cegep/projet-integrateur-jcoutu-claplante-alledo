@@ -8,8 +8,8 @@ describe("tests routes", function () { // eslint-disable-line max-lines-per-func
     beforeEach(() => {
         jest.resetAllMocks();
     });
-    describe("Route RECETTE", () => { // eslint-disable-line max-lines-per-function
 
+    describe("Route RECETTE", () => { // eslint-disable-line max-lines-per-function
         it("Get all recettes devrait retourner 200", async () => { 
             const mockAllRecettes = [
                 {
@@ -42,7 +42,6 @@ describe("tests routes", function () { // eslint-disable-line max-lines-per-func
             const response = await requete(app).get('/recettes/lasagnes');
             expect(response.status).toBe(200);
         })
-
         it("GET recettes/:recetteId devrait retourner 404", async () => {
             
 
@@ -51,12 +50,9 @@ describe("tests routes", function () { // eslint-disable-line max-lines-per-func
             const response = await requete(app).get('/recettes/lasagnes');
             expect(response.status).toBe(404);
         })
-
-
     });
 
     describe("Route INGREDIENT",() => { // eslint-disable-line max-lines-per-function
-
         it("GET ingredients/:recetteId devrait retourner 200", async () => {
             const mockIngredients = {
                 id: "tomate",
@@ -70,7 +66,6 @@ describe("tests routes", function () { // eslint-disable-line max-lines-per-func
             const response = await requete(app).get('/ingredients/tomate');
             expect(response.status).toBe(200);
         })
-
         it("GET ingredients/:recetteId devrait retourner 404", async () => {
             mockRecetteQueries.getIngredientsSelonRecetteId.mockResolvedValue(undefined);
 
@@ -82,7 +77,7 @@ describe("tests routes", function () { // eslint-disable-line max-lines-per-func
 
     describe("Route ETAPE", () => {
 
-        it("Get all etapes devrait retourner 200", async () => {
+        it("GET all etapes devrait retourner 200", async () => {
 
             const mockEtape = [{
                 id: 1,
@@ -96,7 +91,7 @@ describe("tests routes", function () { // eslint-disable-line max-lines-per-func
             expect(response.status).toBe(200);
         })
 
-        it("Get all etapes devrait retourner 404", async () => {
+        it("GET all etapes devrait retourner 404", async () => {
 
             const mockEtape = 
             [
@@ -106,6 +101,104 @@ describe("tests routes", function () { // eslint-disable-line max-lines-per-func
 
             const response = await requete(app).get('/etapes/tomate');
             expect(response.status).toBe(200);
+        })
+    })
+
+    describe("Route APPRECIATION", () => { // eslint-disable-line max-lines-per-function
+        it("GET all appreciations devrait retourner 200", async () => {
+
+            const mockAppreciation = 1 ;
+
+            mockRecetteQueries.getMoyenneAppreciationSelonRecetteId.mockResolvedValue(mockAppreciation);
+
+            const response = await requete(app).get('/appreciations/tomate');
+            expect(response.status).toBe(200);
+        })
+
+        it("GET all appreciations devrait retourner 204" , async () => {
+            mockRecetteQueries.getMoyenneAppreciationSelonRecetteId.mockResolvedValue(null);
+
+            const response = await requete(app).get('/appreciations/tomate');
+            expect(response.status).toBe(204);
+        })
+
+        it("GET all appreciations devrait retourner 404" , async () => {
+            mockRecetteQueries.getMoyenneAppreciationSelonRecetteId.mockResolvedValue(undefined);
+
+            const response = await requete(app).get('/appreciations/tomate');
+            expect(response.status).toBe(404);
+        })
+
+        it("POST appreciation AJOUT devrait retourner 200", async () => {
+            const MockAppreciation =
+        {
+            etoiles: 1,
+            utilisateurId: "alledo",
+            recetteId: "lasagnes"
+        };
+
+        mockRecetteQueries.aDejaFaitAppreciationSurRecetteId.mockResolvedValue(false);
+        mockRecetteQueries.ajouterAppreciation.mockResolvedValue(MockAppreciation);
+
+        const response = await requete(app).post('/appreciations/lasagnes')
+            .auth('alledo', '12345')
+            .send(MockAppreciation);
+
+        expect(response.status).toBe(200);
+        })
+
+        it("POST appreciation AJOUT devrait retourner 404", async () => {
+            const MockAppreciation =
+        {
+            etoiles: 1,
+            utilisateurId: "alledo",
+            recetteId: "lasagnes"
+        };
+
+        mockRecetteQueries.aDejaFaitAppreciationSurRecetteId.mockResolvedValue(false);
+        mockRecetteQueries.ajouterAppreciation.mockResolvedValue(undefined);
+
+        const response = await requete(app).post('/appreciations/lasagnes')
+            .auth('alledo', '12345')
+            .send(MockAppreciation);
+
+        expect(response.status).toBe(404);
+        })
+
+        it("POST appreciation MODIFICATION devrait retourner 200", async () => {
+            const MockAppreciation =
+        {
+            etoiles: 1,
+            utilisateurId: "alledo",
+            recetteId: "lasagnes"
+        };
+
+        mockRecetteQueries.aDejaFaitAppreciationSurRecetteId.mockResolvedValue(true);
+        mockRecetteQueries.modifierAppreciation.mockResolvedValue(MockAppreciation);
+
+        const response = await requete(app).post('/appreciations/lasagnes')
+            .auth('alledo', '12345')
+            .send(MockAppreciation);
+
+        expect(response.status).toBe(200);
+        })
+
+        it("POST appreciation MODIFICATION devrait retourner 404", async () => {
+            const MockAppreciation =
+        {
+            etoiles: 1,
+            utilisateurId: "alledo",
+            recetteId: "lasagnes"
+        };
+
+        mockRecetteQueries.aDejaFaitAppreciationSurRecetteId.mockResolvedValue(true);
+        mockRecetteQueries.modifierAppreciation.mockResolvedValue(undefined);
+
+        const response = await requete(app).post('/appreciations/lasagnes')
+            .auth('alledo', '12345')
+            .send(MockAppreciation);
+
+        expect(response.status).toBe(404);
         })
     })
 });
