@@ -71,7 +71,7 @@
 import ListeEtapes from './ListeEtapes.vue';
 import ListeIngredients from './ListeIngredients.vue';
 import ListeCommentaires from './ListeCommentaires.vue';
-import { fetchRecette, fetchIngredients, fetchEtapes, fetchCommentaires, fetchAppreciations, ajouterAppreciation } from '../../RecetteService';
+import { fetchRecette, fetchIngredients, fetchEtapes, fetchCommentaires, ajouterCommentaire,  fetchAppreciations, ajouterAppreciation } from '../../RecetteService';
 import LoadingSpinner from '../../components/LoadingSpinner.vue';
 import session from '../../session';
 
@@ -90,8 +90,8 @@ export default {
             recette: null,
             ingredients: [],
             etapes: [],
-            appreciation: null,
             commentaires: [],
+            appreciation: null,
             nouvelleAppreciation: [],
             session: session,
             loading: true,
