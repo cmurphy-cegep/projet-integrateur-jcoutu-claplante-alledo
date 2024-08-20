@@ -1,8 +1,10 @@
+const HttpError = require('../HttpError');
 const pool = require('./DBPool');
+const crypto = require("crypto");
 
 const getConnexionSelonCompteUtilisateurId = async (compteUtilisateurId) => {
     const resultat = await pool.query(
-        `SELECT utilisateur_id, nom_complet, mot_de_passe_hash, mot_de_passe_sale, est_admin
+        `SELECT utilisateur_id, nom_complet, mot_de_passe_hash, mot_de_passe_Sel, est_admin
          FROM utilisateur
          WHERE utilisateur_id = $1`,
         [compteUtilisateurId]
@@ -14,7 +16,7 @@ const getConnexionSelonCompteUtilisateurId = async (compteUtilisateurId) => {
             compteUtilisateurId: row.utilisateur_id,
             utilisateurNomComplet: row.nom_complet,
             motDePasseHash: row.mot_de_passe_hash,
-            motDePasseSale: row.mot_de_passe_sale,
+            selMotDePasse: row.mot_de_passe_Sel,
             estAdmin: row.est_admin
         };
     }
@@ -46,13 +48,48 @@ const getCompteUtilisateur = async (utilisateurId, client) => {
 };
 exports.getCompteUtilisateur = getCompteUtilisateur;
 
-const creerCompteUtilisateur = async (utilisateurId, nom, client) => {
+const verifierExistenceUtilisateur = async (utilisateurId, client) => {
     const resultat = await (client || pool).query(
-        `INSERT INTO utilisateur (utilisateur_id, nom_complet) 
-        VALUES ($1, $2)`,
-        [utilisateurId, nom]
+        `SELECT utilisateur_id 
+        FROM utilisateur
+        WHERE utilisateur_id = $1`,
+        [utilisateurId]
     );
 
+    return resultat.rows.length > 0;
+};
+exports.verifierExistenceUtilisateur = verifierExistenceUtilisateur;
+
+const creerCompteUtilisateur = async (utilisateurId, motDePasse, utilisateurNomComplet) => {
+
+   
+
+    const selEtHash = creerSelEtHash(motDePasse);
+
+    await pool.query(
+        `INSERT INTO utilisateur (utilisateur_id, nom_complet, mot_de_passe_hash, mot_de_passe_sale, est_admin) 
+        VALUES ($1, $2, $3, $4, false)`,
+        [utilisateurId, utilisateurNomComplet, selEtHash.motDePasseHash, selEtHash.selMotDePasse]
+        );
+    
     return getCompteUtilisateur(utilisateurId);
 };
 exports.creerCompteUtilisateur = creerCompteUtilisateur;
+
+const creerSelEtHash = (motDePasse) => {
+    const iterations = 100000;
+    const keylen = 64;
+    const digest = "sha512";
+
+    const saltBuf = crypto.randomBytes(16);
+    const selMotDePasse = saltBuf.toString("base64");
+    const derivedKey = crypto.pbkdf2Sync(motDePasse, selMotDePasse, iterations, keylen, digest);
+
+    return {
+        motDePasseHash: derivedKey.toString("base64"),
+        selMotDePasse: selMotDePasse
+    };
+}
+
+
+
