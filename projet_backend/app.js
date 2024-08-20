@@ -50,7 +50,7 @@ passport.use(new BasicStrategyModified((nomUtilisateur, motDePasse, authResult) 
         const keylen = 64;
         const digest = "sha512";
 
-        crypto.pbkdf2(motDePasse, utilisateur.motDePasseSale, iterations, keylen, digest, (err, motDePasseHash) => {
+        crypto.pbkdf2(motDePasse, utilisateur.selMotDePasse, iterations, keylen, digest, (err, motDePasseHash) => {
             if (err) {
                return authResult(err);
             }

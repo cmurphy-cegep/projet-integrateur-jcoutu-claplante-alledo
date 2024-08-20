@@ -4,7 +4,7 @@ const crypto = require("crypto");
 
 const getConnexionSelonCompteUtilisateurId = async (compteUtilisateurId) => {
     const resultat = await pool.query(
-        `SELECT utilisateur_id, nom_complet, mot_de_passe_hash, mot_de_passe_Sel, est_admin
+        `SELECT utilisateur_id, nom_complet, mot_de_passe_hash, mot_de_passe_sale, est_admin
          FROM utilisateur
          WHERE utilisateur_id = $1`,
         [compteUtilisateurId]
@@ -16,7 +16,7 @@ const getConnexionSelonCompteUtilisateurId = async (compteUtilisateurId) => {
             compteUtilisateurId: row.utilisateur_id,
             utilisateurNomComplet: row.nom_complet,
             motDePasseHash: row.mot_de_passe_hash,
-            selMotDePasse: row.mot_de_passe_Sel,
+            selMotDePasse: row.mot_de_passe_sale,
             estAdmin: row.est_admin
         };
     }
