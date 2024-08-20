@@ -16,6 +16,8 @@ const recetteRouter = require('./routes/recetteRouter');
 const ingredientRouter = require('./routes/ingredientRouter');
 const etapeRouter = require('./routes/etapeRouter');
 const commentaireRouter = require('./routes/commentaireRouter');
+const connexionRouter = require('./routes/connexionRouter');
+
 
 const app = express();
 
@@ -73,44 +75,9 @@ app.use('/recettes', recetteRouter);
 app.use('/ingredients', ingredientRouter);
 app.use('/etapes', etapeRouter);
 app.use('/comments', commentaireRouter);
+app.use('/connexion', connexionRouter);
+app.use('/nouveauCompte', connexionRouter);
 
-
- app.get('/connexion',
-    passport.authenticate('basic', {session: false}),
-    (req, res, next) => {
-        if(req.user){
-            // TODO : CHANGER LES NOMS DES VARIABLES
-             const utilisateurDetails = {
-                compteUtilisateurId: req.user.compteUtilisateurId,
-                utilisateurNomComplet: req.user.utilisateurNomComplet,
-                estAdmin: req.user.estAdmin
-             };
-            
-            res.json(utilisateurDetails);
-        }else{
-            return next({status: 500, message: "Propriété user absente"})
-        }
-    }
- );
-
- app.post('/nouveauCompte', (req, res, next) => {
-    const { utilisateurId, utilisateurNomComplet, motDePasseHash, motDePasseSale, estAdmin } = req.body;
-
-    compteUtilisateurQueries.verifierExistenceUtilisateur(utilisateurId)
-    .then(existe => {
-        if (!existe){
-            compteUtilisateurQueries.creerCompteUtilisateur(utilisateurId, utilisateurNomComplet, motDePasseHash, motDePasseSale, estAdmin);
-        }else{
-            return next(new HttpError(err,`L\'utilisateur ${utilisateurId} existe déjà`));
-        }
-    })
-    .then(utilisateur => {
-        res.status(201).json(utilisateur);
-    })
-    .catch(err => {
-        return next(err);
-    });
- });
 
 app.use((err, req, res, next) => {
     console.log("error handler: ", err);
