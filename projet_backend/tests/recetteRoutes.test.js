@@ -4,7 +4,7 @@ jest.mock('../queries/RecetteQueries');
 const mockRecetteQueries = require('../queries/RecetteQueries');
 
 
-describe("tests routes", function () { // eslint-disable-line max-lines-per-function
+describe("tests routes", () => { // eslint-disable-line max-lines-per-function
     beforeEach(() => {
         jest.resetAllMocks();
     });
