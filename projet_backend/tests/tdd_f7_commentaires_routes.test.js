@@ -26,6 +26,14 @@ describe('tests routes commentaires', () => { // eslint-disable-line max-lines-p
         expect(response.status).toBe(200);
     })
 
+    it("GET /:recetteId devrait retourner 204", async () => {
+
+        const Mockcommentaire = [];
+        mockRecetteQueries.getCommentairesSelonRecetteId.mockResolvedValue(Mockcommentaire);
+
+        const response = await requete(app).get('/comments/lasagnes');
+        expect(response.status).toBe(204);
+    })
 
     it("POST /:id devrait retourner 200", async () => {
 
