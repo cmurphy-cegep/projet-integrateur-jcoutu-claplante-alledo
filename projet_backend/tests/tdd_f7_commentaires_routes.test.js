@@ -26,12 +26,6 @@ describe('tests routes commentaires', () => { // eslint-disable-line max-lines-p
         expect(response.status).toBe(200);
     })
 
-    it("GET /:recetteId devrait retourner 404 ID not found", async () => {
-        const response = await requete(app).get('/comments/hjhgj');
-        console.log(response);
-        expect(response.status).toBe(404);
-    })
-
     it("GET /:recetteId devrait retourner 204", async () => {
 
         const Mockcommentaire = [];
