@@ -16,6 +16,7 @@ const recetteRouter = require('./routes/recetteRouter');
 const ingredientRouter = require('./routes/ingredientRouter');
 const etapeRouter = require('./routes/etapeRouter');
 const commentaireRouter = require('./routes/commentaireRouter');
+const appreciationRouter = require('./routes/appreciationRouter');
 
 const app = express();
 
@@ -73,6 +74,7 @@ app.use('/recettes', recetteRouter);
 app.use('/ingredients', ingredientRouter);
 app.use('/etapes', etapeRouter);
 app.use('/comments', commentaireRouter);
+app.use('/appreciations', appreciationRouter);
 
 
  app.get('/connexion',

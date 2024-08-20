@@ -147,3 +147,77 @@ const ajouterCommentaire = async (commentaire) => {
     }
 };
 exports.ajouterCommentaire = ajouterCommentaire;
+
+const getMoyenneAppreciationSelonRecetteId = async (recetteId) => {
+    const result = await pool.query(
+        `SELECT ROUND(AVG(etoiles), 1) AS moyenne_etoiles
+         FROM appreciation
+         WHERE recette_id = $1`,
+        [recetteId]
+    );
+    
+    const row = result.rows[0];
+    if (row && row.moyenne_etoiles !== null) {
+        
+        return row.moyenne_etoiles;
+    } else {
+        return null
+    }
+};
+exports.getMoyenneAppreciationSelonRecetteId = getMoyenneAppreciationSelonRecetteId;
+
+const aDejaFaitAppreciationSurRecetteId = async (appreciation) => {
+    const result = await pool.query(
+        `SELECT etoiles 
+        FROM appreciation
+        WHERE recette_id = $1
+        AND utilisateur_id = $2`,
+        [appreciation.recetteId, appreciation.utilisateurId]
+    );
+
+    return result.rows.length > 0;
+};
+exports.aDejaFaitAppreciationSurRecetteId = aDejaFaitAppreciationSurRecetteId;
+
+const ajouterAppreciation = async (appreciation) => {
+    const result = await pool.query(
+        `INSERT INTO appreciation (etoiles, recette_id, utilisateur_id) 
+         VALUES ($1, $2, $3)
+         RETURNING *`,
+        [appreciation.nbEtoiles, appreciation.recetteId, appreciation.utilisateurId]
+    )
+    const row = result.rows[0];
+    if (row) {
+        const appreciation = {
+            nbEtoiles: row.etoiles,
+            recetteId: row.recette_id,
+            utilisateurId: row.utilisateur_id
+        };
+        return appreciation;
+    };
+};
+exports.ajouterAppreciation = ajouterAppreciation;
+
+const modifierAppreciation = async (appreciation) => {
+    const result = await pool.query(
+        `UPDATE appreciation
+            SET etoiles = $1
+            WHERE recette_id = $2 AND utilisateur_id = $3
+            RETURNING *`,
+        [appreciation.nbEtoiles, appreciation.recetteId, appreciation.utilisateurId]
+    )
+
+    const rowModifier = result.rows[0];
+    if (rowModifier) {
+        const appreciation = {
+            nbEtoiles: rowModifier.etoiles,
+            recetteId: rowModifier.recette_id,
+            utilisateurId: rowModifier.utilisateur_id
+        };
+        return appreciation;
+    }else{
+        return null;
+    }
+};
+
+exports.modifierAppreciation = modifierAppreciation;
