@@ -16,7 +16,7 @@
                                 style="font-size:150%;color:yellow;">&#9733;</span>
                         </div>
                     </h2>
-                    <form @submit.prevent="soumettreAppreciation">
+                    <form @submit.prevent="soumettreAppreciation" v-if="session.user">
                         <p>
                         <p>Votre avis:</p>
 

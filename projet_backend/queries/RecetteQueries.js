@@ -110,6 +110,7 @@ const getCommentairesSelonRecetteId = async (recetteId) => {
         ORDER BY date_publication DESC`,
         [recetteId]
     );
+
     return result.rows.map(row => {
         const commentaire = {
             id: row.commentaire_id,
