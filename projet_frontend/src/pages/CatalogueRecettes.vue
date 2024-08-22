@@ -1,9 +1,12 @@
 <template>
-  <div id="recette-list">
+  <div id="recette-liste">
     <h2>Catalogue de recettes</h2>
-    <LoadingSpinner :error="loadError" :loading="loading"/>
-    <ItemCatalogue v-for="recette in recettes" v-if="!loading" :id="recette.id" :desc="recette.desc"
-                    :nom="recette.nom" :image="recette.image"/>
+    <LoadingSpinner :error="loadError" :loading="loading" />
+    <div v-if="!loading" class="recette-grille">
+      <div v-for="recette in recettes" :key="recette.id" class="recette-conteneur">
+        <ItemCatalogue :id="recette.id" :image="recette.image" :nom="recette.nom" :desc="recette.desc" />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -39,10 +42,26 @@ export default {
 </script>
 
 <style scoped>
-#recette-list {
-  flex-basis: 70%;
-  margin-right: 20px;
-  border: 1px solid black;
-  padding: 10px;
+.recette-grille {
+  display: grid;
+}
+
+.recette-conteneur {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@media (min-width: 600px) {
+  .recette-grille {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 900px) {
+  .recette-grille {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 </style>

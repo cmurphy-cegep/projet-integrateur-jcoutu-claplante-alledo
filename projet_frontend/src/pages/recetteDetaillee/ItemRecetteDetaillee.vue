@@ -10,7 +10,7 @@
                     <div class="recette-desc-longue" v-html="recette.desc"></div>
                     <div class="recette-conteneur4">
                         <h3>Commentaires <button type="button" v-if="session.user && !voirAjoutCommentaire"
-                                @click="voirAjoutCommentaire = true">Ajouter un
+                                @click="voirAjoutCommentaire = true" class="ajouter-Commentaire">Ajouter un
                                 commentaire</button></h3>
 
                         <div v-if=voirAjoutCommentaire>
@@ -26,10 +26,21 @@
                                 <button type="button" @click="annulerAjoutCommentaire">Annuler</button>
                             </form>
                         </div>
-                        <ListeCommentaires v-if="!loading" v-for="commentaire in commentaires"
+                        <!-- <ListeCommentaires v-if="!loading" v-for="commentaire in commentaires"
                             :id="commentaire.idCommentaire" :texte="commentaire.texte" :date="commentaire.date"
                             :utilisateurId="commentaire.utilisateurId" :recetteId="commentaire.recetteId"
-                            :nomComplet="commentaire.nomComplet" />
+                            :nomComplet="commentaire.nomComplet" /> -->
+                        <div v-if="!loading" v-for="(commentaire, index) in commentaires" :key="index"
+                            class="commentaire-conteneur">
+                            <div class="commentaire-gauche">
+                                <div class="commentaire-nom">{{ commentaire.nomComplet }}</div>
+                                <div class="commentaire-date">{{ commentaire.date }}</div>
+                            </div>
+                            <div class="commentaire-droite">
+                                <div class="commentaire-texte">{{ commentaire.texte }}</div>
+                            </div>
+                            <div v-if="index < commentaires.length - 1" style="margin-bottom: 1rem;"></div>
+                        </div>
                     </div>
                 </div>
                 <div class="recette-conteneur2">
@@ -68,15 +79,15 @@
                     <div class="recette-conteneur3">
                         <div class="recette-preparation">
                             <label for="recette-preparation">Préparation</label>
-                            {{ recette.preparation }}
+                            <div> {{ recette.preparation }} min</div>
                         </div>
                         <div class="recette-cuisson">
                             <label for="recette-cuisson">Cuisson</label>
-                            {{ recette.cuisson }}
+                            <div> {{ recette.cuisson }} min</div>
                         </div>
                         <div class="recette-portions">
                             <label for="recette-portions">Portions</label>
-                            {{ recette.portions }}
+                            <div> {{ recette.portions }}</div>
                         </div>
                     </div>
                     <h3 class="ingredient"> Ingrédients</h3>
@@ -257,7 +268,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    width: 45vw;
+    width: 60vw;
     /* Utilisez des unités relatives pour la largeur */
     padding: 2vw;
     /* Utilisez des unités relatives pour le padding */
@@ -285,18 +296,36 @@ export default {
     /* Utilisez des unités relatives pour la bordure */
 }
 
-.image-redimensionnee {
+/* .image-redimensionnee {
     max-width: 100%;
     height: auto;
     flex: 0 0 auto;
-    /* Utilisez des unités relatives pour la marge */
+    /* Utilisez des unités relatives pour la marge 
+} */
+.image-redimensionnee {
+    width: 50vw;
+    /* Le conteneur prend 100% de la largeur disponible */
+    height: 30vw;
+    /* Définissez la hauteur fixe souhaitée */
+    overflow: hidden;
+    /* Cache les parties de l'image qui dépassent */
 }
 
-.image-redimensionnee img {
+/* .image-redimensionnee img {
     width: 100%;
     height: auto;
     display: block;
     object-fit: cover;
+} */
+.image-redimensionnee img {
+    width: 100%;
+    /* L'image prend 100% de la largeur du conteneur */
+    height: 100%;
+    /* L'image prend 100% de la hauteur du conteneur */
+    max-height: 100vw;
+    /* La hauteur maximale de l'image ne dépasse jamais la largeur de la fenêtre */
+    object-fit: cover;
+    /* L'image s'étire ou se contracte pour remplir le conteneur */
 }
 
 .recette-desc-longue {
@@ -307,11 +336,38 @@ export default {
     max-width: 100%;
 }
 
-.recette-desc-longue br {
-    margin-bottom: 1em !important;
-    /* Ajustez cette valeur selon l'espace souhaité */
-    display: block !important;
-    /* Assurez-vous que le br est traité comme un élément de bloc */
+.ajouter-Commentaire {
+    margin-left: 1rem;
+}
+
+.commentaire-conteneur {
+    display: flex;
+    margin-bottom: 1rem;
+    border-top: 1px solid lightgrey;
+}
+
+.commentaire-gauche {
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+    margin-right: 1rem;
+    padding-top: 0.5rem;
+}
+
+.commentaire-nom {
+    font-weight: bold;
+    flex: 1;
+}
+
+.commentaire-date {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: gray;
+}
+
+.commentaire-droite {
+    padding-top: 0.5rem;
+    flex: 1;
 }
 
 .recette-titre {
@@ -342,7 +398,16 @@ export default {
     flex: 1;
     box-sizing: border-box;
     padding: 2vw;
+    text-align: center;
     /* Utilisez des unités relatives pour le padding */
+}
+
+.recette-preparation div,
+.recette-cuisson div,
+.recette-portions div {
+    font-weight: bold;
+    margin-top: 1rem;
+    /* Ajustez cette valeur pour un espace plus prononcé */
 }
 
 #commentaire-texte {

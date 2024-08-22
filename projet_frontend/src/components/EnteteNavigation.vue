@@ -7,7 +7,7 @@
                 </router-link>
             </div>
             <div class="nav">
-                <span v-if="session.user && session.user.estAdmin"> 
+                <span v-if="session.user && session.user.estAdmin">
                     <router-link to="/admin/nouvelle-recette">Nouvelle recette</router-link>
                 </span>
             </div>
@@ -15,12 +15,13 @@
             <div v-if="session.user && session.user.estAdmin">
                 <img class="admin-image" src="../../imageAdmin/admin.jpg" alt="Administrateur">
             </div>
-            <div class="connexion">
+            <div>
                 <div v-if="session.user">
                     <div>Bienvenue, {{ session.user.utilisateurNomComplet }}
-                    <a href="" @click.prevent="session.disconnect()">Déconnexion</a></div>
+                        <a href="" @click.prevent="session.disconnect()" class="connexion">Déconnexion</a>
+                    </div>
                 </div>
-                <div v-else><router-link to="/connexion">Se connecter</router-link></div>
+                <div v-else><router-link to="/connexion" class="connexion">Se connecter</router-link></div>
             </div>
         </div>
     </header>
@@ -73,10 +74,16 @@ export default {
 
 
 .connexion {
-    flex-basis: 0 0 30%;
-    padding: 0.3rem;
+    flex-basis: 30%;
+    padding: .5rem;
     text-align: right;
+    border: 1px solid #000;
+    /* Couleur et épaisseur de la bordure */
+    border-radius: 25px;
+    /* Forme ovale */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
 }
+
 .admin {
     flex-basis: 0 0 5%;
 }

@@ -1,17 +1,19 @@
 <template>
-  <div class="recette">
-    <img :src="imageSrc" alt="Image" />
-    <div class="recette-info">
-      <div class="recette-name">
-        <router-link :to="recetteDetailUrl">{{ nom }}</router-link>
+  <router-link :to="recetteDetailUrl">
+    <div class="recette">
+      <div class="recette-image">
+        <img :src="imageSrc" alt="Image" />
       </div>
-      <div class="recette-description">{{ desc }}</div>
+      <div class="recette-info">
+        <div class="recette-nom">{{ nom }}</div>
+        <div class="recette-description">{{ desc }}</div>
+      </div>
     </div>
-  </div>
+  </router-link>
 </template>
 
 <script>
-import {addApiPrefixToPath} from '@/api_utils';
+import { addApiPrefixToPath } from '@/api_utils';
 import session from '../session';
 
 export default {
@@ -33,43 +35,42 @@ export default {
     imageSrc() {
       return `data:image/png;base64,${this.image}`;
     },
-    
+
   }
 }
 </script>
 
 <style scoped>
 .recette {
-  margin-bottom: 20px;
+  width: 100%;
+  height: 100%;
   border: 1px solid black;
-  padding: 10px;
   overflow: hidden;
-  clear: both;
 }
 
 .recette img {
-  float: left;
-  margin-right: 10px;
-  width: 100px;
-  object-fit: cover;
+  width: 100%;
+  height: 40vh;
+  object-fit: hidden;
 }
 
 .recette-info {
   float: left;
-  width: 60%;
+  width: 100%;
 }
 
-.recette-name {
+.recette-nom {
   font-weight: bold;
   font-size: 1.2em;
   margin-bottom: 5px;
+  text-align: center;
 }
 
 .recette-description {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: 650px;
+  width: 575px;
   margin-top: 5px;
   font-size: 0.9em;
   color: #666;
