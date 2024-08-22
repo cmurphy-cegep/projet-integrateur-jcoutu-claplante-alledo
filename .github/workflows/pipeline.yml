@@ -42,7 +42,7 @@ jobs:
       - name: Fix backend vulnerabilities
         run: |
           cd ./projet_backend/
-          npm audit fix
+          npm run audit
 
       - name: Migrate PostgreSQL
         run: |

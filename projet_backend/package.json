@@ -6,9 +6,11 @@
     "test": "jest",
     "test-coverage": "jest --coverage",
     "dev": "nodemon ./bin/www",
-    "lint": "eslint"
+    "lint": "eslint",
+    "audit": "better-npm-audit audit --production"
   },
   "dependencies": {
+    "better-npm-audit": "^3.8.3",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "^4.16.1",
