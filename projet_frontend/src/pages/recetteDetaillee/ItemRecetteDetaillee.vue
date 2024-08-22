@@ -91,7 +91,9 @@
                         :nomComplet="commentaire.nomComplet" />
                 </div>
             </div>
-            <button type="button" v-if="session.user && session.user.estAdmin" @click="activerEdition">Éditer</button>
+            <div v-if="session.user && session.user.estAdmin">
+                <router-link :to="redirigerVersEdition" custom v-slot="{navigate}"><button @click="navigate" role="link">Éditer</button></router-link>
+            </div>
             <div v-if="edition">
                 <form @submit.prevent="soumettreRecetteEditee">
                     <div>
@@ -200,9 +202,7 @@ export default {
                 this.errorMessage = err.message;
             });
         },
-        activerEdition() {
-            this.edition = true;
-        },
+
         annulerEdition() {
             this.edition = false;
             this.rafraichirRecette(this.id);
@@ -259,7 +259,10 @@ export default {
     computed: {
         imageSrc() {
             return `data:image/png;base64,${this.recette.image}`;
-        }
+        },
+        redirigerVersEdition() {
+            return "/editerRecette/" + this.id;
+        },
     },
     watch: {
         id(nouvelId) {

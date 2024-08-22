@@ -8,7 +8,7 @@
             </div>
             <div class="nav">
                 <span v-if="session.user && session.user.estAdmin"> 
-                    <router-link to="/admin/nouvelle-recette">Nouvelle recette</router-link>
+                    <router-link to="/nouvelleRecette">Nouvelle recette</router-link>
                 </span>
             </div>
 

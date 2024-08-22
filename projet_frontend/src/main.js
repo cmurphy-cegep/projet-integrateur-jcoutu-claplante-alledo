@@ -5,6 +5,8 @@ import App from './App.vue';
 import CatalogueRecettes from './pages/CatalogueRecettes.vue';
 import ItemRecetteDetaillee from './pages/recetteDetaillee/ItemRecetteDetaillee.vue';
 import FormulaireLogin from './pages/FormulaireLogin.vue';
+import AjouterOuEditerRecette from './pages/AjouterOuEditerRecette.vue';
+import AjouterRecette from './pages/AjouterRecette.vue';
 
 const app = createApp(App);
 
@@ -15,7 +17,8 @@ const router = createRouter({
         { path: '/recettes/:id', component: ItemRecetteDetaillee, props: true },
         { path: '/connexion', component: FormulaireLogin },
         { path: '/recettes', component: CatalogueRecettes },
-        //{ path: '/admin/nouvelle-recette', component: A determiner },       
+        { path: '/nouvelleRecette', component: AjouterRecette, props: { modeNouvelleRecette: true } },
+        { path: '/editerRecette/:id', component: AjouterOuEditerRecette, props: true }      
     ]
 });
 
