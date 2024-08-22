@@ -18,7 +18,7 @@ const convertirEnRecette = jsonRecette => {
     return {
         id: jsonRecette.id,
         nom: jsonRecette.nom,
-        desc: jsonRecette.description.replaceAll('\\r\\n', '<br/>'),
+        desc: jsonRecette.description.replace(/\\r\\n|\n/g, '<br/>'),
         preparation: formatterNombreVide(jsonRecette.preparation),
         cuisson: formatterNombreVide(jsonRecette.cuisson),
         portions: formatterNombreVide(jsonRecette.portions),
