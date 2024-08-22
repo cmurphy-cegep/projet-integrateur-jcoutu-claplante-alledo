@@ -48,7 +48,7 @@ export default {
         }
 
             const nouveauCompte = {
-                utilisateurId: this.utilisateurId,
+                utilisateurId: (this.utilisateurId).toLowerCase(),
                 motDePasse: this.motDePasse,
                 nomComplet: this.nomComplet
             };

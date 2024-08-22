@@ -42,7 +42,9 @@
             this.validerNomCompte();
             this.validerMotDePasse();
 
-            session.login(this.nomCompte, this.motDePasse).then(user => {
+            const nomCompteMinuscules = this.nomCompte.toLowerCase()
+
+            session.login(nomCompteMinuscules, this.motDePasse).then(user => {
                alert("Bienvenue, " + user.utilisateurNomComplet + (user.estAdmin ? ".\nVous êtes administrateur." : "."));
                 this.$router.push('/');
             }).catch(authError => {
