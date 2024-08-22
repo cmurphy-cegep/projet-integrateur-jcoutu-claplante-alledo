@@ -28,18 +28,15 @@ const convertirEnRecette = jsonRecette => {
 
 const convertirEnIngredient = jsonIngredient => {
     return {
-        idIngredient: jsonIngredient.id,
         nom: (jsonIngredient.quantite > 1 && jsonIngredient.uniteMesure === '') ? jsonIngredient.nom+'s' : jsonIngredient.nom,
         quantite: (jsonIngredient.quantite % 1 === 0) ? Number(jsonIngredient.quantite) : jsonIngredient.quantite,
-        uniteMesure: jsonIngredient.uniteMesure,
+        uniteMesure: jsonIngredient.uniteMesure
     };
 };
 
 const convertirEnEtape = jsonEtape => {
     return {
-        idEtape: jsonEtape.id,
-        description: jsonEtape.description,
-        ordre: jsonEtape.ordre,
+        description: jsonEtape.description
     };
 };
 
@@ -61,23 +58,6 @@ export async function fetchRecette(recetteId) {
         return convertirEnRecette(await reponse.json());
     } else {
         throw new Error(`Recette ${recetteId} introuvable`);
-    }
-};
-
-export async function mettreAJourRecette(recette) {
-    const reponse = await fetch(`/api/recettes/${recette.recetteId}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-            ...session.getAuthHeaders()
-        },
-        body: JSON.stringify(recette)
-    });
-    
-    if (reponse.ok) {
-        return convertirEnRecette(await reponse.json());
-    } else {
-        throw new Error(`Impossible d'éditer la recette ${recette.recetteId}: ${reponse.status}`);
     }
 };
 
@@ -165,5 +145,39 @@ export async function ajouterAppreciation(appreciation) {
         return data.etoiles;
     } else {
         throw new Error(`Impossible d'ajouter l'appreciation pour la recette ${appreciation.recetteId}: ${reponse.status}`)
+    }
+};
+
+export async function mettreAJourRecette(recette) {
+    const reponse = await fetch(`/api/recettes/${recette.recetteId}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            ...session.getAuthHeaders()
+        },
+        body: JSON.stringify(recette)
+    });
+    
+    if (reponse.ok) {
+        return convertirEnRecette(await reponse.json());
+    } else {
+        throw new Error(`Impossible d'éditer la recette ${recette.recetteId}: ${reponse.status}`);
+    }
+};
+
+export async function creerRecette(recette) {
+    const reponse = await fetch(`/api/recettes`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            ...session.getAuthHeaders()
+        },
+        body: JSON.stringify(recette)
+    });
+    
+    if (reponse.ok) {
+        return;
+    } else {
+        throw new Error(`Impossible d'ajouter la nouvelle recette: ${reponse.status}`);
     }
 };

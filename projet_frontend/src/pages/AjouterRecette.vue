@@ -1,6 +1,6 @@
 <template>
     <div v-if="session.user && session.user.estAdmin">
-        <form @submit.prevent="soumettreFormulaire">
+        <form @submit.prevent="soumettreNouvelleRecette">
             <div v-if="modeNouvelleRecette">
                 <label for="recette-id">Identifiant de la recette : </label>
                 <input id="recette-id" v-model="recette.id" />
@@ -42,7 +42,7 @@
                         <td>{{ ingredient.quantite }}</td>
                         <td>{{ ingredient.uniteMesure }}</td>
                         <td>{{ ingredient.nom }}</td>
-                        <td><button v-if="ingredient" @click="supprimerIngredient(index)">Supprimer
+                        <td><button type="button" v-if="ingredient" @click="supprimerIngredient(index)">Supprimer
                                 l'ingrédient</button></td>
                     </tr>
 
@@ -52,7 +52,7 @@
                         <td><input type="number" id="ingredient-quantite" v-model="ajoutQuantite" /></td>
                         <td><input id="ingredient-uniteMesure" v-model="ajoutUniteMesure" /></td>
                         <td><input id="ingredient-nom" v-model="ajoutNomIngredient" /></td>
-                        <td><button @click="ajouterIngredient">Ajouter
+                        <td><button type="button" @click="ajouterIngredient">Ajouter
                                 l'ingrédient</button></td>
                     </tr>
                 </tfoot>
@@ -66,25 +66,27 @@
                 <tbody>
                     <tr v-for="(etape, index) in etapes">
                         <td>{{ etape.description }}</td>
-                        <td><button v-if="etape && index !== 0" @click="deplacerEtapeVersHaut(index)">Déplacer vers le
+                        <td><button type="button" v-if="etape && index !== 0" @click="deplacerEtapeVersHaut(index)">Déplacer vers le
                                 haut</button></td>
-                        <td><button v-if="etape && index !== etapes.length - 1"
+                        <td><button type="button" v-if="etape && index !== etapes.length - 1"
                                 @click="deplacerEtapeVersBas(index)">Déplacer vers le bas</button></td>
-                        <td><button v-if="etape" @click="supprimerEtape(index)">Supprimer l'étape</button></td>
+                        <td><button type="button" v-if="etape" @click="supprimerEtape(index)">Supprimer l'étape</button></td>
                     </tr>
                 </tbody>
                 <tfoot>
                     <tr>
                         <td><input id="etape-texte" v-model="ajoutDescriptionEtape" /></td>
-                        <td><button @click="ajouterEtape">Ajouter une étape</button></td>
+                        <td><button type="button" @click="ajouterEtape">Ajouter une étape</button></td>
                     </tr>
                 </tfoot>
             </table>
+            <button type="submit">Ajouter la recette</button>
         </form>
     </div>
 </template>
 
 <script>
+import { creerRecette } from '../RecetteService';
 import session from '../session';
 //import { fetchRecette, fetchIngredients, fetchEtapes } from '../RecetteService';
 
@@ -101,8 +103,6 @@ export default {
                 nom: this.nom || '',
                 preparation: this.preparation || '',
                 cuisson: this.cuisson || '',
-
-
             },
             ingredients: [],
             etapes: [],
@@ -139,20 +139,35 @@ export default {
         },
         deplacerEtapeVersHaut(index) {
             const temp = this.etapes[index];
-            this.etapes[index] = this.etapes[index-1]
-            this.etapes[index-1] = temp;
+            this.etapes[index] = this.etapes[index - 1]
+            this.etapes[index - 1] = temp;
         },
         deplacerEtapeVersBas(index) {
             const temp = this.etapes[index];
-            this.etapes[index] = this.etapes[index+1]
-            this.etapes[index+1] = temp;
+            this.etapes[index] = this.etapes[index + 1]
+            this.etapes[index + 1] = temp;
+        },
+        async soumettreNouvelleRecette() {
+            const nouvelleRecette = {
+                id: this.recette.id,
+                nom: this.recette.nom,
+                desc: this.recette.desc,
+                preparation: this.recette.preparation,
+                cuisson: this.recette.cuisson,
+                portions: this.recette.portions,
+                ingredients: this.ingredients,
+                etapes: this.etapes
+            }
+            try {
+                await creerRecette(nouvelleRecette);
+                this.$router.push('/recette/' + this.recette.id);
+            } catch (err) {
+                console.error(err);
+                alert(err.message);
+            }
         }
-    },
-    computed: {
-
     }
-
-}
+};
 
 </script>
 
