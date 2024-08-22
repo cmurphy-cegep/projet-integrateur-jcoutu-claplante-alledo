@@ -16,6 +16,7 @@ const recetteRouter = require('./routes/recetteRouter');
 const ingredientRouter = require('./routes/ingredientRouter');
 const etapeRouter = require('./routes/etapeRouter');
 const commentaireRouter = require('./routes/commentaireRouter');
+const connexionRouter = require('./routes/connexionRouter');
 const appreciationRouter = require('./routes/appreciationRouter');
 
 const app = express();
@@ -49,7 +50,7 @@ passport.use(new BasicStrategyModified((nomUtilisateur, motDePasse, authResult) 
         const keylen = 64;
         const digest = "sha512";
 
-        crypto.pbkdf2(motDePasse, utilisateur.motDePasseSale, iterations, keylen, digest, (err, motDePasseHash) => {
+        crypto.pbkdf2(motDePasse, utilisateur.selMotDePasse, iterations, keylen, digest, (err, motDePasseHash) => {
             if (err) {
                return authResult(err);
             }
@@ -74,26 +75,10 @@ app.use('/recettes', recetteRouter);
 app.use('/ingredients', ingredientRouter);
 app.use('/etapes', etapeRouter);
 app.use('/comments', commentaireRouter);
+app.use('/connexion', connexionRouter);
+app.use('/nouveauCompte', connexionRouter);
 app.use('/appreciations', appreciationRouter);
 
-
- app.get('/connexion',
-    passport.authenticate('basic', {session: false}),
-    (req, res, next) => {
-        if(req.user){
-            // TODO : CHANGER LES NOMS DES VARIABLES
-             const utilisateurDetails = {
-                compteUtilisateurId: req.user.compteUtilisateurId,
-                utilisateurNomComplet: req.user.utilisateurNomComplet,
-                estAdmin: req.user.estAdmin
-             };
-            
-            res.json(utilisateurDetails);
-        }else{
-            return next({status: 500, message: "Propriété user absente"})
-        }
-    }
- );
 
 app.use((err, req, res, next) => {
     console.log("error handler: ", err);

@@ -16,7 +16,7 @@
                                 style="font-size:150%;color:yellow;">&#9733;</span>
                         </div>
                     </h2>
-                    <form @submit.prevent="soumettreAppreciation">
+                    <form @submit.prevent="soumettreAppreciation" v-if="session.user">
                         <p>
                         <p>Votre avis:</p>
 
@@ -109,6 +109,8 @@
 
             </div>
         </div>
+        <button type="button" v-if="session.user && session.user.estAdmin" @click="enableEdit">Éditer</button>
+        <!-- Ajouter l'affichage d'édition de la recette -->
     </div>
 </template>
 
@@ -154,7 +156,6 @@ export default {
             this.loading = true;
             this.errorMessage = null;
             this.recette = null;
-            this.nouveauCommentaire = null;
 
             fetchRecette(id).then(recette => {
                 this.recette = recette;

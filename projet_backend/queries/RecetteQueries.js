@@ -62,25 +62,29 @@ const getRecetteById = async (recetteId) => {
 exports.getRecetteById = getRecetteById;
 
 const getIngredientsSelonRecetteId = async (recetteId) => {
-    const result = await pool.query(
-        `SELECT r.ingredient_id, nom, quantite, unite_mesure 
+    try {
+        const result = await pool.query(
+            `SELECT r.ingredient_id, nom, quantite, unite_mesure 
         FROM recette_ingredient r
         JOIN ingredient i ON r.ingredient_id = i.ingredient_id
         WHERE recette_id = $1
         ORDER BY ordre`,
-        [recetteId]
-    );
+            [recetteId]
+        );
 
-    return result.rows.map(row => {
-        const ingredient = {
-            id: row.ingredient_id,
-            nom: row.nom,
-            quantite: row.quantite,
-            uniteMesure: row.unite_mesure,
-            ordre: row.ordre
-        };
-        return ingredient;
-    });
+        return result.rows.map(row => {
+            const ingredient = {
+                id: row.ingredient_id,
+                nom: row.nom,
+                quantite: row.quantite,
+                uniteMesure: row.unite_mesure,
+                ordre: row.ordre
+            };
+            return ingredient;
+        });
+    } catch (error) {
+        throw new Error('Impossible de fetch les ingredients');
+    }
 };
 exports.getIngredientsSelonRecetteId = getIngredientsSelonRecetteId;
 
@@ -114,6 +118,7 @@ const getCommentairesSelonRecetteId = async (recetteId) => {
         ORDER BY date_publication DESC`,
         [recetteId]
     );
+
     return result.rows.map(row => {
         const commentaire = {
             id: row.commentaire_id,
@@ -231,10 +236,10 @@ const getMoyenneAppreciationSelonRecetteId = async (recetteId) => {
          WHERE recette_id = $1`,
         [recetteId]
     );
-    
+
     const row = result.rows[0];
     if (row && row.moyenne_etoiles !== null) {
-        
+
         return row.moyenne_etoiles;
     } else {
         return null
@@ -291,7 +296,7 @@ const modifierAppreciation = async (appreciation) => {
             utilisateurId: rowModifier.utilisateur_id
         };
         return appreciation;
-    }else{
+    } else {
         return null;
     }
 };
