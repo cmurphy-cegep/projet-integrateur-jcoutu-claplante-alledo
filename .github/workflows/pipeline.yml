@@ -39,6 +39,11 @@ jobs:
           cd ./projet_frontend/
           npm audit fix
 
+      - name: Fix backend vulnerabilities
+        run: |
+          cd ./projet_backend/
+          npm audit
+
       - name: Migrate PostgreSQL
         run: |
           PGPASSWORD=12345 psql -h localhost -U backend_user -d recettes -f projet_bdd/01_creer_bd.sql
