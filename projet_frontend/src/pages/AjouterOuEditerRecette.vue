@@ -1,11 +1,11 @@
 <template>
     <div v-if="session.user && session.user.estAdmin">
         <form @submit.prevent="soumettreFormulaire">
-            <div v-if="modeNouvelleRecette">
+            <div v-if="modeNouvelleRecette" class="form-control" :class="{ invalide: !idValide }">
                 <label for="recette-id">Identifiant de la recette : </label>
                 <input id="recette-id" v-model="recette.id" />
             </div>
-            <div>
+            <div class="form-control" :class="{ invalide: !nomValide }">
                 <label for="recette-nom">Nom de la recette : </label>
                 <input id="recette-nom" v-model="recette.nom" />
             </div>
@@ -111,13 +111,23 @@ export default {
                 nom: this.nom || '',
                 preparation: this.preparation || '',
                 cuisson: this.cuisson || '',
+                portions: this.portions || ''
             },
             ingredients: [],
             etapes: [],
             ajoutQuantite: '',
             ajoutUniteMesure: '',
             ajoutNomIngredient: '',
-            ajoutDescriptionEtape: ''
+            ajoutDescriptionEtape: '',
+            idValide: true,
+            nomValide: true,
+            preparationValide: true,
+            cuissonValide: true,
+            portionsValide: true,
+            ingredientQuantiteValide: true,
+            ingredientUniteMesureValide: true,
+            ingredientNomValide: true,
+            etapeDescriptionValide: true
         };
     },
     methods: {
@@ -231,4 +241,27 @@ export default {
 
 </script>
 
-<style></style>
+<style scoped>
+.form-control.invalide input,
+.form-control.invalide select {
+    border-color: red;
+}
+
+.form-control.invalide label {
+    color: red;
+}
+
+form * {
+    margin: 0.3rem;
+}
+
+.boxed-left {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+    margin: 1rem auto;
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: left;
+    width: 90%;
+    max-width: 80rem;
+}
+</style>
