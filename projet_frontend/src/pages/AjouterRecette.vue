@@ -42,6 +42,10 @@
                         <td>{{ ingredient.quantite }}</td>
                         <td>{{ ingredient.uniteMesure }}</td>
                         <td>{{ ingredient.nom }}</td>
+                        <td><button type="button" v-if="ingredient && index !== 0" @click="deplacerIngredientVersHaut(index)">Déplacer vers le
+                                haut</button></td>
+                        <td><button type="button" v-if="ingredient && index !== ingredients.length - 1"
+                                @click="deplacerIngredientVersBas(index)">Déplacer vers le bas</button></td>
                         <td><button type="button" v-if="ingredient" @click="supprimerIngredient(index)">Supprimer
                                 l'ingrédient</button></td>
                     </tr>
@@ -126,6 +130,16 @@ export default {
         },
         supprimerIngredient(index) {
             this.ingredients.splice(index, 1);
+        },
+        deplacerIngredientVersHaut(index) {
+            const temp = this.ingredients[index];
+            this.ingredients[index] = this.ingredients[index - 1]
+            this.ingredients[index - 1] = temp;
+        },
+        deplacerIngredientVersBas(index) {
+            const temp = this.ingredients[index];
+            this.ingredients[index] = this.ingredients[index + 1]
+            this.ingredients[index + 1] = temp;
         },
         ajouterEtape() {
             const nouvelleEtape = {

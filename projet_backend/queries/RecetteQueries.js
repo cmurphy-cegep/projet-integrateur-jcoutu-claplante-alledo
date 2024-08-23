@@ -154,6 +154,21 @@ const ajouterCommentaire = async (commentaire) => {
 };
 exports.ajouterCommentaire = ajouterCommentaire;
 
+async function getIngredientByNom(nom, client) {
+    const result = await client.query(
+        `SELECT ingredient_id 
+        FROM ingredient
+        WHERE nom = $1`,
+        [nom]
+    );
+    if (result.rows[0]) {
+        return result.rows[0].ingredient_id;
+    }
+    else {
+        return undefined;
+    }
+}
+
 const ajouterIngredient = async (ingredient, client) => {
 
     const result = await client.query(
@@ -217,7 +232,7 @@ const ajouterRecetteBdd = async (recette) => {
         for (let i = 0; i < recette.ingredients.length; i++) {
             const ordreIngredient = i + 1;
             let idIngredient = await getIngredientByNom(recette.ingredients[i].nom, client);
-            if (idIngredient) {
+            if (!idIngredient) {
                 idIngredient = await ajouterIngredient(recette.ingredients[i], client);
             }
             await insererDansTableRecetteIngredient(idRecette, idIngredient, recette.ingredients[i], ordreIngredient, client);
@@ -238,23 +253,30 @@ const ajouterRecetteBdd = async (recette) => {
 };
 exports.ajouterRecetteBdd = ajouterRecetteBdd;
 
-async function getIngredientByNom(nom, client) {
-    return result = await client.query(
-        `SELECT ingredient_id 
-        FROM ingredient
-        WHERE nom = $1`,
-        [nom]
+async function modifierDansTableRecette(recette, client) {
+    return await client.query(
+        `UPDATE recette SET nom = $2, description = $3, temps_preparation = $4, temps_cuisson = $5, nombre_portions = $6 
+        WHERE recette_id = $1`,
+        [recette.id, recette.nom, recette.desc, recette.preparation, recette.cuisson, recette.portions]
+    );
+};
+
+async function supprimerLignesTableRecetteIngredientSelonIdRecette(idRecette, client) {
+    return await client.query(
+        `DELETE FROM recette_ingredient WHERE recette_id = $1`,
+        [idRecette]
+    );
+}
+
+async function supprimerLignesTableEtapeSelonIdRecette(idRecette, client) {
+    return await client.query(
+        `DELETE FROM etape WHERE recette_id = $1`,
+        [idRecette]
     );
 }
 
 const modifierRecette = async (recette) => {
     const id = "" + recette.id;
-
-    for (element in recette) {
-        if (!element) {
-            throw new HttpError(400, `Le champ ${element} est requis`);
-        }
-    }
 
     await modifierRecetteBdd(recette);
 
@@ -276,11 +298,11 @@ const modifierRecetteBdd = async (recette) => {
 
         for (let i = 0; i < recette.ingredients.length; i++) {
             const ordreIngredient = i + 1;
-            const idIngredient = await getIngredientByNom(ingredient.nom);
-            if (idIngredient) {
-                idIngredient = await ajouterIngredient(ingredient);
+            let idIngredient = await getIngredientByNom(recette.ingredients[i].nom, client);
+            if (!idIngredient) {
+                idIngredient = await ajouterIngredient(recette.ingredients[i], client);
             }
-            await insererDansTableRecetteIngredient(idRecette, idIngredient, ingredient, ordreIngredient, client);
+            await insererDansTableRecetteIngredient(idRecette, idIngredient, recette.ingredients[i], ordreIngredient, client);
         }
 
         await supprimerLignesTableEtapeSelonIdRecette(idRecette, client);

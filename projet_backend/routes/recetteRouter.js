@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
- 
+
 const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -39,8 +39,8 @@ const onePixelTransparentPngImage = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAA
 router.get('/images/:imageId', (req, res, next) => {
     const imageName = req.params.imageName;
 
-    
-    const imagePath =  `../images/recettes/${imageName}`
+
+    const imagePath = `../images/recettes/${imageName}`
     // read binary data
     const imageBase64 = fs.readFileSync(imagePath, 'base64');
 
@@ -66,7 +66,7 @@ router.post('/',
     (req, res, next) => {
         const utilisateur = req.user;
 
-        if(!utilisateur || !utilisateur.estAdmin) {
+        if (!utilisateur || !utilisateur.estAdmin) {
             return next(new HttpError(404, 'Droit administrateur requis'));
         }
 
@@ -86,6 +86,34 @@ router.post('/',
         }).catch(err => {
             return next(err);
         })
-});
+    });
+
+router.put('/:id',
+    passport.authenticate('basic', { session: false }),
+    (req, res, next) => {
+        const utilisateur = req.user;
+
+        if (!utilisateur || !utilisateur.estAdmin) {
+            return next(new HttpError(404, 'Droit administrateur requis'));
+        }
+
+        const id = req.params.id;
+        if (!id || id === '') {
+            return next(new HttpError(400, 'Le paramètre id est requis'));
+        }
+
+        if (id !== req.body.id) {
+            return next(new HttpError(400, `Le paramètre spécifie l'id ${id} alors que la recette fournie a l'id ${req.body.id}`));
+        }
+
+        recetteQueries.modifierRecette(req.body).then(recetteModifiee => {
+            if (!recetteModifiee) {
+                return next(new HttpError(404, `Recette ${id} introuvable`));
+            }
+            res.json(recetteModifiee);
+        }).catch(err => {
+            return next(err);
+        })
+    });
 
 module.exports = router;
