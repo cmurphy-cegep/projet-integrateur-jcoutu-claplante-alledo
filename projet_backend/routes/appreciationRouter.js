@@ -41,8 +41,8 @@ router.post('/:recetteId',
         
         const nouvelleAppreciation = {
             nbEtoiles: req.body.etoiles,
-            utilisateurId: "" + req.body.utilisateur_id,
-            recetteId: "" + req.body.recette_id
+            utilisateurId: "" + req.body.utilisateurId,
+            recetteId: "" + req.body.recetteId
         };
 
         recetteQueries.aDejaFaitAppreciationSurRecetteId(nouvelleAppreciation).then(result => {

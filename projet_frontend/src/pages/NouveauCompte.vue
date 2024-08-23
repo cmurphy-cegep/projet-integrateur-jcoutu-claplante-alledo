@@ -6,18 +6,18 @@
             <div class="form-control" :class="{ invalide: !motDePasseIdentique }">
                 <div><label for="motDePasse">Mot de passe: </label><input id="motDePasse" type="password"
                         v-model="motDePasse" />
-                <span v-if="!motDePasseIdentique">Les deux champs doivent être identiques !</span>
+                    <span v-if="!motDePasseIdentique">Les deux champs doivent être identiques !</span>
                 </div>
             </div>
             <div class="form-control" :class="{ invalide: !motDePasseIdentique }">
                 <div><label for="confirmationMotDePasse">Confirmer mot de passe: </label><input
                         id="confirmationMotDePasse" type="password" v-model="confirmationMotDePasse" />
-                <span v-if="!motDePasseIdentique">Les deux champs doivent être identiques !</span>
+                    <span v-if="!motDePasseIdentique">Les deux champs doivent être identiques !</span>
                 </div>
             </div>
             <div><label for="nomComplet">Nom complet: </label><input id="nomComplet" v-model="nomComplet" /></div>
             <!-- <button v-bind:disabled="!validerBouton" @click="gererCreationCompte">Créer le compte</button> -->
-            <button v-bind:disabled="!validerBouton">Créer le compte</button>
+            <button v-bind:disabled="!validerBouton" v-on="validerChamps">Créer le compte</button>
         </form>
     </div>
 </template>
@@ -45,33 +45,30 @@ export default {
 
             if (!this.validerMotDePasse()) {
                 return;
-        }
+            }
 
             const nouveauCompte = {
-                utilisateurId: this.utilisateurId,
+                utilisateurId: (this.utilisateurId).toLowerCase(),
                 motDePasse: this.motDePasse,
                 nomComplet: this.nomComplet
             };
 
             try {
                 await creerCompteUtilisateur(nouveauCompte);
+                this.$router.push('/connexion');
             } catch (err) {
                 console.error(err);
                 alert(err.message);
             }
         },
         validerMotDePasse() {
-        this.motDePasseIdentique = this.motDePasse !== '' && this.confirmationMotDePasse !== '' && this.motDePasse === this.confirmationMotDePasse;
-        return this.motDePasseIdentique;
-    },
-        naviguerSiValide() {
-        if (this.validerMotDePasse() && this.validerBouton) {
-            this.$router.push('/connexion');
+            this.motDePasseIdentique = this.motDePasse !== '' && this.confirmationMotDePasse !== '' && this.motDePasse === this.confirmationMotDePasse;
+            return this.motDePasseIdentique;
+        },
+        validerChamps() {
+            if (this.validerMotDePasse() && this.validerBouton) {
+            }
         }
-    },
-        gererCreationCompte() {
-        this.naviguerSiValide();
-    }
     }
 }
 </script>

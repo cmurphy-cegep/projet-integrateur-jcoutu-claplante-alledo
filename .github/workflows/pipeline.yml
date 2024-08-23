@@ -11,10 +11,10 @@ jobs:
         image: postgres
 
         env:
-          POSTGRES_USER: 'backend_user'
+          POSTGRES_USER: "backend_user"
           POSTGRES_PASSWORD: 12345
           POSTGRES_DB: recettes
-        ports: 
+        ports:
           - 5432:5432
 
     steps:
@@ -22,7 +22,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Install frontend dependencies
         run: |
@@ -42,7 +42,7 @@ jobs:
       - name: Fix backend vulnerabilities
         run: |
           cd ./projet_backend/
-          npm audit fix
+          npm run audit
 
       - name: Migrate PostgreSQL
         run: |
@@ -53,7 +53,7 @@ jobs:
           PGPASSWORD=12345 psql -h localhost -U backend_user -d recettes -f projet_bdd/05_grant_backend_user.sql
           PGPASSWORD=12345 psql -h localhost -U backend_user -d recettes -f projet_bdd/06_creer_utilisateurs.sql
         env:
-          POSTGRES_USER: 'backend_user'
+          POSTGRES_USER: "backend_user"
           POSTGRES_PASSWORD: 12345
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
@@ -62,7 +62,7 @@ jobs:
         run: |
           cd ./projet_frontend/
           npm run build
-          
+
       - name: Jest test
         run: |
           cd ./projet_backend/
