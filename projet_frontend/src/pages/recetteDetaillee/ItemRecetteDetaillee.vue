@@ -226,8 +226,8 @@ export default {
         async soumettreAppreciation() {
             const nouvelleAppreciation = {
                 etoiles: parseInt(this.selected),
-                utilisateur_id: session.user.compteUtilisateurId,
-                recette_id: this.id
+                utilisateurId: session.user.compteUtilisateurId,
+                recetteId: this.id
             };
             try {
                 await ajouterAppreciation(nouvelleAppreciation);
