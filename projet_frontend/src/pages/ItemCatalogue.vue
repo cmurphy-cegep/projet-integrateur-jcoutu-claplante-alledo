@@ -1,15 +1,18 @@
 <template>
-  <router-link :to="recetteDetailUrl">
-    <div class="recette">
-      <div class="recette-image">
-        <img :src="imageSrc" alt="Image" />
+  <div class="lien">
+    <router-link :to="recetteDetailUrl">
+      <div class="recette">
+        <div class="recette-image">
+          <img :src="imageSrc" alt="Image" />
+        </div>
+        <div class="recette-info">
+          <div class="recette-nom">{{ nom }}</div>
+          <div class="recette-description">{{ desc }}</div>
+        </div>
       </div>
-      <div class="recette-info">
-        <div class="recette-nom">{{ nom }}</div>
-        <div class="recette-description">{{ desc }}</div>
-      </div>
-    </div>
-  </router-link>
+
+    </router-link>
+  </div>
 </template>
 
 <script>
@@ -41,6 +44,13 @@ export default {
 </script>
 
 <style scoped>
+.lien {
+  width: 100%;
+  height: 100%;
+  max-width: 1200px;
+  gap: .25rem;
+}
+
 .recette {
   width: 100%;
   height: 100%;
@@ -70,7 +80,7 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: 575px;
+  width: 25vw;
   margin-top: 5px;
   font-size: 0.9em;
   color: #666;

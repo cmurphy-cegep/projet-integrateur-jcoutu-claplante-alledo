@@ -44,13 +44,16 @@ export default {
 <style scoped>
 .recette-grille {
   display: grid;
+  justify-content: center;
 }
+
 
 .recette-conteneur {
   padding: 1rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  width: 80%;
+  margin: auto;
 }
 
 @media (min-width: 600px) {

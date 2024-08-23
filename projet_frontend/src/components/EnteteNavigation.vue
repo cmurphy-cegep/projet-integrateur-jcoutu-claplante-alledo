@@ -43,6 +43,7 @@ export default {
 .admin-image {
     width: 4vw;
     height: auto;
+    margin-right: 1rem;
 }
 
 .black-title {
