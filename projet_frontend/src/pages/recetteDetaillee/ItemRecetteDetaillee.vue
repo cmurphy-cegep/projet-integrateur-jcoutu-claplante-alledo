@@ -94,23 +94,7 @@
             <div v-if="session.user && session.user.estAdmin">
                 <router-link :to="redirigerVersEdition" custom v-slot="{navigate}"><button @click="navigate" role="link">Éditer</button></router-link>
             </div>
-            <div v-if="edition">
-                <form @submit.prevent="soumettreRecetteEditee">
-                    <div>
-                        <div>
-                            <label for="recette-titre">Nom de la recette: </label>
-                        </div>
-                        <div>
-                            <input class="recette-titre" id="recette-titre" v-model="recette.nom" />
-                        </div>
-                    </div>
-                    
-                </form>
-
-            </div>
         </div>
-        <button type="button" v-if="session.user && session.user.estAdmin" @click="enableEdit">Éditer</button>
-        <!-- Ajouter l'affichage d'édition de la recette -->
     </div>
 </template>
 

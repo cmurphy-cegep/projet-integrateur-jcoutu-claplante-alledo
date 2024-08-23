@@ -28,7 +28,7 @@ const convertirEnRecette = jsonRecette => {
 
 const convertirEnIngredient = jsonIngredient => {
     return {
-        nom: (jsonIngredient.quantite > 1 && jsonIngredient.uniteMesure === '') ? jsonIngredient.nom+'s' : jsonIngredient.nom,
+        nom: jsonIngredient.nom,
         quantite: (jsonIngredient.quantite % 1 === 0) ? Number(jsonIngredient.quantite) : jsonIngredient.quantite,
         uniteMesure: jsonIngredient.uniteMesure
     };
@@ -168,6 +168,23 @@ export async function mettreAJourRecette(recette) {
 export async function creerRecette(recette) {
     const reponse = await fetch(`/api/recettes`, {
         method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            ...session.getAuthHeaders()
+        },
+        body: JSON.stringify(recette)
+    });
+    
+    if (reponse.ok) {
+        return;
+    } else {
+        throw new Error(`Impossible d'ajouter la nouvelle recette: ${reponse.status}`);
+    }
+};
+
+export async function modifierRecette(recette) {
+    const reponse = await fetch(`/api/recettes/${recette.id}`, {
+        method: "PUT",
         headers: {
             "Content-Type": "application/json",
             ...session.getAuthHeaders()

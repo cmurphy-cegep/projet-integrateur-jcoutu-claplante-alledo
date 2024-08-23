@@ -1,7 +1,7 @@
 INSERT INTO Ingredient (nom) VALUES
 ('de spaghetti'),
 ('de pancetta'),
-('œuf'),
+('œufs'),
 ('de fromage parmesan'),
 ('de poivre noir'),
 ('de fettuccine'),
@@ -17,7 +17,7 @@ INSERT INTO Ingredient (nom) VALUES
 ('d’huile d’olive'),
 ('de lanières de bœuf'),
 ('de champignons'),
-('oignon'),
+('oignons'),
 ('de crème aigre'),
 ('de bouillon de bœuf'),
 ('de pâtes'),
@@ -95,7 +95,7 @@ INSERT INTO recette_ingredient (recette_id, ingredient_id, quantite, unite_mesur
 -- Boeuf Stroganoff
 ('boeuf_stroganoff', 17, 500, 'g', 1),
 ('boeuf_stroganoff', 18, 200, 'g', 2),
-('boeuf_stroganoff', 19, 1, '', 3),
+('boeuf_stroganoff', 19, 2, '', 3),
 ('boeuf_stroganoff', 20, 150, 'ml', 4),
 
 -- Pâtes à la Bolognaise
@@ -105,7 +105,7 @@ INSERT INTO recette_ingredient (recette_id, ingredient_id, quantite, unite_mesur
 ('pates_a_la_bolognaise', 25, 1, 'cuillère à café', 4),
 
 -- Ratatouille
-('ratatouille', 19, 1, '', 1),
+('ratatouille', 19, 2, '', 1),
 ('ratatouille', 28, 1, '', 2),
 ('ratatouille', 29, 1, '', 3),
 ('ratatouille', 16, 2, 'cuillères à soupe', 4),
