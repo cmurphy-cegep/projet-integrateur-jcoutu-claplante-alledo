@@ -90,6 +90,6 @@ const creerSelEtHash = (motDePasse) => {
         selMotDePasse: selMotDePasse
     };
 }
-
+exports.creerSelEtHash = creerSelEtHash;
 
 
