@@ -86,6 +86,20 @@ describe("Test Queries", () => {  // eslint-disable-line max-lines-per-function
             const response = await getRecetteById(recetteId);
             expect(response).toEqual(expectedRecette);
         })
+
+        it("", async () => {
+            const mockAppreciation = {
+                etoiles: 1,
+                recette_id: "popcorn",
+                utilisateur_id: "alledo"
+            };
+
+            mockPool.query.mockResolvedValue({ rows: [mockAppreciation] });
+            const appreciation = await ajouterAppreciation(mockAppreciation);
+            expect(appreciation.nbEtoiles).toEqual(1);
+            expect(appreciation.utilisateurId).toEqual(mockAppreciation.utilisateur_id);
+            expect(appreciation.recetteId).toEqual(mockAppreciation.recette_id);
+        })
     })
 
     describe("Test Ingredients", () => { // eslint-disable-line max-lines-per-function
@@ -209,9 +223,6 @@ describe("Test Queries", () => {  // eslint-disable-line max-lines-per-function
 
             mockPool.query.mockResolvedValue({ rows: [mockAppreciation] });
             const appreciation = await ajouterAppreciation(mockAppreciation);
-            console.log(mockAppreciation);
-            console.log("==============");
-            console.log(appreciation)
             expect(appreciation.nbEtoiles).toEqual(1);
             expect(appreciation.utilisateurId).toEqual(mockAppreciation.utilisateur_id);
             expect(appreciation.recetteId).toEqual(mockAppreciation.recette_id);
