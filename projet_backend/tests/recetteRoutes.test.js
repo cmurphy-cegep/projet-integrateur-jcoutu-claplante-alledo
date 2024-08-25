@@ -1,4 +1,5 @@
 const requete = require('supertest');
+const passport = require('passport');
 const app = require('../app');
 jest.mock('../queries/RecetteQueries');
 const mockRecetteQueries = require('../queries/RecetteQueries');
@@ -10,7 +11,7 @@ describe("tests routes", () => { // eslint-disable-line max-lines-per-function
     });
 
     describe("Route RECETTE", () => { // eslint-disable-line max-lines-per-function
-        it("Get all recettes devrait retourner 200", async () => { 
+        it("Get all recettes devrait retourner 200", async () => {
             const mockAllRecettes = [
                 {
                     id: "ape",
@@ -23,10 +24,10 @@ describe("tests routes", () => { // eslint-disable-line max-lines-per-function
                     description: "123123123",
                 }];
 
-                mockRecetteQueries.getAllRecettes.mockResolvedValue(mockAllRecettes);
+            mockRecetteQueries.getAllRecettes.mockResolvedValue(mockAllRecettes);
 
-                const response = await requete(app).get('/recettes')
-                expect(response.status).toBe(200);
+            const response = await requete(app).get('/recettes')
+            expect(response.status).toBe(200);
 
         })
         it("GET recettes/:recetteId devrait retourner 200", async () => {
@@ -43,16 +44,30 @@ describe("tests routes", () => { // eslint-disable-line max-lines-per-function
             expect(response.status).toBe(200);
         })
         it("GET recettes/:recetteId devrait retourner 404", async () => {
-            
+
 
             mockRecetteQueries.getRecetteById.mockResolvedValue(undefined);
 
             const response = await requete(app).get('/recettes/lasagnes');
             expect(response.status).toBe(404);
         })
+
+        it("POST recettes/ devrait retourner 404 req.user = null", async () => {
+            // eslint-disable-next-line max-nested-callbacks
+            passport.authenticate = jest.fn((authType, options, callback) => (req, res, next) => {
+                req.user = null;
+                next();
+            });
+        
+            const response = await requete(app)
+                .post('/')
+                .send({ nom: 'poutine' });
+        
+            expect(response.status).toBe(404);
+        })
     });
 
-    describe("Route INGREDIENT",() => { // eslint-disable-line max-lines-per-function
+    describe("Route INGREDIENT", () => { // eslint-disable-line max-lines-per-function
         it("GET ingredients/:recetteId devrait retourner 200", async () => {
             const mockIngredients = {
                 id: "tomate",
@@ -60,9 +75,9 @@ describe("tests routes", () => { // eslint-disable-line max-lines-per-function
                 quantite: 2,
                 uniteMesure: "ml"
             };
-    
+
             mockRecetteQueries.getIngredientsSelonRecetteId.mockResolvedValue(mockIngredients);
-    
+
             const response = await requete(app).get('/ingredients/tomate');
             expect(response.status).toBe(200);
         })
@@ -72,7 +87,7 @@ describe("tests routes", () => { // eslint-disable-line max-lines-per-function
             const response = await requete(app).get('/ingredients/tomate');
             expect(response.status).toBe(404);
         })
-        
+
     })
 
     describe("Route ETAPE", () => {
@@ -93,10 +108,10 @@ describe("tests routes", () => { // eslint-disable-line max-lines-per-function
 
         it("GET all etapes devrait retourner 404", async () => {
 
-            const mockEtape = 
-            [
-                {}
-            ];
+            const mockEtape =
+                [
+                    {}
+                ];
             mockRecetteQueries.getEtapesSelonRecetteId.mockResolvedValue(mockEtape);
 
             const response = await requete(app).get('/etapes/tomate');
@@ -107,7 +122,7 @@ describe("tests routes", () => { // eslint-disable-line max-lines-per-function
     describe("Route APPRECIATION", () => { // eslint-disable-line max-lines-per-function
         it("GET all appreciations devrait retourner 200", async () => {
 
-            const mockAppreciation = 1 ;
+            const mockAppreciation = 1;
 
             mockRecetteQueries.getMoyenneAppreciationSelonRecetteId.mockResolvedValue(mockAppreciation);
 
@@ -115,14 +130,14 @@ describe("tests routes", () => { // eslint-disable-line max-lines-per-function
             expect(response.status).toBe(200);
         })
 
-        it("GET all appreciations devrait retourner 204" , async () => {
+        it("GET all appreciations devrait retourner 204", async () => {
             mockRecetteQueries.getMoyenneAppreciationSelonRecetteId.mockResolvedValue(null);
 
             const response = await requete(app).get('/appreciations/tomate');
             expect(response.status).toBe(204);
         })
 
-        it("GET all appreciations devrait retourner 404" , async () => {
+        it("GET all appreciations devrait retourner 404", async () => {
             mockRecetteQueries.getMoyenneAppreciationSelonRecetteId.mockResolvedValue(undefined);
 
             const response = await requete(app).get('/appreciations/tomate');
@@ -131,74 +146,74 @@ describe("tests routes", () => { // eslint-disable-line max-lines-per-function
 
         it("POST appreciation AJOUT devrait retourner 200", async () => {
             const MockAppreciation =
-        {
-            etoiles: 1,
-            utilisateurId: "alledo",
-            recetteId: "lasagnes"
-        };
+            {
+                etoiles: 1,
+                utilisateurId: "alledo",
+                recetteId: "lasagnes"
+            };
 
-        mockRecetteQueries.aDejaFaitAppreciationSurRecetteId.mockResolvedValue(false);
-        mockRecetteQueries.ajouterAppreciation.mockResolvedValue(MockAppreciation);
+            mockRecetteQueries.aDejaFaitAppreciationSurRecetteId.mockResolvedValue(false);
+            mockRecetteQueries.ajouterAppreciation.mockResolvedValue(MockAppreciation);
 
-        const response = await requete(app).post('/appreciations/lasagnes')
-            .auth('alledo', '12345')
-            .send(MockAppreciation);
+            const response = await requete(app).post('/appreciations/lasagnes')
+                .auth('alledo', '12345')
+                .send(MockAppreciation);
 
-        expect(response.status).toBe(200);
+            expect(response.status).toBe(200);
         })
 
         it("POST appreciation AJOUT devrait retourner 404", async () => {
             const MockAppreciation =
-        {
-            etoiles: 1,
-            utilisateurId: "alledo",
-            recetteId: "lasagnes"
-        };
+            {
+                etoiles: 1,
+                utilisateurId: "alledo",
+                recetteId: "lasagnes"
+            };
 
-        mockRecetteQueries.aDejaFaitAppreciationSurRecetteId.mockResolvedValue(false);
-        mockRecetteQueries.ajouterAppreciation.mockResolvedValue(undefined);
+            mockRecetteQueries.aDejaFaitAppreciationSurRecetteId.mockResolvedValue(false);
+            mockRecetteQueries.ajouterAppreciation.mockResolvedValue(undefined);
 
-        const response = await requete(app).post('/appreciations/lasagnes')
-            .auth('alledo', '12345')
-            .send(MockAppreciation);
+            const response = await requete(app).post('/appreciations/lasagnes')
+                .auth('alledo', '12345')
+                .send(MockAppreciation);
 
-        expect(response.status).toBe(404);
+            expect(response.status).toBe(404);
         })
 
         it("POST appreciation MODIFICATION devrait retourner 200", async () => {
             const MockAppreciation =
-        {
-            etoiles: 1,
-            utilisateurId: "alledo",
-            recetteId: "lasagnes"
-        };
+            {
+                etoiles: 1,
+                utilisateurId: "alledo",
+                recetteId: "lasagnes"
+            };
 
-        mockRecetteQueries.aDejaFaitAppreciationSurRecetteId.mockResolvedValue(true);
-        mockRecetteQueries.modifierAppreciation.mockResolvedValue(MockAppreciation);
+            mockRecetteQueries.aDejaFaitAppreciationSurRecetteId.mockResolvedValue(true);
+            mockRecetteQueries.modifierAppreciation.mockResolvedValue(MockAppreciation);
 
-        const response = await requete(app).post('/appreciations/lasagnes')
-            .auth('alledo', '12345')
-            .send(MockAppreciation);
+            const response = await requete(app).post('/appreciations/lasagnes')
+                .auth('alledo', '12345')
+                .send(MockAppreciation);
 
-        expect(response.status).toBe(200);
+            expect(response.status).toBe(200);
         })
 
         it("POST appreciation MODIFICATION devrait retourner 404", async () => {
             const MockAppreciation =
-        {
-            etoiles: 1,
-            utilisateurId: "alledo",
-            recetteId: "lasagnes"
-        };
+            {
+                etoiles: 1,
+                utilisateurId: "alledo",
+                recetteId: "lasagnes"
+            };
 
-        mockRecetteQueries.aDejaFaitAppreciationSurRecetteId.mockResolvedValue(true);
-        mockRecetteQueries.modifierAppreciation.mockResolvedValue(undefined);
+            mockRecetteQueries.aDejaFaitAppreciationSurRecetteId.mockResolvedValue(true);
+            mockRecetteQueries.modifierAppreciation.mockResolvedValue(undefined);
 
-        const response = await requete(app).post('/appreciations/lasagnes')
-            .auth('alledo', '12345')
-            .send(MockAppreciation);
+            const response = await requete(app).post('/appreciations/lasagnes')
+                .auth('alledo', '12345')
+                .send(MockAppreciation);
 
-        expect(response.status).toBe(404);
+            expect(response.status).toBe(404);
         })
     })
 });
