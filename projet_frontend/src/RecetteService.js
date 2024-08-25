@@ -10,32 +10,33 @@ export async function fetchRecettes() {
     }
 }
 
+function formatterNombreVide(nombre) {
+    return (nombre === 0) ? "-" : nombre;
+}
+
 const convertirEnRecette = jsonRecette => {
     return {
         id: jsonRecette.id,
         nom: jsonRecette.nom,
-        desc: jsonRecette.description.replaceAll('\\r\\n', '<br/>'),
-        preparation: jsonRecette.preparation,
-        cuisson: jsonRecette.cuisson,
-        portions: jsonRecette.portions,
+        desc: jsonRecette.description.replace(/\\r\\n|\n/g, '<br/>'),
+        preparation: formatterNombreVide(jsonRecette.preparation),
+        cuisson: formatterNombreVide(jsonRecette.cuisson),
+        portions: formatterNombreVide(jsonRecette.portions),
         image: jsonRecette.image
     };
 };
 
 const convertirEnIngredient = jsonIngredient => {
     return {
-        idIngredient: jsonIngredient.id,
         nom: jsonIngredient.nom,
-        quantite: jsonIngredient.quantite,
-        uniteMesure: jsonIngredient.uniteMesure,
+        quantite: (jsonIngredient.quantite % 1 === 0) ? Number(jsonIngredient.quantite) : jsonIngredient.quantite,
+        uniteMesure: jsonIngredient.uniteMesure
     };
 };
 
 const convertirEnEtape = jsonEtape => {
     return {
-        idEtape: jsonEtape.id,
-        description: jsonEtape.description,
-        ordre: jsonEtape.ordre,
+        description: jsonEtape.description
     };
 };
 
@@ -76,8 +77,7 @@ export async function fetchEtapes(recetteId) {
 
     if (reponse.ok) {
         const repJson = await reponse.json();
-        const repJsonTriee = repJson.sort((a,b) => a.ordre - b.ordre);
-        return repJsonTriee.map(e => convertirEnEtape(e));
+        return repJson.map(e => convertirEnEtape(e));
     } else {
         throw new Error(`Liste d'étapes pour la recette ${recetteId} introuvable`);
     }
@@ -109,6 +109,8 @@ export async function ajouterCommentaire(commentaire) {
     
     if (reponse.ok) {
         return convertirEnCommentaire(await reponse.json());
+    } else if (reponse.rows === 0) {
+        return [];
     } else {
         throw new Error(`Impossible d'ajouter le commentaire pour la recette ${commentaire.recetteId}: ${reponse.status}`);
     }
@@ -145,3 +147,54 @@ export async function ajouterAppreciation(appreciation) {
         throw new Error(`Impossible d'ajouter l'appreciation pour la recette ${appreciation.recetteId}: ${reponse.status}`)
     }
 };
+
+export async function creerRecette(recette) {
+    const reponse = await fetch(`/api/recettes`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            ...session.getAuthHeaders()
+        },
+        body: JSON.stringify(recette)
+    });
+    
+    if (reponse.ok) {
+        return;
+    } else {
+        throw new Error(`Impossible d'ajouter la nouvelle recette: ${reponse.status}`);
+    }
+};
+
+export async function modifierRecette(recette) {
+    const reponse = await fetch(`/api/recettes/${recette.id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            ...session.getAuthHeaders()
+        },
+        body: JSON.stringify(recette)
+    });
+    
+    if (reponse.ok) {
+        return;
+    } else {
+        throw new Error(`Impossible d'ajouter la nouvelle recette: ${reponse.status}`);
+    }
+};
+
+export async function modifierRecetteImage(recetteId, formDonnees) {
+    console.log(formDonnees);
+    const response = await fetch(`/api/recettes/${recetteId}/image`, {
+        method: "POST",
+        headers: {
+            ...session.getAuthHeaders()
+        },
+        body: formDonnees
+    });
+
+    if (response.ok) {
+        return;
+    } else {
+        throw new Error(`Impossible de modifier l'image de la recette ${recetteId}: ${response.status}`);
+    }
+}

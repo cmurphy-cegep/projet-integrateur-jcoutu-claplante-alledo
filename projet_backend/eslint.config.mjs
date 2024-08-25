@@ -16,11 +16,11 @@ export default [
     rules: {
       "complexity": ["error", 10],
       "max-depth": ["error", 4],
-      "max-lines": ["error", 300],
+      "max-lines": ["error", 500],
       "max-lines-per-function": ["error", 50],
       "max-nested-callbacks": ["error", 3],
       "max-params": ["error", 6],
-      "max-statements": ["error", 10],
+      "max-statements": ["error", 20],
       "no-var": "error",
       "eqeqeq": ["error", "always"],
       "getter-return": "error",
