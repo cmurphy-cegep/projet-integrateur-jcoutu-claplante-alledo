@@ -1,7 +1,7 @@
 const fs = require('fs');
 const pool = require('./DBPool');
 const { DateTime } = require('luxon');
-
+const HttpError = require("../HttpError");
 const transformImageTo64 = (imageName) => {
     const imagePath = `./images/recettes/${imageName}`
     let base64;
@@ -34,7 +34,6 @@ const getAllRecettes = async () => {
 };
 exports.getAllRecettes = getAllRecettes;
 
-
 const getRecetteById = async (recetteId) => {
     const result = await pool.query(
         `SELECT recette_id, nom, description, temps_preparation, temps_cuisson, nombre_portions, image
@@ -66,7 +65,8 @@ const getIngredientsSelonRecetteId = async (recetteId) => {
             `SELECT r.ingredient_id, nom, quantite, unite_mesure 
         FROM recette_ingredient r
         JOIN ingredient i ON r.ingredient_id = i.ingredient_id
-        WHERE recette_id = $1`,
+        WHERE recette_id = $1
+        ORDER BY ordre`,
             [recetteId]
         );
 
@@ -75,7 +75,8 @@ const getIngredientsSelonRecetteId = async (recetteId) => {
                 id: row.ingredient_id,
                 nom: row.nom,
                 quantite: row.quantite,
-                uniteMesure: row.unite_mesure
+                uniteMesure: row.unite_mesure,
+                ordre: row.ordre
             };
             return ingredient;
         });
@@ -85,12 +86,12 @@ const getIngredientsSelonRecetteId = async (recetteId) => {
 };
 exports.getIngredientsSelonRecetteId = getIngredientsSelonRecetteId;
 
-
 const getEtapesSelonRecetteId = async (recetteId) => {
     const result = await pool.query(
         `SELECT etape_id, description, ordre 
         FROM etape
-        WHERE recette_id = $1`,
+        WHERE recette_id = $1
+        ORDER BY ordre`,
         [recetteId]
     );
     return result.rows.map(row => {
@@ -153,6 +154,174 @@ const ajouterCommentaire = async (commentaire) => {
 };
 exports.ajouterCommentaire = ajouterCommentaire;
 
+async function getIngredientByNom(nom, client) {
+    const result = await client.query(
+        `SELECT ingredient_id 
+        FROM ingredient
+        WHERE nom = $1`,
+        [nom]
+    );
+    if (result.rows[0]) {
+        return result.rows[0].ingredient_id;
+    }
+    else {
+        return undefined;
+    }
+}
+
+const ajouterIngredient = async (ingredient, client) => {
+
+    const result = await client.query(
+        `INSERT INTO ingredient (nom) 
+        VALUES ($1)
+        RETURNING ingredient_id`,
+        [ingredient.nom]
+    );
+    return result.rows[0].ingredient_id;
+};
+exports.ajouterIngredient = ajouterIngredient;
+
+async function insererDansTableRecette(recette, client) {
+    return await client.query(
+        `INSERT INTO recette (recette_id, nom, description, temps_preparation, temps_cuisson, nombre_portions) 
+        VALUES ($1, $2, $3, $4, $5, $6)`,
+        [recette.id, recette.nom, recette.desc, recette.preparation, recette.cuisson, recette.portions]
+    );
+};
+
+async function insererDansTableRecetteIngredient(idRecette, idIngredient, ingredient, ordreIngredient, client) {
+    return await client.query(
+        `INSERT INTO recette_ingredient (recette_id, ingredient_id, quantite, unite_mesure, ordre) 
+        VALUES ($1, $2, $3, $4, $5)`,
+        [idRecette, idIngredient, ingredient.quantite, ingredient.uniteMesure, ordreIngredient]
+    );
+};
+
+async function insererDansTableEtape(idRecette, etape, ordreEtape, client) {
+    return await client.query(
+        `INSERT INTO etape (description, ordre, recette_id) 
+        VALUES ($1, $2, $3)`,
+        [etape.description, ordreEtape, idRecette]
+    );
+};
+
+const ajouterRecette = async (recette) => {
+    /*
+    for (const element of recette) {
+        if (!element) {
+            throw new HttpError(400, `Le champ ${element} est requis`);
+        }
+    }
+*/
+    await ajouterRecetteBdd(recette);
+
+    return getRecetteById(recette.id)
+}
+exports.ajouterRecette = ajouterRecette;
+
+const ajouterRecetteBdd = async (recette) => {
+    const client = await pool.connect();
+
+    try {
+        await client.query('BEGIN');
+
+        const idRecette = "" + recette.id;
+
+        await insererDansTableRecette(recette, client);
+
+        for (let i = 0; i < recette.ingredients.length; i++) {
+            const ordreIngredient = i + 1;
+            let idIngredient = await getIngredientByNom(recette.ingredients[i].nom, client);
+            if (!idIngredient) {
+                idIngredient = await ajouterIngredient(recette.ingredients[i], client);
+            }
+            await insererDansTableRecetteIngredient(idRecette, idIngredient, recette.ingredients[i], ordreIngredient, client);
+        }
+
+        for (let i = 0; i < recette.etapes.length; i++) {
+            const ordreEtape = i + 1;
+            await insererDansTableEtape(idRecette, recette.etapes[i], ordreEtape, client);
+        }
+
+        await client.query('COMMIT');
+    } catch (err) {
+        await client.query('ROLLBACK');
+        throw err;
+    } finally {
+        client.release();
+    }
+};
+exports.ajouterRecetteBdd = ajouterRecetteBdd;
+
+async function modifierDansTableRecette(recette, client) {
+    return await client.query(
+        `UPDATE recette SET nom = $2, description = $3, temps_preparation = $4, temps_cuisson = $5, nombre_portions = $6 
+        WHERE recette_id = $1`,
+        [recette.id, recette.nom, recette.desc, recette.preparation, recette.cuisson, recette.portions]
+    );
+};
+
+async function supprimerLignesTableRecetteIngredientSelonIdRecette(idRecette, client) {
+    return await client.query(
+        `DELETE FROM recette_ingredient WHERE recette_id = $1`,
+        [idRecette]
+    );
+}
+
+async function supprimerLignesTableEtapeSelonIdRecette(idRecette, client) {
+    return await client.query(
+        `DELETE FROM etape WHERE recette_id = $1`,
+        [idRecette]
+    );
+}
+
+const modifierRecette = async (recette) => {
+    const id = "" + recette.id;
+
+    await modifierRecetteBdd(recette);
+
+    return getRecetteById(id)
+}
+exports.modifierRecette = modifierRecette;
+
+const modifierRecetteBdd = async (recette) => {
+    const client = await pool.connect();
+
+    try {
+        await client.query('BEGIN');
+
+        const idRecette = recette.id;
+
+        await modifierDansTableRecette(recette, client);
+
+        await supprimerLignesTableRecetteIngredientSelonIdRecette(idRecette, client);
+
+        for (let i = 0; i < recette.ingredients.length; i++) {
+            const ordreIngredient = i + 1;
+            let idIngredient = await getIngredientByNom(recette.ingredients[i].nom, client);
+            if (!idIngredient) {
+                idIngredient = await ajouterIngredient(recette.ingredients[i], client);
+            }
+            await insererDansTableRecetteIngredient(idRecette, idIngredient, recette.ingredients[i], ordreIngredient, client);
+        }
+
+        await supprimerLignesTableEtapeSelonIdRecette(idRecette, client);
+
+        for (let i = 0; i < recette.etapes.length; i++) {
+            const ordreEtape = i + 1;
+            await insererDansTableEtape(idRecette, recette.etapes[i], ordreEtape, client);
+        }
+
+        await client.query('COMMIT');
+    } catch (err) {
+        await client.query('ROLLBACK');
+        throw err;
+    } finally {
+        client.release();
+    }
+};
+exports.modifierRecetteBdd = modifierRecetteBdd;
+
 const getMoyenneAppreciationSelonRecetteId = async (recetteId) => {
     const result = await pool.query(
         `SELECT ROUND(AVG(etoiles), 1) AS moyenne_etoiles
@@ -211,7 +380,6 @@ const modifierAppreciation = async (appreciation) => {
             RETURNING *`,
         [appreciation.nbEtoiles, appreciation.recetteId, appreciation.utilisateurId]
     )
-
     const rowModifier = result.rows[0];
     if (rowModifier) {
         const appreciation = {
@@ -222,7 +390,36 @@ const modifierAppreciation = async (appreciation) => {
         return appreciation;
     } else {
         return null;
-    }
+    };
 };
-
 exports.modifierAppreciation = modifierAppreciation;
+
+const modifierRecetteImage = async (recetteId, file) => {
+    
+    const path = require('path');
+
+    const cheminFichier = path.join(__dirname, '../images/recettes', file.originalname);
+
+    fs.writeFile(cheminFichier, file.buffer, (err) => {
+        if (err) {
+            console.error('Erreur lors de l\'enregistrement de l\'image:', err);
+        } else {
+            console.log('Image enregistrée avec succès dans :', cheminFichier);
+        }
+    });
+
+    const imageNom = file.originalname;
+
+    const result = await pool.query(
+        `UPDATE recette SET image = $2
+        WHERE recette_id = $1`,
+        [recetteId, imageNom]
+    );
+
+    if (result.rowCount === 0) {
+        throw new Error("Erreur lors de la mise-à-jour de l'image");
+    }
+
+    return result;
+};
+exports.modifierRecetteImage = modifierRecetteImage;

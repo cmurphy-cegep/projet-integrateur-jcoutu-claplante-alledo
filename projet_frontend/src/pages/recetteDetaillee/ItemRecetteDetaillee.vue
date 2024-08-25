@@ -104,10 +104,10 @@
                 </div>
 
             </div>
-
+            <div v-if="session.user && session.user.estAdmin">
+                <router-link :to="redirigerVersEdition" custom v-slot="{navigate}"><button @click="navigate" role="link">Éditer</button></router-link>
+            </div>
         </div>
-        <button type="button" v-if="session.user && session.user.estAdmin" @click="enableEdit">Éditer</button>
-        <!-- Ajouter l'affichage d'édition de la recette -->
     </div>
 </template>
 
@@ -201,6 +201,21 @@ export default {
             });
         },
 
+        annulerEdition() {
+            this.edition = false;
+            this.rafraichirRecette(this.id);
+        },
+        async soumettreRecetteEditee() {
+            try {
+                await mettreAJourRecette(this.recette);
+                this.edition = false;
+                this.rafraichirRecette(this.id);
+            } catch (err) {
+                console.error(err);
+                alert(err.message);
+            }
+        },
+
         async soumettreCommentaire() {
             const nouveauCommentaire = {
                 texte: this.ajoutCommentaireTexte,
@@ -242,7 +257,10 @@ export default {
     computed: {
         imageSrc() {
             return `data:image/png;base64,${this.recette.image}`;
-        }
+        },
+        redirigerVersEdition() {
+            return "/editerRecette/" + this.id;
+        },
     },
     watch: {
         id(nouvelId) {

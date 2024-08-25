@@ -1,44 +1,51 @@
 INSERT INTO Ingredient (nom) VALUES
-('spaghetti'),
-('pancetta'),
+('de spaghetti'),
+('de pancetta'),
 ('œufs'),
-('fromage parmesan'),
-('poivre noir'),
-('fettuccine'),
-('blanc de poulet'),
-('crème épaisse'),
-('ail'),
-('fromage parmesan'),
-('tomates'),
-('concombres'),
-('olives'),
-('fromage feta'),
+('de fromage parmesan'),
+('de poivre noir'),
+('de fettuccine'),
+('de poitrine de poulet'),
+('de crème épaisse'),
+('d’ail'),
+('de pommes de terre'),
+('tomate'),
+('concombre'),
+('d’olives'),
+('de fromage feta'),
 ('oignon rouge'),
-('huile d’olive'),
-('lanières de bœuf'),
-('champignons'),
-('oignon'),
-('crème aigre'),
-('bouillon de bœuf'),
-('pâtes'),
-('tomates concassées'),
-('basilic'),
-('ail en poudre'),
-('poivron'),
+('d’huile d’olive'),
+('de lanières de bœuf'),
+('de champignons'),
 ('oignons'),
+('de crème aigre'),
+('de bouillon de bœuf'),
+('de pâtes'),
+('de tomates concassées'),
+('de basilic'),
+('d’ail en poudre'),
+('de poivron'),
+('pomme'),
 ('aubergine'),
 ('courgette'),
 ('poulet'),
-('lait de coco'),
-('gingembre'),
-('soja'),
-('citron vert'),
-('coriandre'),
-('crème fraîche'),
-('lardons'),
-('champignons de paris'),
-('vinaigre balsamique'),
-('oeufs brouillés');
+('de lait de coco'),
+('de gingembre'),
+('de soja'),
+('de citron vert'),
+('de coriandre'),
+('de crème fraîche'),
+('de lardons'),
+('de champignons de paris'),
+('de vinaigre balsamique'),
+('de farine'),
+('de mascarpone'),
+('de sucre'),
+('de biscuits à la cuillère'),
+('de café'),
+('de cacao en poudre'),
+('de beurre'),
+('de lait');
 
 
 INSERT INTO recette (recette_id, nom, description, temps_preparation, temps_cuisson, nombre_portions, image) VALUES
@@ -57,99 +64,122 @@ INSERT INTO recette (recette_id, nom, description, temps_preparation, temps_cuis
 ('gratin_dauphinois', 'Gratin Dauphinois', 'Des tranches fines de pommes de terre cuites lentement dans une crème riche et onctueuse, parfumée à l’ail. \r\nCe gratin classique de la cuisine française est un accompagnement parfait pour les viandes rôties ou les plats en sauce. Sa texture fondante et son goût délicat en font un plat réconfortant et irrésistible.', 20, 60, 4, 'gratin_dauphinois.jpg'),
 ('chili_con_carne', 'Chili Con Carne', 'Un ragoût épicé originaire du sud des États-Unis, composé de viande hachée, haricots rouges, tomates et épices. Le chili est un plat convivial, souvent servi avec du riz, des tortillas ou du pain de maïs. Facile à personnaliser selon le niveau de piquant désiré, il est parfait pour les grandes réunions ou les repas réconfortants.', 20, 45, 6, 'chili_con_carne.jpg'),
 ('moussaka', 'Moussaka', 'Un gratin méditerranéen composé de couches d’aubergines, de viande hachée et de sauce béchamel. \r\nCe plat emblématique de la cuisine grecque est riche en saveurs, avec un équilibre parfait entre le crémeux de la béchamel et le goût légèrement fumé des aubergines. Cuit au four jusqu’à ce qu’il soit doré et bouillonnant, la moussaka est idéale pour les repas en famille.', 30, 60, 6, 'moussaka.jpg'),
-('poulet_roti', 'Poulet Rôti', 'Un poulet entier rôti au four, assaisonné avec des herbes aromatiques et accompagné de légumes. Ce plat classique est synonyme de repas familial convivial, avec une peau croustillante et une viande juteuse. Facile à préparer, le poulet rôti est un favori des dimanches, offrant un repas complet et satisfaisant.', 20, 90, 4, 'poulet_roti.jpg'),
 ('gateau_au_chocolat', 'Gâteau au Chocolat', 'Un dessert riche et fondant, ce gâteau au chocolat est un incontournable pour les amateurs de chocolat. Avec sa texture moelleuse et son goût intense, il peut être servi nature, avec une ganache, ou accompagné de fruits ou de crème. Simple à réaliser, il est parfait pour toute occasion, qu’il s’agisse d’un anniversaire ou d’une fin de repas gourmande.', 20, 40, 8, 'gateau_chocolat.jpg'),
 ('curry_de_legumes', 'Curry de Légumes', 'Un mélange coloré de légumes variés mijotés dans une sauce au curry épicée et au lait de coco. Ce plat végétarien est à la fois nourrissant et plein de saveurs exotiques. \r\nParfait pour accompagner du riz ou du pain naan, il est facile à adapter selon les légumes de saison et les goûts personnels. C’est une option saine et savoureuse pour tous les jours.', 15, 30, 4, 'curry_legumes.jpg'),
 ('boeuf_bourguignon', 'Boeuf Bourguignon', 'Un ragoût de bœuf mijoté lentement avec du vin rouge, des légumes et des champignons, typique de la cuisine française. \r\nCe plat traditionnel est riche et savoureux, avec des morceaux de viande tendre et des arômes profonds. \r\nIdéal pour les repas d’hiver, il se sert souvent avec des pommes de terre ou des pâtes pour absorber la sauce généreuse.', 30, 120, 6, 'boeuf_bourguignon.jpg'),
 ('tiramisu', 'Tiramisu', 'Un dessert italien raffiné composé de couches de biscuits imbibés de café, de mascarpone crémeux et de cacao en poudre. \r\nLe tiramisu est un mélange parfait de douceur et d’amertume, avec une texture légère et onctueuse. Il est souvent servi bien frais, idéal pour conclure un repas avec élégance. \r\nFacile à préparer à l’avance, il gagne en saveur lorsqu’il repose un peu avant d’être dégusté.', 20, 0, 6, 'tiramisu.jpg');
 
-INSERT INTO recette_ingredient (recette_id, ingredient_id, quantite, unite_mesure) VALUES
-('spaghetti_carbonara', 1, 400, 'g'),
-('spaghetti_carbonara', 2, 150, 'g'),
-('spaghetti_carbonara', 3, 3, 'unités'),
-('spaghetti_carbonara', 4, 100, 'g'),
-('spaghetti_carbonara', 5, 2, 'cuillères à café'),
+INSERT INTO recette_ingredient (recette_id, ingredient_id, quantite, unite_mesure, ordre) VALUES
+-- Spaghetti Carbonara
+('spaghetti_carbonara', 1, 400, 'g', 1),
+('spaghetti_carbonara', 2, 150, 'g', 2),
+('spaghetti_carbonara', 3, 3, '', 3),
+('spaghetti_carbonara', 4, 100, 'g', 4),
+('spaghetti_carbonara', 5, 2, 'cuillères à café', 5),
 
-('poulet_alfredo', 6, 300, 'g'),
-('poulet_alfredo', 7, 2, 'unités'),
-('poulet_alfredo', 8, 250, 'ml'),
-('poulet_alfredo', 9, 2, 'gousses'),
-('poulet_alfredo', 10, 100, 'g'),
+-- Poulet Alfredo
+('poulet_alfredo', 6, 300, 'g', 1),
+('poulet_alfredo', 7, 454, 'g', 2),
+('poulet_alfredo', 8, 250, 'ml', 3),
+('poulet_alfredo', 9, 2, 'gousses', 4),
+('poulet_alfredo', 4, 100, 'g', 5),
 
-('salade_grecque', 11, 4, 'unités'),
-('salade_grecque', 12, 2, 'unités'),
-('salade_grecque', 13, 100, 'g'),
-('salade_grecque', 14, 100, 'g'),
-('salade_grecque', 15, 1, 'unité'),
-('salade_grecque', 16, 3, 'cuillères à soupe'),
+-- Salade Grecque
+('salade_grecque', 11, 4, '', 1),
+('salade_grecque', 12, 2, '', 2),
+('salade_grecque', 13, 100, 'g', 3),
+('salade_grecque', 14, 100, 'g', 4),
+('salade_grecque', 15, 1, '', 5),
+('salade_grecque', 16, 3, 'cuillères à soupe', 6),
 
-('boeuf_stroganoff', 17, 500, 'g'),
-('boeuf_stroganoff', 18, 200, 'g'),
-('boeuf_stroganoff', 19, 1, 'unité'),
-('boeuf_stroganoff', 20, 150, 'ml'),
+-- Boeuf Stroganoff
+('boeuf_stroganoff', 17, 500, 'g', 1),
+('boeuf_stroganoff', 18, 200, 'g', 2),
+('boeuf_stroganoff', 19, 2, '', 3),
+('boeuf_stroganoff', 20, 150, 'ml', 4),
 
-('pates_a_la_bolognaise', 22, 400, 'g'),
-('pates_a_la_bolognaise', 23, 500, 'ml'),
-('pates_a_la_bolognaise', 24, 10, 'feuilles'),
-('pates_a_la_bolognaise', 25, 1, 'cuillère à café'),
+-- Pâtes à la Bolognaise
+('pates_a_la_bolognaise', 22, 400, 'g', 1),
+('pates_a_la_bolognaise', 23, 500, 'ml', 2),
+('pates_a_la_bolognaise', 24, 10, 'feuilles', 3),
+('pates_a_la_bolognaise', 25, 1, 'cuillère à café', 4),
 
-('ratatouille', 27, 1, 'unité'),
-('ratatouille', 28, 1, 'unité'),
-('ratatouille', 29, 1, 'unité'),
-('ratatouille', 24, 10, 'feuilles'),
+-- Ratatouille
+('ratatouille', 19, 2, '', 1),
+('ratatouille', 28, 1, '', 2),
+('ratatouille', 29, 1, '', 3),
+('ratatouille', 16, 2, 'cuillères à soupe', 4),
+('ratatouille', 24, 10, 'feuilles', 5),
 
-('poulet_au_curry', 30, 500, 'g'),
-('poulet_au_curry', 8, 200, 'ml'),
-('poulet_au_curry', 9, 2, 'gousses'),
-('poulet_au_curry', 32, 1, 'cuillère à soupe'),
+-- Poulet au Curry
+('poulet_au_curry', 7, 500, 'g', 1),
+('poulet_au_curry', 8, 200, 'ml', 2), -- Crème épaisse
+('poulet_au_curry', 9, 2, 'gousses', 3),
+('poulet_au_curry', 32, 1, 'cuillère à soupe', 4), -- Gingembre
 
-('lasagnes', 22, 300, 'g'),
-('lasagnes', 17, 400, 'g'),
-('lasagnes', 36, 200, 'ml'),
-('lasagnes', 37, 150, 'g'),
+-- Lasagnes
+('lasagnes', 22, 300, 'g', 1), -- Pâtes
+('lasagnes', 17, 400, 'g', 2), -- Lanières de bœuf
+('lasagnes', 23, 200, 'ml', 3), -- Tomates concassées
+('lasagnes', 4, 150, 'g', 4), -- Fromage parmesan
 
-('tarte_tatin', 11, 5, 'unités'),
-('tarte_tatin', 39, 2, 'cuillères à soupe'),
+-- Tarte Tatin
+('tarte_tatin', 27, 5, '', 1), -- Pommes
+('tarte_tatin', 42, 2, 'cuillères à soupe', 2), -- Sucre
 
-('crepes_suzette', 40, 4, 'unités'),
-('crepes_suzette', 9, 1, 'cuillère à soupe'),
-('crepes_suzette', 34, 1, 'cuillère à soupe'),
+-- Crêpes Suzette
+('crepes_suzette', 3, 4, '', 1), -- Œufs
+('crepes_suzette', 42, 2, 'cuillères à soupe', 2), -- Sucre
+('crepes_suzette', 46, 1, 'cuillère à soupe', 3),
+('crepes_suzette', 47, 6, 'cuillères à soupe', 4),
 
-('soupe_a_l_oignon', 19, 500, 'g'),
-('soupe_a_l_oignon', 21, 1, 'l'),
-('soupe_a_l_oignon', 36, 100, 'ml'),
+-- Soupe à l'oignon
+('soupe_a_l_oignon', 19, 2, '', 1), -- Oignon
+('soupe_a_l_oignon', 21, 1, 'l', 2), -- Bouillon de bœuf
+('soupe_a_l_oignon', 36, 100, 'ml', 3), -- Crème fraîche
 
-('quiche_lorraine', 37, 200, 'g'),
-('quiche_lorraine', 17, 100, 'g'),
-('quiche_lorraine', 36, 200, 'ml'),
+-- Quiche Lorraine
+('quiche_lorraine', 37, 200, 'g', 3), -- Lardons
+('quiche_lorraine', 3, 6, '', 1), -- Oeufs
+('quiche_lorraine', 36, 200, 'ml', 2), -- Crème fraîche
 
-('gratin_dauphinois', 22, 800, 'g'),
-('gratin_dauphinois', 36, 250, 'ml'),
+-- Gratin Dauphinois
+('gratin_dauphinois', 10, 800, 'g', 1),
+('gratin_dauphinois', 36, 250, 'ml', 2), -- Crème fraîche
 
-('chili_con_carne', 17, 400, 'g'),
-('chili_con_carne', 23, 300, 'ml'),
-('chili_con_carne', 25, 1, 'cuillère à café'),
+-- Chili con Carne
+('chili_con_carne', 17, 400, 'g', 1), -- Lanières de bœuf
+('chili_con_carne', 23, 300, 'ml', 2), -- Tomates concassées
+('chili_con_carne', 25, 1, 'cuillère à café', 3), -- Poudre de chili (corrigé en autre ingrédient)
 
-('moussaka', 28, 300, 'g'),
-('moussaka', 17, 500, 'g'),
-('moussaka', 36, 200, 'ml'),
+-- Moussaka
+('moussaka', 28, 2, '', 1), -- Aubergine
+('moussaka', 17, 500, 'g', 2), -- Lanières de bœuf
+('moussaka', 23, 200, 'ml', 3), -- Tomates concassées
 
-('poulet_roti', 30, 1, 'unité'),
-('poulet_roti', 16, 2, 'cuillères à soupe'),
+-- Gâteau au Chocolat
+('gateau_au_chocolat', 40, 2, 'tasses', 1),
+('gateau_au_chocolat', 45, 200, 'g', 2),
+('gateau_au_chocolat', 3, 4, '', 4), -- Œufs
+('gateau_au_chocolat', 42, 100, 'g', 3), -- Sucre
 
-('gateau_au_chocolat', 40, 200, 'g'),
-('gateau_au_chocolat', 36, 100, 'ml'),
+-- Curry de Légumes
+('curry_de_legumes', 29, 2, '', 1), -- Courgette
+('curry_de_legumes', 31, 200, 'ml', 2), -- Lait de coco
+('curry_de_legumes', 32, 1, 'cuillère à café', 3), -- Gingembre
 
-('curry_de_legumes', 29, 200, 'g'),
-('curry_de_legumes', 31, 200, 'ml'),
-('curry_de_legumes', 32, 1, 'cuillère à café'),
+-- Boeuf Bourguignon
+('boeuf_bourguignon', 17, 800, 'g', 1), -- Lanières de bœuf
+('boeuf_bourguignon', 23, 500, 'ml', 2), -- Tomates concassées
+('boeuf_bourguignon', 21, 1, 'l', 3), -- Bouillon de bœuf
 
-('boeuf_bourguignon', 17, 800, 'g'),
-('boeuf_bourguignon', 23, 500, 'ml'),
-('boeuf_bourguignon', 21, 1, 'l'),
+-- Tiramisu
+('tiramisu', 41, 250, 'g', 1), -- Mascarpone
+('tiramisu', 42, 2, 'cuillères à soupe', 2), -- Sucre
+('tiramisu', 43, 200, 'g', 3), -- Biscuits à la cuillère
+('tiramisu', 44, 100, 'ml', 4), -- Café
+('tiramisu', 45, 2, 'cuillères à soupe', 5); -- Cacao en poudre
 
-('tiramisu', 40, 250, 'g'),
-('tiramisu', 34, 2, 'cuillères à soupe');
 
 INSERT INTO Etape (description, ordre, recette_id) VALUES
 ('Faire cuire les spaghetti selon les instructions.', 1, 'spaghetti_carbonara'),
@@ -201,8 +231,9 @@ INSERT INTO Etape (description, ordre, recette_id) VALUES
 ('Ajouter le bouillon et laisser mijoter.', 2, 'soupe_a_l_oignon'),
 ('Servir avec du pain grillé.', 3, 'soupe_a_l_oignon'),
 
-('Préparer la pâte et la garnir de lardons et de fromage.', 1, 'quiche_lorraine'),
-('Faire cuire au four.', 2, 'quiche_lorraine'),
+('Battre les oeufs avec la crème fraîche.', 1, 'quiche_lorraine'),
+('Préparer la pâte et la garnir du mélange d’oeufs et des lardons.', 2, 'quiche_lorraine'),
+('Faire cuire au four.', 3, 'quiche_lorraine'),
 
 ('Préparer les pommes de terre et les trancher.', 1, 'gratin_dauphinois'),
 ('Préparer la crème et mélanger avec les pommes de terre.', 2, 'gratin_dauphinois'),
@@ -212,13 +243,10 @@ INSERT INTO Etape (description, ordre, recette_id) VALUES
 ('Ajouter les haricots et les tomates.', 2, 'chili_con_carne'),
 ('Assaisonner et laisser mijoter.', 3, 'chili_con_carne'),
 
-('Préparer les aubergines et les courgettes.', 1, 'moussaka'),
+('Couper en fines tranches les aubergines.', 1, 'moussaka'),
 ('Faire revenir la viande.', 2, 'moussaka'),
 ('Assembler les couches avec une béchamel.', 3, 'moussaka'),
 ('Faire cuire au four.', 4, 'moussaka'),
-
-('Assaisonner le poulet.', 1, 'poulet_roti'),
-('Faire cuire au four avec des légumes.', 2, 'poulet_roti'),
 
 ('Préparer la pâte et faire cuire au four.', 1, 'gateau_au_chocolat'),
 ('Préparer le glaçage et appliquer.', 2, 'gateau_au_chocolat'),
