@@ -148,23 +148,6 @@ export async function ajouterAppreciation(appreciation) {
     }
 };
 
-export async function mettreAJourRecette(recette) {
-    const reponse = await fetch(`/api/recettes/${recette.recetteId}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-            ...session.getAuthHeaders()
-        },
-        body: JSON.stringify(recette)
-    });
-    
-    if (reponse.ok) {
-        return convertirEnRecette(await reponse.json());
-    } else {
-        throw new Error(`Impossible d'éditer la recette ${recette.recetteId}: ${reponse.status}`);
-    }
-};
-
 export async function creerRecette(recette) {
     const reponse = await fetch(`/api/recettes`, {
         method: "POST",
@@ -198,3 +181,20 @@ export async function modifierRecette(recette) {
         throw new Error(`Impossible d'ajouter la nouvelle recette: ${reponse.status}`);
     }
 };
+
+export async function modifierRecetteImage(recetteId, formDonnees) {
+    console.log(formDonnees);
+    const response = await fetch(`/api/recettes/${recetteId}/image`, {
+        method: "POST",
+        headers: {
+            ...session.getAuthHeaders()
+        },
+        body: formDonnees
+    });
+
+    if (response.ok) {
+        return;
+    } else {
+        throw new Error(`Impossible de modifier l'image de la recette ${recetteId}: ${response.status}`);
+    }
+}

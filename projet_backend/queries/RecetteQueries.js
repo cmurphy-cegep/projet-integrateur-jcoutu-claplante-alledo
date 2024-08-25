@@ -393,3 +393,33 @@ const modifierAppreciation = async (appreciation) => {
     };
 };
 exports.modifierAppreciation = modifierAppreciation;
+
+const modifierRecetteImage = async (recetteId, file) => {
+    
+    const path = require('path');
+
+    const cheminFichier = path.join(__dirname, '../images/recettes', file.originalname);
+
+    fs.writeFile(cheminFichier, file.buffer, (err) => {
+        if (err) {
+            console.error('Erreur lors de l\'enregistrement de l\'image:', err);
+        } else {
+            console.log('Image enregistrée avec succès dans :', cheminFichier);
+        }
+    });
+
+    const imageNom = file.originalname;
+
+    const result = await pool.query(
+        `UPDATE recette SET image = $2
+        WHERE recette_id = $1`,
+        [recetteId, imageNom]
+    );
+
+    if (result.rowCount === 0) {
+        throw new Error("Erreur lors de la mise-à-jour de l'image");
+    }
+
+    return result;
+};
+exports.modifierRecetteImage = modifierRecetteImage;

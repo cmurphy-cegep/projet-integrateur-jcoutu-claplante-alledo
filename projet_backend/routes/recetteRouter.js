@@ -116,4 +116,25 @@ router.put('/:id',
         })
     });
 
+router.post('/:id/image',
+    upload.single('recette-image'),
+    (req, res, next) => {
+        const id = req.params.id;
+        if (!id || id === '') {
+            return next(new HttpError(400, 'Le champ id est requis'));
+        }
+
+        recetteQueries.getRecetteById(id).then(recette => {
+            if (!recette) {
+                throw new HttpError(404, `Recette id ${id} introuvable`);
+            }
+            return recetteQueries.modifierRecetteImage(id, req.file);
+        }).then(imageInfo => {
+            res.send("");
+        }).catch(err => {
+            next(err);
+        });
+
+    });
+
 module.exports = router;

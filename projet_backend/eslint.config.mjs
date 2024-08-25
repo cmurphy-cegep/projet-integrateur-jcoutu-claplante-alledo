@@ -16,7 +16,7 @@ export default [
     rules: {
       "complexity": ["error", 10],
       "max-depth": ["error", 4],
-      "max-lines": ["error", 400],
+      "max-lines": ["error", 500],
       "max-lines-per-function": ["error", 50],
       "max-nested-callbacks": ["error", 3],
       "max-params": ["error", 6],

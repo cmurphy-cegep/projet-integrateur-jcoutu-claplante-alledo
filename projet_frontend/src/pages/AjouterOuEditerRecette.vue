@@ -4,29 +4,32 @@
             <div v-if="modeNouvelleRecette" class="form-control" :class="{ invalide: !idValide }">
                 <label for="recette-id">Identifiant de la recette : </label>
                 <input id="recette-id" v-model="recette.id" />
+                <span v-if="!idValide">Veuillez entrer un identifiant de recette</span>
             </div>
             <div class="form-control" :class="{ invalide: !nomValide }">
                 <label for="recette-nom">Nom de la recette : </label>
                 <input id="recette-nom" v-model="recette.nom" />
+                <span v-if="!nomValide">Veuillez entrer un nom</span>
             </div>
             <div>
                 <label for="recette-preparation">Temps de préparation (en minutes) : </label>
-                <input type="number" id="recette-preparation" v-model="recette.preparation" min="0" />
+                <input type="number" id="recette-preparation" v-model="recette.preparation" min="0" step="1" />
             </div>
             <div>
                 <label for="recette-cuisson">Temps de cuisson (en minutes) : </label>
-                <input type="number" id="recette-cuisson" v-model="recette.cuisson" min="0" />
+                <input type="number" id="recette-cuisson" v-model="recette.cuisson" min="0" step="1" />
             </div>
             <div>
                 <label for="recette-portions">Nombre de portions : </label>
-                <input type="number" id="recette-portions" v-model="recette.portions" min="0" />
+                <input type="number" id="recette-portions" v-model="recette.portions" min="0" step="1" />
             </div>
             <div>
                 <label for="recette-description">Description de la recette : </label>
             </div>
-            <div>
+            <div class="form-control" :class="{ invalide: !descValide }">
                 <textarea id="recette-description" v-model="recette.desc" maxlength="700" rows="7"
                     cols="100"> </textarea>
+                <span v-if="!descValide">Veuillez entrer une description</span>
             </div>
 
             <table>
@@ -54,11 +57,21 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td><input type="number" id="ingredient-quantite" v-model="ajoutQuantite" /></td>
-                        <td><input id="ingredient-uniteMesure" v-model="ajoutUniteMesure" /></td>
-                        <td><input id="ingredient-nom" v-model="ajoutNomIngredient" /></td>
-                        <td><button type="button" @click="ajouterIngredient">Ajouter
-                                l'ingrédient</button></td>
+                        <td>
+                            <input type="number" id="ingredient-quantite" v-model="ajoutQuantite" min="0" step="0.1"
+                                placeholder="0.0" />
+                        </td>
+                        <td>
+                            <input id="ingredient-uniteMesure" v-model="ajoutUniteMesure" />
+                        </td>
+                        <td class="form-control" :class="{ invalide: !ajoutNomIngredientValide }">
+                            <input id="ingredient-nom" v-model="ajoutNomIngredient" />
+                        </td>
+                        <td>
+                            <button type="button" @click="ajouterIngredient">Ajouter l'ingrédient</button>
+                            <span v-if="!ajoutNomIngredientValide">Pour ajouter un ingrédient, veuillez saisir le nom de
+                                l'ingrédient</span>
+                        </td>
                     </tr>
                 </tfoot>
             </table>
@@ -82,20 +95,39 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td><input id="etape-texte" v-model="ajoutDescriptionEtape" /></td>
+                        <td class="form-control" :class="{ invalide: !ajoutDescriptionEtapeValide }">
+                            <input id="etape-texte" v-model="ajoutDescriptionEtape" />
+                        </td>
                         <td><button type="button" @click="ajouterEtape">Ajouter une étape</button></td>
+                        <span v-if="!ajoutDescriptionEtapeValide">Pour ajouter une étape, veuillez saisir le texte de
+                            l'étape</span>
                     </tr>
                 </tfoot>
             </table>
             <div>
-                <button type="submit">Soumettre</button>
+                <button type="submit">Soumettre le formulaire</button>
+            </div>
+        </form>
+        <hr />
+        <form @submit.prevent="soumettreImage">
+            <div>
+                <div>
+                    <label for="recette-image">Téléverser l'image : </label>
+                </div>
+                <div>
+                    <input type="file" id="recette-image" accept="image/png, image/jpeg, image/gif" />
+                </div>
+                &nbsp;
+                <div>
+                    <button type="submit">Soumettre l'image</button>
+                </div>
             </div>
         </form>
     </div>
 </template>
 
 <script>
-import { fetchRecette, fetchIngredients, fetchEtapes, creerRecette, modifierRecette } from '../RecetteService';
+import { fetchRecette, fetchIngredients, fetchEtapes, creerRecette, modifierRecette, modifierRecetteImage } from '../RecetteService';
 import session from '../session';
 
 export default {
@@ -111,7 +143,8 @@ export default {
                 nom: this.nom || '',
                 preparation: this.preparation || '',
                 cuisson: this.cuisson || '',
-                portions: this.portions || ''
+                portions: this.portions || '',
+                desc: this.desc || '',
             },
             ingredients: [],
             etapes: [],
@@ -121,13 +154,9 @@ export default {
             ajoutDescriptionEtape: '',
             idValide: true,
             nomValide: true,
-            preparationValide: true,
-            cuissonValide: true,
-            portionsValide: true,
-            ingredientQuantiteValide: true,
-            ingredientUniteMesureValide: true,
-            ingredientNomValide: true,
-            etapeDescriptionValide: true
+            descValide: true,
+            ajoutNomIngredientValide: true,
+            ajoutDescriptionEtapeValide: true
         };
     },
     methods: {
@@ -153,15 +182,22 @@ export default {
             });
         },
         ajouterIngredient() {
-            const nouvelIngredient = {
-                quantite: this.ajoutQuantite,
-                uniteMesure: this.ajoutUniteMesure,
-                nom: this.ajoutNomIngredient
+            this.transformerAjoutQuantiteNullAZero();
+            this.validerAjoutNomIngredient();
+
+            if (this.ajoutNomIngredientValide) {
+                const nouvelIngredient = {
+                    quantite: this.ajoutQuantite,
+                    uniteMesure: this.ajoutUniteMesure,
+                    nom: this.ajoutNomIngredient
+                }
+                this.ingredients.push(nouvelIngredient);
+                this.ajoutQuantite = '';
+                this.ajoutUniteMesure = '';
+                this.ajoutNomIngredient = '';
+            } else {
+                alert("Veuillez remplir les champs obligatoires");
             }
-            this.ingredients.push(nouvelIngredient);
-            this.ajoutQuantite = '';
-            this.ajoutUniteMesure = '';
-            this.ajoutNomIngredient = '';
         },
         supprimerIngredient(index) {
             this.ingredients.splice(index, 1);
@@ -177,11 +213,17 @@ export default {
             this.ingredients[index + 1] = temp;
         },
         ajouterEtape() {
-            const nouvelleEtape = {
-                description: this.ajoutDescriptionEtape
+            this.validerAjoutDescriptionEtape();
+
+            if (this.ajoutDescriptionEtapeValide) {
+                const nouvelleEtape = {
+                    description: this.ajoutDescriptionEtape
+                }
+                this.etapes.push(nouvelleEtape);
+                this.ajoutDescriptionEtape = '';
+            } else {
+                alert("Veuillez remplir les champs obligatoires");
             }
-            this.etapes.push(nouvelleEtape);
-            this.ajoutDescriptionEtape = '';
         },
         supprimerEtape(index) {
             this.etapes.splice(index, 1);
@@ -196,7 +238,21 @@ export default {
             this.etapes[index] = this.etapes[index + 1]
             this.etapes[index + 1] = temp;
         },
-        async soumettreFormulaire() {
+        soumettreFormulaire() {
+            this.validerId();
+            this.validerNom();
+            this.transformerPreparationNullAZero();
+            this.transformerCuissonNullAZero();
+            this.transformerPortionsNullAZero();
+            this.validerDescription();
+
+            if (this.idValide && this.nomValide && this.descValide) {
+                this.envoyerFormulaire();
+            } else {
+                alert("Veuillez remplir les champs obligatoires");
+            }
+        },
+        async envoyerFormulaire() {
             const nouvelleRecette = {
                 id: this.recette.id,
                 nom: this.recette.nom,
@@ -224,6 +280,74 @@ export default {
                     console.error(err);
                     alert(err.message);
                 }
+            }
+        },
+        validerId() {
+            if (this.recette.id === '') {
+                this.idValide = false;
+            } else {
+                this.idValide = true;
+            }
+        },
+        validerNom() {
+            if (this.recette.nom === '') {
+                this.nomValide = false;
+            } else {
+                this.nomValide = true;
+            }
+        },
+        transformerPreparationNullAZero() {
+            if (this.recette.preparation === null || this.recette.preparation === "" || this.recette.preparation === "-") {
+                this.recette.preparation = 0;
+            }
+        },
+        transformerCuissonNullAZero() {
+            if (this.recette.cuisson === null || this.recette.cuisson === "" || this.recette.cuisson === "-") {
+                this.recette.cuisson = 0;
+            }
+        },
+        transformerPortionsNullAZero() {
+            if (this.recette.portions === null || this.recette.portions === "" || this.recette.portions === "-") {
+                this.recette.portions = 0;
+            }
+        },
+        validerDescription() {
+            if (this.recette.desc === '') {
+                this.descValide = false;
+            } else {
+                this.descValide = true;
+            }
+        },
+        transformerAjoutQuantiteNullAZero() {
+            if (this.ajoutQuantite === null || this.ajoutQuantite === "") {
+                this.ajoutQuantite = 0;
+            }
+        },
+        validerAjoutNomIngredient() {
+            if (this.ajoutNomIngredient === '') {
+                this.ajoutNomIngredientValide = false;
+            } else {
+                this.ajoutNomIngredientValide = true;
+            }
+        },
+        validerAjoutDescriptionEtape() {
+            if (this.ajoutDescriptionEtape === '') {
+                this.ajoutDescriptionEtapeValide = false;
+            } else {
+                this.ajoutDescriptionEtapeValide = true;
+            }
+        },
+        async soumettreImage() {
+            const formDonnees = new FormData();
+            const champFichier = document.querySelector("input[id='recette-image']");
+            formDonnees.append('recette-image', champFichier.files[0]);
+
+            try {
+                await modifierRecetteImage(this.recette.id, formDonnees);
+                this.$router.push('/recettes/' + this.recette.id);
+            } catch (err) {
+                console.error(err);
+                alert(err.message);
             }
         }
     },
