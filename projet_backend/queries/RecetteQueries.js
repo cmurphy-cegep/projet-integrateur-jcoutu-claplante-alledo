@@ -205,17 +205,36 @@ async function insererDansTableEtape(idRecette, etape, ordreEtape, client) {
     );
 };
 
-const ajouterRecette = async (recette) => {
-    /*
-    for (const element of recette) {
-        if (!element) {
-            throw new HttpError(400, `Le champ ${element} est requis`);
-        }
+function estVide(champ) {
+    return !champ || champ === '';
+}
+
+function validerChamp(champ, nomChamp) {
+    if (estVide(champ)) {
+        throw new HttpError(400, `Le champ ${nomChamp} est requis`);
     }
-*/
+}
+
+function validerSousChamps(champs, nomTableau, nomChamp) {
+    champs.forEach((champ, index) => {
+        validerChamp(champ[nomChamp], `${nomChamp} pour ${nomTableau} à l'index ${index}`)
+    });
+}
+
+function validerChampsRecette(recette) {
+    validerChamp(recette.id, 'id');
+    validerChamp(recette.nom, 'nom');
+    validerChamp(recette.desc, 'desc');
+    validerSousChamps(recette.ingredients, 'ingredient', 'nom')
+    validerSousChamps(recette.etapes, 'etape', 'description')
+}
+
+const ajouterRecette = async (recette) => {
+    validerChampsRecette(recette);
+
     await ajouterRecetteBdd(recette);
 
-    return getRecetteById(recette.id)
+    return getRecetteById(recette.id);
 }
 exports.ajouterRecette = ajouterRecette;
 
@@ -276,11 +295,11 @@ async function supprimerLignesTableEtapeSelonIdRecette(idRecette, client) {
 }
 
 const modifierRecette = async (recette) => {
-    const id = "" + recette.id;
+    validerChampsRecette(recette);
 
     await modifierRecetteBdd(recette);
 
-    return getRecetteById(id)
+    return getRecetteById(recette.id)
 }
 exports.modifierRecette = modifierRecette;
 
@@ -290,7 +309,7 @@ const modifierRecetteBdd = async (recette) => {
     try {
         await client.query('BEGIN');
 
-        const idRecette = recette.id;
+        const idRecette = "" + recette.id;
 
         await modifierDansTableRecette(recette, client);
 
@@ -395,7 +414,7 @@ const modifierAppreciation = async (appreciation) => {
 exports.modifierAppreciation = modifierAppreciation;
 
 const modifierRecetteImage = async (recetteId, file) => {
-    
+
     const path = require('path');
 
     const cheminFichier = path.join(__dirname, '../images/recettes', file.originalname);

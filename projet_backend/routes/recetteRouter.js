@@ -70,11 +70,6 @@ router.post('/',
             return next(new HttpError(404, 'Droit administrateur requis'));
         }
 
-        const id = req.body.id;
-        if (!id || id === '') {
-            return next(new HttpError(400, 'Le champ id est requis'));
-        }
-
         recetteQueries.getRecetteById(id).then(recette => {
             if (recette) {
                 throw new HttpError(400, `Une recette avec l'id ${id} existe déjà`);
