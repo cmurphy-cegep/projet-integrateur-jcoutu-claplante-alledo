@@ -70,6 +70,11 @@ router.post('/',
             return next(new HttpError(404, 'Droit administrateur requis'));
         }
 
+        const id = req.body.id;
+        if (!id || id === '') {
+            return next(new HttpError(400, 'Le champ id est requis'));
+        }
+
         recetteQueries.getRecetteById(id).then(recette => {
             if (recette) {
                 throw new HttpError(400, `Une recette avec l'id ${id} existe déjà`);
@@ -112,8 +117,15 @@ router.put('/:id',
     });
 
 router.post('/:id/image',
+    passport.authenticate('basic', { session: false }),
     upload.single('recette-image'),
     (req, res, next) => {
+        const utilisateur = req.user;
+
+        if (!utilisateur || !utilisateur.estAdmin) {
+            return next(new HttpError(404, 'Droit administrateur requis'));
+        }
+
         const id = req.params.id;
         if (!id || id === '') {
             return next(new HttpError(400, 'Le champ id est requis'));
@@ -130,6 +142,27 @@ router.post('/:id/image',
             next(err);
         });
 
+    });
+
+router.delete('/:id',
+    passport.authenticate('basic', { session: false }),
+    (req, res, next) => {
+        const utilisateur = req.user;
+
+        if (!utilisateur || !utilisateur.estAdmin) {
+            return next(new HttpError(404, 'Droit administrateur requis'));
+        }
+
+        const id = req.params.id;
+        if (!id || id === '') {
+            return next(new HttpError(400, 'Le paramètre id est requis'));
+        }
+
+        recetteQueries.supprimerRecette(id).then(result => {
+            return res.json({});
+        }).catch(err => {
+            return next(err);
+        })
     });
 
 module.exports = router;
