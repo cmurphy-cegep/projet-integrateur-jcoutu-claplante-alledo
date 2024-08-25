@@ -1,5 +1,9 @@
 <template>
     <div v-if="session.user && session.user.estAdmin">
+        <h2 v-if="modeNouvelleRecette">Création d'une nouvelle recette</h2>
+        <h2 v-if="!modeNouvelleRecette">Édition de la recette : id {{ recette.id }}
+            <button type="button" @click="supprimerRecette">Supprimer la recette</button>
+        </h2>
         <form @submit.prevent="soumettreFormulaire">
             <div v-if="modeNouvelleRecette" class="form-control" :class="{ invalide: !idValide }">
                 <label for="recette-id">Identifiant de la recette : </label>
@@ -31,7 +35,9 @@
                     cols="100"> </textarea>
                 <span v-if="!descValide">Veuillez entrer une description</span>
             </div>
-
+            <h3 class="ingredient"> Ingrédients</h3>
+            <span class="form-control" :class="{ invalide: !ingredientsValide }"></span>
+            <span v-if="!ingredientsValide">Un minimum d'un ingrédient est requis.</span>
             <table>
                 <thead>
                     <tr>
@@ -75,6 +81,9 @@
                     </tr>
                 </tfoot>
             </table>
+            <h3 class="etape"> Étapes</h3>
+            <span class="form-control" :class="{ invalide: !etapesValide }"></span>
+            <span v-if="!etapesValide">Un minimum d'une étape est requise.</span>
             <table>
                 <thead>
                     <tr>
@@ -109,7 +118,7 @@
             </div>
         </form>
         <hr />
-        <form @submit.prevent="soumettreImage">
+        <form v-if="!modeNouvelleRecette" @submit.prevent="soumettreImage">
             <div>
                 <div>
                     <label for="recette-image">Téléverser l'image : </label>
@@ -127,7 +136,7 @@
 </template>
 
 <script>
-import { fetchRecette, fetchIngredients, fetchEtapes, creerRecette, modifierRecette, modifierRecetteImage } from '../RecetteService';
+import { fetchRecette, fetchIngredients, fetchEtapes, creerRecette, modifierRecette, modifierRecetteImage, supprimerRecette } from '../RecetteService';
 import session from '../session';
 
 export default {
@@ -155,6 +164,8 @@ export default {
             idValide: true,
             nomValide: true,
             descValide: true,
+            ingredientsValide: true,
+            etapesValide: true,
             ajoutNomIngredientValide: true,
             ajoutDescriptionEtapeValide: true
         };
@@ -245,8 +256,10 @@ export default {
             this.transformerCuissonNullAZero();
             this.transformerPortionsNullAZero();
             this.validerDescription();
+            this.validerIngredients();
+            this.validerEtapes();
 
-            if (this.idValide && this.nomValide && this.descValide) {
+            if (this.idValide && this.nomValide && this.descValide && this.ingredientsValide &&this.etapesValide) {
                 this.envoyerFormulaire();
             } else {
                 alert("Veuillez remplir les champs obligatoires");
@@ -318,6 +331,20 @@ export default {
                 this.descValide = true;
             }
         },
+        validerIngredients() {
+            if (!this.ingredients || this.ingredients.length === 0) {
+                this.ingredientsValide = false;
+            } else {
+                this.ingredientsValide = true;
+            }
+        },
+        validerEtapes() {
+            if (!this.etapes || this.etapes.length === 0) {
+                this.etapesValide = false;
+            } else {
+                this.etapesValide = true;
+            }
+        },
         transformerAjoutQuantiteNullAZero() {
             if (this.ajoutQuantite === null || this.ajoutQuantite === "") {
                 this.ajoutQuantite = 0;
@@ -345,6 +372,15 @@ export default {
             try {
                 await modifierRecetteImage(this.recette.id, formDonnees);
                 this.$router.push('/recettes/' + this.recette.id);
+            } catch (err) {
+                console.error(err);
+                alert(err.message);
+            }
+        },
+        async supprimerRecette() {
+            try {
+                await supprimerRecette(this.recette.id);
+                this.$router.push('/recettes/');
             } catch (err) {
                 console.error(err);
                 alert(err.message);
