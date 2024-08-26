@@ -97,8 +97,6 @@ describe("Test Queries", () => {  // eslint-disable-line max-lines-per-function
         })
 
         it('getRecetteById devrait throw un erreur quand la query fail', async () => {
-            mockPool.query.mockRejectedValue(new Error('Erreur database'));
-
             const recetteId = "test";
             mockPool.query.mockResolvedValue({});
 
