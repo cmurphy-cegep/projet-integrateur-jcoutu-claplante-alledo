@@ -192,6 +192,9 @@ async function insererDansTableRecette(recette, client) {
 exports.insererDansTableRecette = insererDansTableRecette;
 
 async function insererDansTableRecetteIngredient(idRecette, idIngredient, ingredient, ordreIngredient, client) {
+    if (ingredient.quantite === '') {
+        ingredient.quantite = 0;
+    }
     return await client.query(
         `INSERT INTO recette_ingredient (recette_id, ingredient_id, quantite, unite_mesure, ordre) 
         VALUES ($1, $2, $3, $4, $5)`,
@@ -420,7 +423,7 @@ const modifierAppreciation = async (appreciation) => {
 };
 exports.modifierAppreciation = modifierAppreciation;
 
-const modifierRecetteImage = async (recetteId, file) => {
+const modifierRecetteImage = async (idRecette, file) => {
 
     const path = require('path');
 
@@ -439,7 +442,7 @@ const modifierRecetteImage = async (recetteId, file) => {
     const result = await pool.query(
         `UPDATE recette SET image = $2
         WHERE recette_id = $1`,
-        [recetteId, imageNom]
+        [idRecette, imageNom]
     );
 
     if (result.rowCount === 0) {
@@ -449,3 +452,50 @@ const modifierRecetteImage = async (recetteId, file) => {
     return result;
 };
 exports.modifierRecetteImage = modifierRecetteImage;
+
+async function supprimerLignesTableCommentaireSelonIdRecette(idRecette, client) {
+    return await client.query(
+        `DELETE FROM commentaire WHERE recette_id = $1`,
+        [idRecette]
+    );
+}
+
+async function supprimerLignesTableAppreciationSelonIdRecette(idRecette, client) {
+    return await client.query(
+        `DELETE FROM appreciation WHERE recette_id = $1`,
+        [idRecette]
+    );
+}
+
+async function supprimerDansTableRecette(idRecette, client) {
+    return await client.query(
+        `DELETE FROM recette WHERE recette_id = $1`,
+        [idRecette]
+    );
+}
+
+const supprimerRecette = async (idRecette) => {
+    const client = await pool.connect();
+
+    try {
+        await client.query('BEGIN');
+
+        await supprimerLignesTableRecetteIngredientSelonIdRecette(idRecette, client);
+
+        await supprimerLignesTableEtapeSelonIdRecette(idRecette, client);
+
+        await supprimerLignesTableCommentaireSelonIdRecette(idRecette, client);
+
+        await supprimerLignesTableAppreciationSelonIdRecette(idRecette, client);
+
+        await supprimerDansTableRecette(idRecette, client);
+
+        await client.query('COMMIT');
+    } catch (err) {
+        await client.query('ROLLBACK');
+        throw err;
+    } finally {
+        client.release();
+    }
+};
+exports.supprimerRecette = supprimerRecette;

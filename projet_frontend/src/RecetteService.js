@@ -14,6 +14,10 @@ function formatterNombreVide(nombre) {
     return (nombre === 0) ? "-" : nombre;
 }
 
+function effacerZero(nombre) {
+    return (nombre === 0) ? "" : nombre;
+}
+
 const convertirEnRecette = jsonRecette => {
     return {
         id: jsonRecette.id,
@@ -29,7 +33,7 @@ const convertirEnRecette = jsonRecette => {
 const convertirEnIngredient = jsonIngredient => {
     return {
         nom: jsonIngredient.nom,
-        quantite: (jsonIngredient.quantite % 1 === 0) ? Number(jsonIngredient.quantite) : jsonIngredient.quantite,
+        quantite: (jsonIngredient.quantite % 1 === 0) ? effacerZero(Number(jsonIngredient.quantite)) : jsonIngredient.quantite,
         uniteMesure: jsonIngredient.uniteMesure
     };
 };
@@ -183,7 +187,6 @@ export async function modifierRecette(recette) {
 };
 
 export async function modifierRecetteImage(recetteId, formDonnees) {
-    console.log(formDonnees);
     const response = await fetch(`/api/recettes/${recetteId}/image`, {
         method: "POST",
         headers: {
@@ -196,5 +199,21 @@ export async function modifierRecetteImage(recetteId, formDonnees) {
         return;
     } else {
         throw new Error(`Impossible de modifier l'image de la recette ${recetteId}: ${response.status}`);
+    }
+};
+
+export async function supprimerRecette(recetteId) {
+    const reponse = await fetch(`/api/recettes/${recetteId}`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            ...session.getAuthHeaders()
+        },
+    });
+    
+    if (reponse.ok) {
+        return;
+    } else {
+        throw new Error(`Impossible de supprimer la recette ${recetteId}: ${reponse.status}`);
     }
 }
