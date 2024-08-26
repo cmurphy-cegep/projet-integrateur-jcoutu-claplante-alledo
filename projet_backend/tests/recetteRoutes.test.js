@@ -140,6 +140,144 @@ describe("tests routes", () => { // eslint-disable-line max-lines-per-function
     
             expect(response.status).toBe(400);
         })
+
+        it("POST recettes/ devrai retourner 200", async () => {
+            const MockRecette = {
+                id: "patate",
+                nom: "B",
+                description: "asdasdl",
+                temps_preparation: 410,
+                temps_cuisson: 30,
+                nombre_portions: 2,
+                image: "noImage"
+            };
+    
+            mockRecetteQueries.getRecetteById.mockResolvedValue(null);
+            mockRecetteQueries.ajouterRecette.mockResolvedValue(MockRecette);
+            
+            const response = await requete(app)
+                .post('/recettes')
+                .auth('admin', '12345')
+                .send(MockRecette);
+    
+    
+            expect(response.status).toBe(200);
+        })
+
+        it("PUT recettes/:id devrait retourner 404 droit administrateur requis", async () => {
+            const MockRecette = {
+                id: "patate",
+                nom: "B",
+                description: "asdasdl",
+                temps_preparation: 410,
+                temps_cuisson: 30,
+                nombre_portions: 2,
+                image: "noImage"
+            };
+    
+            mockRecetteQueries.modifierRecette.mockResolvedValue(MockRecette);
+            
+            const response = await requete(app)
+                .put('/recettes/patate')
+                .auth('alledo', '12345')
+                .send(MockRecette);
+    
+            expect(response.status).toBe(404);
+        })
+
+        it("PUT recettes/:id devrait retourner 400 paramètre id requis", async () => {
+            const MockRecette = {
+                nom: "B",
+                description: "asdasdl",
+                temps_preparation: 410,
+                temps_cuisson: 30,
+                nombre_portions: 2,
+                image: "noImage"
+            };
+    
+            mockRecetteQueries.modifierRecette.mockResolvedValue(MockRecette);
+            
+            const response = await requete(app)
+                .put('/recettes/patate')
+                .auth('admin', '12345')
+                .send(MockRecette);
+    
+            expect(response.status).toBe(400);
+        })
+
+        it("PUT recettes/:id devrait retourner 400 ID != au req.body", async () => {
+            const MockRecette = {
+                id: "patate",
+                nom: "B",
+                description: "asdasdl",
+                temps_preparation: 410,
+                temps_cuisson: 30,
+                nombre_portions: 2,
+                image: "noImage"
+            };
+    
+            mockRecetteQueries.modifierRecette.mockResolvedValue(MockRecette);
+            
+            const response = await requete(app)
+                .put('/recettes/pate')
+                .auth('admin', '12345')
+                .send(MockRecette);
+    
+            expect(response.status).toBe(400);
+        })
+
+        it("PUT recettes/:id devrait retourner 404 recette introuvable", async () => {
+            const MockRecette = {
+                id: "patate",
+                nom: "B",
+                description: "asdasdl",
+                temps_preparation: 410,
+                temps_cuisson: 30,
+                nombre_portions: 2,
+                image: "noImage"
+            };
+    
+            mockRecetteQueries.modifierRecette.mockResolvedValue(null);
+            
+            const response = await requete(app)
+                .put('/recettes/patate')
+                .auth('admin', '12345')
+                .send(MockRecette);
+    
+            expect(response.status).toBe(404);
+        })
+
+        it("PUT recettes/:id devrait retourner 200", async () => {
+            const MockRecette = {
+                id: "patate",
+                nom: "B",
+                description: "asdasdl",
+                temps_preparation: 410,
+                temps_cuisson: 30,
+                nombre_portions: 2,
+                image: "noImage"
+            };
+    
+            mockRecetteQueries.modifierRecette.mockResolvedValue(MockRecette);
+            
+            const response = await requete(app)
+                .put('/recettes/patate')
+                .auth('admin', '12345')
+                .send(MockRecette);
+    
+    
+            expect(response.status).toBe(200);
+        })
+
+        it("DELETE recettes/:id devrait 404 droit administrateur requis", async () => {
+    
+            const response = await requete(app)
+                .delete('/recettes/patate')
+                .auth('alledo', '12345')
+                .send("allo");
+    
+            expect(response.status).toBe(404);
+        })
     });
 
     describe("Route INGREDIENT", () => { // eslint-disable-line max-lines-per-function

@@ -141,6 +141,90 @@ describe("Test Queries", () => {  // eslint-disable-line max-lines-per-function
                 [idRecette, idIngredient, ingredient.quantite, ingredient.uniteMesure, ordreIngredient]
             );
         })
+
+        it("modifierDansTableRecette devrait retourner le bon query", async () => {
+            const recette = {
+                id: 1,
+                nom: 'Test',
+                desc: 'Un bon test',
+                preparation: 10,
+                cuisson: 30,
+                portions: 4
+            };
+            const reponse = await recetteQueries.modifierDansTableRecette(recette, mockPool);
+            mockPool.query.mockResolvedValue({});
+
+            expect(mockPool.query).toHaveBeenCalledWith(
+                `UPDATE recette SET nom = $2, description = $3, temps_preparation = $4, temps_cuisson = $5, nombre_portions = $6 
+        WHERE recette_id = $1`,
+                [recette.id, recette.nom, recette.desc, recette.preparation, recette.cuisson, recette.portions]
+            );
+        })
+
+        it("supprimerLignesTableRecetteIngredientSelonIdRecette devrait retourner le bon query", async () => {
+
+            const idRecette = "patate";
+
+            const reponse = await recetteQueries.supprimerLignesTableRecetteIngredientSelonIdRecette(idRecette, mockPool);
+            mockPool.query.mockResolvedValue({});
+
+            expect(mockPool.query).toHaveBeenCalledWith(
+                `DELETE FROM recette_ingredient WHERE recette_id = $1`,
+                [idRecette]
+            );
+        })
+
+        it("supprimerLignesTableEtapeSelonIdRecette devrait retourner le bon query", async () => {
+
+            const idRecette = "patate";
+
+            const reponse = await recetteQueries.supprimerLignesTableEtapeSelonIdRecette(idRecette, mockPool);
+            mockPool.query.mockResolvedValue({});
+
+            expect(mockPool.query).toHaveBeenCalledWith(
+                `DELETE FROM etape WHERE recette_id = $1`,
+                [idRecette]
+            );
+        })
+
+        it("supprimerLignesTableCommentaireSelonIdRecette devrait retourner le bon query", async () => {
+
+            const idRecette = "patate";
+
+            const reponse = await recetteQueries.supprimerLignesTableCommentaireSelonIdRecette(idRecette, mockPool);
+            mockPool.query.mockResolvedValue({});
+
+            expect(mockPool.query).toHaveBeenCalledWith(
+                `DELETE FROM commentaire WHERE recette_id = $1`,
+                [idRecette]
+            );
+        })
+
+        it("supprimerLignesTableAppreciationSelonIdRecette devrait retourner le bon query", async () => {
+
+            const idRecette = "patate";
+
+            const reponse = await recetteQueries.supprimerLignesTableAppreciationSelonIdRecette(idRecette, mockPool);
+            mockPool.query.mockResolvedValue({});
+
+            expect(mockPool.query).toHaveBeenCalledWith(
+                `DELETE FROM appreciation WHERE recette_id = $1`,
+                [idRecette]
+            );
+        })
+
+        it("supprimerDansTableRecette devrait retourner le bon query", async () => {
+
+            const idRecette = "patate";
+
+            const reponse = await recetteQueries.supprimerDansTableRecette(idRecette, mockPool);
+            mockPool.query.mockResolvedValue({});
+
+            expect(mockPool.query).toHaveBeenCalledWith(
+                `DELETE FROM recette WHERE recette_id = $1`,
+                [idRecette]
+            );
+        })
     })
 
     describe("Test Ingredients", () => { // eslint-disable-line max-lines-per-function
@@ -339,9 +423,9 @@ describe("Test Queries", () => {  // eslint-disable-line max-lines-per-function
         it("validerChamp devrait retourner un erreur si estVide est TRUE", () => {
             const champVide = "";
             const nomChamp = "recetteId";
-            
+
             const appellerValiderChamp = () => recetteQueries.validerChamp(champVide, nomChamp);
-            
+
             expect(appellerValiderChamp).toThrow();
             expect(appellerValiderChamp).toThrow(`Le champ ${nomChamp} est requis`);
         })
