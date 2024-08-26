@@ -63,7 +63,7 @@ router.get('/images/:imageId', (req, res, next) => {
 
 router.post('/',
     passport.authenticate('basic', { session: false }),
-    (req, res, next) => {
+    async (req, res, next) => {
         const utilisateur = req.user;
 
         if (!utilisateur || !utilisateur.estAdmin) {
@@ -75,18 +75,18 @@ router.post('/',
             return next(new HttpError(400, 'Le champ id est requis'));
         }
 
-        //devrait changer pour await
-        recetteQueries.getRecetteById(id).then(recette => {
+        try {
+            const recette = await recetteQueries.getRecetteById(id);
             if (recette) {
-                return next(new HttpError(400, `Une recette avec l'id ${id} existe déjà`));
+                throw new HttpError(400, `Une recette avec l'id ${id} existe déjà`);
             }
 
-            recetteQueries.ajouterRecette(req.body).then(nouvelleRecette => {
-                res.json(nouvelleRecette);
-            }).catch(err => {
-                return next(err);
-            })
-        })
+            const nouvelleRecette = await recetteQueries.ajouterRecette(req.body);
+            res.json(nouvelleRecette);
+        } catch (err) {
+            return next(err);
+        }
+
 
     });
 
