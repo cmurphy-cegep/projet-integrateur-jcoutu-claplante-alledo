@@ -65,6 +65,27 @@ describe("tests routes", () => { // eslint-disable-line max-lines-per-function
         
             expect(response.status).toBe(404);
         })
+
+        // it("POST recettes/ devrait retourner 200", async () => {
+        //     // eslint-disable-next-line max-nested-callbacks
+        //     passport.authenticate = jest.fn((authType, options, callback) => (req, res, next) => {
+        //         req.user = {
+        //             compteUtilisateurId: "alledo",
+        //             utilisateurNomComplet: "Alexandre Lledo",
+        //             motDePasseHash: "asvfs123",
+        //             selMotDePasse: "00acs",
+        //             estAdmin: false
+        //         };
+        //         console.log(req.user)
+        //         next();
+        //     });
+        
+        //     const response = await requete(app)
+        //         .post('/')
+        //         .send({ nom: 'poutine' });
+        
+        //     expect(response.status).toBe(200);
+        // })
     });
 
     describe("Route INGREDIENT", () => { // eslint-disable-line max-lines-per-function

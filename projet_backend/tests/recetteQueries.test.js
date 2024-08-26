@@ -1,6 +1,6 @@
 jest.mock('../queries/DBPool');
 const mockPool = require('../queries/DBPool');
-const { getEtapesSelonRecetteId, getAllRecettes, getRecetteById, getIngredientsSelonRecetteId, getMoyenneAppreciationSelonRecetteId, aDejaFaitAppreciationSurRecetteId, ajouterAppreciation, modifierAppreciation } = require('../queries/RecetteQueries');
+const { getEtapesSelonRecetteId, getAllRecettes, getRecetteById, getIngredientsSelonRecetteId, getMoyenneAppreciationSelonRecetteId, aDejaFaitAppreciationSurRecetteId, ajouterAppreciation, getIngredientByNom, ajouterIngredient, insererDansTableRecette, insererDansTableRecetteIngredient, insererDansTableEtape, estVide, validerChamp, validerSousChamps } = require('../queries/RecetteQueries');
 
 describe("Test Queries", () => {  // eslint-disable-line max-lines-per-function
     beforeEach(() => {
@@ -87,18 +87,61 @@ describe("Test Queries", () => {  // eslint-disable-line max-lines-per-function
             expect(response).toEqual(expectedRecette);
         })
 
-        it("", async () => {
-            const mockAppreciation = {
-                etoiles: 1,
-                recette_id: "popcorn",
-                utilisateur_id: "alledo"
+        it('getRecetteById devrait retourner undefined si la recette est introuvable', async () => {
+            mockPool.query.mockResolvedValue({ rows: [] });
+
+            const recetteId = "test";
+            const result = await getRecetteById(recetteId);
+
+            expect(result).toBeUndefined();
+        })
+
+        it('getRecetteById devrait throw un erreur quand la query fail', async () => {
+            mockPool.query.mockRejectedValue(new Error('Erreur database'));
+
+            const recetteId = "test";
+            mockPool.query.mockResolvedValue({});
+
+            await expect(getIngredientsSelonRecetteId(recetteId)).rejects.toThrow('Impossible de fetch les ingredients');
+        });
+
+        it("insererDansTableRecette devrait retourner le bon query", async () => {
+            const recette = {
+                id: 1,
+                nom: 'Test',
+                desc: 'Un bon test',
+                preparation: 10,
+                cuisson: 30,
+                portions: 4
             };
 
-            mockPool.query.mockResolvedValue({ rows: [mockAppreciation] });
-            const appreciation = await ajouterAppreciation(mockAppreciation);
-            expect(appreciation.nbEtoiles).toEqual(1);
-            expect(appreciation.utilisateurId).toEqual(mockAppreciation.utilisateur_id);
-            expect(appreciation.recetteId).toEqual(mockAppreciation.recette_id);
+            const reponse = await insererDansTableRecette(recette, mockPool);
+            mockPool.query.mockResolvedValue({});
+
+            expect(mockPool.query).toHaveBeenCalledWith(
+                `INSERT INTO recette (recette_id, nom, description, temps_preparation, temps_cuisson, nombre_portions) 
+        VALUES ($1, $2, $3, $4, $5, $6)`, // ne pas changer la tabulation ne marchera pas si on a trop d'espace avant VALUES
+                [recette.id, recette.nom, recette.desc, recette.preparation, recette.cuisson, recette.portions]
+            );
+        })
+
+        it("insererDansTableRecetteIngredient devrait retourner le bon query", async () => {
+            const idRecette = 1;
+            const idIngredient = 2;
+            const ingredient = {
+                quantite: 100,
+                uniteMesure: 'g'
+            };
+            const ordreIngredient = 1;
+
+            const reponse = await insererDansTableRecetteIngredient(idRecette, idIngredient, ingredient, ordreIngredient, mockPool);
+            mockPool.query.mockResolvedValue({});
+
+            expect(mockPool.query).toHaveBeenCalledWith(
+                `INSERT INTO recette_ingredient (recette_id, ingredient_id, quantite, unite_mesure, ordre) 
+        VALUES ($1, $2, $3, $4, $5)`, // ne pas changer la tabulation ne marchera pas si on a trop d'espace avant VALUES
+                [idRecette, idIngredient, ingredient.quantite, ingredient.uniteMesure, ordreIngredient]
+            );
         })
     })
 
@@ -136,6 +179,36 @@ describe("Test Queries", () => {  // eslint-disable-line max-lines-per-function
             const recetteId = "poulet";
             const response = await getIngredientsSelonRecetteId(recetteId);
             expect(response).toEqual(expectedIngredients);
+        })
+
+        it("getIngredientByNom devrait retourner le nom de l'ingredient", async () => {
+            const expectedIngredientId = { ingredient_id: 1 };
+            const recetteNom = "poutine";
+
+            mockPool.query.mockResolvedValue({ rows: [expectedIngredientId] });
+            const reponse = await getIngredientByNom(recetteNom, mockPool);
+
+            expect(reponse).toBe(expectedIngredientId.ingredient_id);
+
+        })
+
+        it("getIngredientByNom devrait retourner undefined", async () => {
+            const recetteNom = "poutine";
+
+            mockPool.query.mockResolvedValue({ rows: [] });
+            const reponse = await getIngredientByNom(recetteNom, mockPool);
+
+            expect(reponse).toBe(undefined);
+        })
+
+        it("ajouterIngredient devrait retourner l'ingredient id", async () => {
+            const mockIngredient = { ingredient_id: "poutine" };
+            const expectedNom = "poutine";
+
+            mockPool.query.mockResolvedValue({ rows: [mockIngredient] });
+            const reponse = await ajouterIngredient(mockIngredient, mockPool);
+
+            expect(reponse).toBe(expectedNom)
         })
 
     })
@@ -178,6 +251,23 @@ describe("Test Queries", () => {  // eslint-disable-line max-lines-per-function
             const recetteId = "poulet";
             const response = await getEtapesSelonRecetteId(recetteId);
             expect(response).toEqual(expectedEtapes);
+        })
+
+        it("insererDansTableEtape devrait retourner la bonne query", async () => {
+
+            const idRecette = 1;
+            const etape = {
+                description: 'sortir les couteaux'
+            };
+            const ordreEtape = 1;
+
+            const reponse = await insererDansTableEtape(idRecette, etape, ordreEtape, mockPool);
+
+            expect(mockPool.query).toHaveBeenCalledWith(
+                `INSERT INTO etape (description, ordre, recette_id) 
+        VALUES ($1, $2, $3)`,
+                [etape.description, ordreEtape, idRecette]
+            );
         })
     })
 
@@ -226,6 +316,36 @@ describe("Test Queries", () => {  // eslint-disable-line max-lines-per-function
             expect(appreciation.nbEtoiles).toEqual(1);
             expect(appreciation.utilisateurId).toEqual(mockAppreciation.utilisateur_id);
             expect(appreciation.recetteId).toEqual(mockAppreciation.recette_id);
+        })
+    })
+
+    describe("Test formulaire", () => {// eslint-disable-line max-lines-per-function
+        it("estVide devrait retourner TRUE si le champ est vide", () => {
+
+            const champVide = "";
+
+            const reponse = estVide(champVide);
+
+            expect(reponse).toBe(true);
+        })
+
+        it("estVide devrait retourner FALSE si le champ n'est pas vide", () => {
+
+            const champVide = "allo";
+
+            const reponse = estVide(champVide);
+
+            expect(reponse).toBe(false);
+        })
+
+        it("validerChamp devrait retourner un erreur si estVide est TRUE", () => {
+            const champVide = "";
+            const nomChamp = "recetteId";
+            
+            const appellerValiderChamp = () => validerChamp(champVide, nomChamp);
+            
+            expect(appellerValiderChamp).toThrow();
+            expect(appellerValiderChamp).toThrow(`Le champ ${nomChamp} est requis`);
         })
     })
 })

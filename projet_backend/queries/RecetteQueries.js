@@ -167,7 +167,8 @@ async function getIngredientByNom(nom, client) {
     else {
         return undefined;
     }
-}
+};
+exports.getIngredientByNom = getIngredientByNom;
 
 const ajouterIngredient = async (ingredient, client) => {
 
@@ -188,6 +189,7 @@ async function insererDansTableRecette(recette, client) {
         [recette.id, recette.nom, recette.desc, recette.preparation, recette.cuisson, recette.portions]
     );
 };
+exports.insererDansTableRecette = insererDansTableRecette;
 
 async function insererDansTableRecetteIngredient(idRecette, idIngredient, ingredient, ordreIngredient, client) {
     return await client.query(
@@ -196,6 +198,7 @@ async function insererDansTableRecetteIngredient(idRecette, idIngredient, ingred
         [idRecette, idIngredient, ingredient.quantite, ingredient.uniteMesure, ordreIngredient]
     );
 };
+exports.insererDansTableRecetteIngredient = insererDansTableRecetteIngredient;
 
 async function insererDansTableEtape(idRecette, etape, ordreEtape, client) {
     return await client.query(
@@ -204,22 +207,26 @@ async function insererDansTableEtape(idRecette, etape, ordreEtape, client) {
         [etape.description, ordreEtape, idRecette]
     );
 };
+exports.insererDansTableEtape = insererDansTableEtape;
 
 function estVide(champ) {
     return !champ || champ === '';
 }
+exports.estVide = estVide;
 
 function validerChamp(champ, nomChamp) {
     if (estVide(champ)) {
         throw new HttpError(400, `Le champ ${nomChamp} est requis`);
     }
 }
+exports.validerChamp = validerChamp;
 
 function validerSousChamps(champs, nomTableau, nomChamp) {
     champs.forEach((champ, index) => {
         validerChamp(champ[nomChamp], `${nomChamp} pour ${nomTableau} à l'index ${index}`)
     });
 }
+exports.validerSousChamps = validerSousChamps;
 
 function validerChampsRecette(recette) {
     validerChamp(recette.id, 'id');
