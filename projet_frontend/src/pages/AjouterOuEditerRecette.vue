@@ -1,6 +1,6 @@
 <template>
     <div v-if="session.user && session.user.estAdmin">
-        <form @submit.prevent="soumettreFormulaire">
+        <form class="formulaire" @submit.prevent="soumettreFormulaire">
             <div v-if="modeNouvelleRecette" class="form-control" :class="{ invalide: !idValide }">
                 <label for="recette-id">Identifiant de la recette : </label>
                 <input id="recette-id" v-model="recette.id" />
@@ -11,19 +11,19 @@
                 <input id="recette-nom" v-model="recette.nom" />
                 <span v-if="!nomValide">Veuillez entrer un nom</span>
             </div>
-            <div>
+            <div class="form-control">
                 <label for="recette-preparation">Temps de préparation (en minutes) : </label>
                 <input type="number" id="recette-preparation" v-model="recette.preparation" min="0" step="1" />
             </div>
-            <div>
+            <div class="form-control">
                 <label for="recette-cuisson">Temps de cuisson (en minutes) : </label>
                 <input type="number" id="recette-cuisson" v-model="recette.cuisson" min="0" step="1" />
             </div>
-            <div>
+            <div class="form-control">
                 <label for="recette-portions">Nombre de portions : </label>
                 <input type="number" id="recette-portions" v-model="recette.portions" min="0" step="1" />
             </div>
-            <div>
+            <div class="form-control">
                 <label for="recette-description">Description de la recette : </label>
             </div>
             <div class="form-control" :class="{ invalide: !descValide }">
@@ -32,9 +32,9 @@
                 <span v-if="!descValide">Veuillez entrer une description</span>
             </div>
 
-            <table>
+            <table class="table-ajout-ingredient">
                 <thead>
-                    <tr>
+                    <tr class="table-ajout-titre">
                         <th>Quantité</th>
                         <th>Unité</th>
                         <th>Nom de l'ingrédient</th>
@@ -56,7 +56,7 @@
 
                 </tbody>
                 <tfoot>
-                    <tr>
+                    <tr class="table-ajout-saisie">
                         <td>
                             <input type="number" id="ingredient-quantite" v-model="ajoutQuantite" min="0" step="0.1"
                                 placeholder="0.0" />
@@ -64,7 +64,7 @@
                         <td>
                             <input id="ingredient-uniteMesure" v-model="ajoutUniteMesure" />
                         </td>
-                        <td class="form-control" :class="{ invalide: !ajoutNomIngredientValide }">
+                        <td :class="{ invalide: !ajoutNomIngredientValide }">
                             <input id="ingredient-nom" v-model="ajoutNomIngredient" />
                         </td>
                         <td>
@@ -95,7 +95,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td class="form-control" :class="{ invalide: !ajoutDescriptionEtapeValide }">
+                        <td :class="{ invalide: !ajoutDescriptionEtapeValide }">
                             <input id="etape-texte" v-model="ajoutDescriptionEtape" />
                         </td>
                         <td><button type="button" @click="ajouterEtape">Ajouter une étape</button></td>
@@ -366,6 +366,71 @@ export default {
 </script>
 
 <style scoped>
+.formulaire {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-left: 1rem;
+}
+
+.form-control {
+    display: flex;
+    margin-bottom: .5rem;
+    width: 100%;
+}
+
+.form-control label {
+    display: inline-block;
+    width: 20%;
+    margin-right: .6rem;
+    text-align: left;
+}
+
+.form-control input {
+    width: 29%;
+    padding: 0.25rem;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.form-control textarea {
+    width: 50%;
+    padding: 0.25rem;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.table-ajout-ingredient {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.table-ajout-titre {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    margin: 0%;
+    padding-bottom: 1%;
+    padding-top: 1%;
+}
+
+.table-ajout-titre th {
+    width: 20%;
+    text-align: left;
+}
+
+.table-ajout-saisie {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.table-ajout-saisie td {
+    width: 20%;
+    text-align: left;
+}
+
 .form-control.invalide input,
 .form-control.invalide select {
     border-color: red;
@@ -375,9 +440,7 @@ export default {
     color: red;
 }
 
-form * {
-    margin: 0.3rem;
-}
+
 
 .boxed-left {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
