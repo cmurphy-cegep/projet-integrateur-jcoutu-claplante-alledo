@@ -37,6 +37,13 @@ describe("tests routes", () => { // eslint-disable-line max-lines-per-function
             const response = await requete(app).get('/recettes')
             expect(response.status).toBe(500);
         })
+
+        it("GET all recettes devrait retourner une erreur", async () => {
+            mockRecetteQueries.ajouterIngredient.mockRejectedValue(new Error('Erreur lecture database'));
+
+            const response = await requete(app).get('/recettes/lasagnes')
+            expect(response.status).toBe(500);
+        })
         it("GET recettes/:recetteId devrait retourner 200", async () => {
             const mockRecette = [
                 {
@@ -58,20 +65,6 @@ describe("tests routes", () => { // eslint-disable-line max-lines-per-function
             const response = await requete(app).get('/recettes/lasagnes');
             expect(response.status).toBe(404);
         })
-
-        // it("POST recettes/ devrait retourner 404 req.user = null", async () => {
-        //     // eslint-disable-next-line max-nested-callbacks
-        //     passport.authenticate = jest.fn((authType, options, callback) => (req, res, next) => {
-        //         req.user = null;
-        //         next();
-        //     });
-        
-        //     const response = await requete(app)
-        //         .post('/')
-        //         .send({ nom: 'poutine' });
-        
-        //     expect(response.status).toBe(404);
-        // })
 
         it("POST recettes/ devrait retourner 404 droit utilisateur admin", async () => {
             const MockRecette =
@@ -168,6 +161,71 @@ describe("tests routes", () => { // eslint-disable-line max-lines-per-function
 
             const response = await requete(app).get('/ingredients/tomate');
             expect(response.status).toBe(404);
+        })
+        
+        it("POST ingredients/ devrait retourner 403 droit administrateur requis", async () => {
+            const mockIngredients = {
+                id: "tomate",
+                nom: "tomate rouge",
+                quantite: 2,
+                uniteMesure: "ml"
+            };
+    
+            mockRecetteQueries.ajouterIngredient.mockResolvedValue(mockIngredients);
+    
+            const response = await requete(app).post('/ingredients')
+                .auth('alledo', '12345')
+                .send(mockIngredients);
+    
+            expect(response.status).toBe(403);
+        })
+
+        it("POST ingredients/ devrait renvoyer 404 impossible de rajouter l'ingredient", async () => {
+            const mockIngredients = {
+                id: "tomate",
+                nom: "tomate rouge",
+                quantite: 2,
+                uniteMesure: "ml"
+            };
+    
+            mockRecetteQueries.ajouterIngredient.mockResolvedValue(null);
+    
+            const response = await requete(app).post('/ingredients')
+                .auth('admin', '12345')
+                .send(mockIngredients);
+    
+            expect(response.status).toBe(404);
+        })
+
+        it("POST ingredients/ devrait renvoyer 200", async () => {
+            const mockIngredients = {
+                id: "tomate",
+                nom: "tomate rouge",
+                quantite: 2,
+                uniteMesure: "ml"
+            };
+    
+            mockRecetteQueries.ajouterIngredient.mockResolvedValue(mockIngredients);
+    
+            const response = await requete(app).post('/ingredients')
+                .auth('admin', '12345')
+                .send(mockIngredients);
+            expect(response.status).toBe(200);
+            expect(response.body).toEqual(mockIngredients)
+        })
+
+        it("POST ingredients/ throw error", async () => {
+            mockRecetteQueries.ajouterIngredient.mockRejectedValue(new Error('Erreur lecture database'));
+
+            const response = await requete(app).post('/ingredients')
+                .auth('admin', '12345')
+                .send({
+                    id: "tomate",
+                    nom: "tomate rouge",
+                    quantite: 2,
+                    uniteMesure: "ml"
+                });
+            expect(response.status).toBe(500);
         })
 
     })
