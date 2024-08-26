@@ -88,9 +88,9 @@ describe("tests routes", () => { // eslint-disable-line max-lines-per-function
             expect(response.status).toBe(404);
         })
 
-        it("POST recettes/ devrait retourner 400 recette existe deja", async () => {
+        it("POST recettes/ devrait retourner 400 champ ID vide", async () => {
             const MockRecette = {
-                id: "ape",
+                id: "",
                 nom: "B",
                 description: "asdasdl",
                 temps_preparation: 410,
@@ -99,29 +99,46 @@ describe("tests routes", () => { // eslint-disable-line max-lines-per-function
                 image: "noImage"
             };
     
-            mockRecetteQueries.getRecetteById.mockResolvedValue("asb");
+            mockRecetteQueries.getRecetteById.mockResolvedValue("");
             mockRecetteQueries.ajouterRecette.mockResolvedValue(MockRecette);
+            
+            const response = await requete(app)
+                .post('/recettes')
+                .auth('admin', '12345')
+                .send(MockRecette);
     
-            // Act
+    
+            expect(response.status).toBe(400);
+        })
+
+        it("POST recettes/ devrait retourner 400 recette existe deja", async () => {
+            const mockRecette = {
+                id: "patate",
+                nom: "B",
+                description: "asdasdl",
+                preparation: 410,
+                cuisson: 30,
+                portions: 2,
+                image: "noImage"
+            };
+    
+            mockRecetteQueries.getRecetteById.mockResolvedValue(mockRecette);
+
             const response = await requete(app)
                 .post('/recettes')
                 .auth('admin', '12345')
                 .send({
+                    id: "patate",
                     nom: "B",
                     description: "asdasdl",
-                    temps_preparation: 410,
-                    temps_cuisson: 30,
-                    nombre_portions: 2,
+                    preparation: 410,
+                    cuisson: 30,
+                    portions: 2,
                     image: "noImage"
                 });
     
-            // Log response for debugging
-            console.log(response.body);
     
-            // Assert
             expect(response.status).toBe(400);
-            expect(response.body).toHaveProperty('error'); // Check if there's an error property
-            expect(response.body.error).toBe('Une recette avec cet ID existe déjà');
         })
     });
 

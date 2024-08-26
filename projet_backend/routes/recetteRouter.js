@@ -75,17 +75,19 @@ router.post('/',
             return next(new HttpError(400, 'Le champ id est requis'));
         }
 
+        //devrait changer pour await
         recetteQueries.getRecetteById(id).then(recette => {
             if (recette) {
-                throw new HttpError(400, `Une recette avec l'id ${id} existe déjà`);
+                return next(new HttpError(400, `Une recette avec l'id ${id} existe déjà`));
             }
+
+            recetteQueries.ajouterRecette(req.body).then(nouvelleRecette => {
+                res.json(nouvelleRecette);
+            }).catch(err => {
+                return next(err);
+            })
         })
 
-        recetteQueries.ajouterRecette(req.body).then(nouvelleRecette => {
-            res.json(nouvelleRecette);
-        }).catch(err => {
-            return next(err);
-        })
     });
 
 router.put('/:id',
