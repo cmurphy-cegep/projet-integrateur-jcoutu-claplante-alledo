@@ -84,21 +84,51 @@ describe("Test compteUtilisateur", () => {
         jest.mock('../queries/CompteUtilisateurQueries', () => ({
             creerSelEtHash: jest.fn()
         }));
-        
-        const mockPasswordService = require('../queries/CompteUtilisateurQueries');
-        
+
+        const mockMotDePasse = require('../queries/CompteUtilisateurQueries');
+
         const motDePasse = "12345";
         const expectedHash = "abcde";
         const expectedSalt = "fghi";
-    
-        mockPasswordService.creerSelEtHash.mockResolvedValue({
+
+        mockMotDePasse.creerSelEtHash.mockResolvedValue({
             motDePasseHash: expectedHash,
             selMotDePasse: expectedSalt
         });
-    
-        const response = await mockPasswordService.creerSelEtHash(motDePasse);
+
+        const response = await mockMotDePasse.creerSelEtHash(motDePasse);
         console.log(response);
         expect(response.motDePasseHash).toBe(expectedHash);
         expect(response.selMotDePasse).toBe(expectedSalt);
-    });
     })
+
+    it("creerCompteUtilisateur devrait retourner le nouveau utilisateur", async () => {
+        const utilisateur = {
+            utilisateur_id: "alledo",
+            nom_complet: "Alexandre Lledo",
+            mot_de_passe_hash: "123edacjdsv",
+            mot_de_passe_sale: "ddavaboa55",
+            est_admin: false
+        };
+
+        const expectedUtilisateur = {
+            utilisateurId: "alledo",
+            nom: "Alexandre Lledo",
+            estAdmin: false
+        };
+
+        const motDePasse = "12345";
+        const expectedHash = "abcde";
+        const expectedSalt = "fghi";
+
+        compteUtilisateurQueries.creerSelEtHash = jest.fn().mockResolvedValue({
+            motDePasseHash: expectedHash,
+            selMotDePasse: expectedSalt
+        });
+
+        mockPool.query = jest.fn().mockResolvedValue({ rows: [utilisateur] });
+
+        const response = await compteUtilisateurQueries.creerCompteUtilisateur(utilisateur.utilisateur_id, motDePasse, utilisateur.nom_complet);
+        expect(response).toEqual(expectedUtilisateur);
+    })
+});
