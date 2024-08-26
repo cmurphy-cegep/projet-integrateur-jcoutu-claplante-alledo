@@ -105,7 +105,6 @@ const getEtapesSelonRecetteId = async (recetteId) => {
 };
 exports.getEtapesSelonRecetteId = getEtapesSelonRecetteId;
 
-
 const getCommentairesSelonRecetteId = async (recetteId) => {
     const result = await pool.query(
         `SELECT commentaire_id, texte, to_char(date_publication, 'YYYY-MM-DD HH24:MI') AS date_formatee, c.utilisateur_id, recette_id, nom_complet 
@@ -479,15 +478,10 @@ const supprimerRecette = async (idRecette) => {
 
     try {
         await client.query('BEGIN');
-
         await supprimerLignesTableRecetteIngredientSelonIdRecette(idRecette, client);
-
         await supprimerLignesTableEtapeSelonIdRecette(idRecette, client);
-
         await supprimerLignesTableCommentaireSelonIdRecette(idRecette, client);
-
         await supprimerLignesTableAppreciationSelonIdRecette(idRecette, client);
-
         await supprimerDansTableRecette(idRecette, client);
 
         await client.query('COMMIT');

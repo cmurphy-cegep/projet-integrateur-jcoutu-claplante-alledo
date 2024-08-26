@@ -1,6 +1,6 @@
 jest.mock('../queries/DBPool');
 const mockPool = require('../queries/DBPool');
-const { getEtapesSelonRecetteId, getAllRecettes, getRecetteById, getIngredientsSelonRecetteId, getMoyenneAppreciationSelonRecetteId, aDejaFaitAppreciationSurRecetteId, ajouterAppreciation, getIngredientByNom, ajouterIngredient, insererDansTableRecette, insererDansTableRecetteIngredient, insererDansTableEtape, estVide, validerChamp, validerSousChamps } = require('../queries/RecetteQueries');
+const recetteQueries = require('../queries/RecetteQueries')
 
 describe("Test Queries", () => {  // eslint-disable-line max-lines-per-function
     beforeEach(() => {
@@ -54,7 +54,7 @@ describe("Test Queries", () => {  // eslint-disable-line max-lines-per-function
             ];
 
             mockPool.query.mockResolvedValue({ rows: mockRecettes });
-            const response = await getAllRecettes();
+            const response = await recetteQueries.getAllRecettes();
             expect(response).toEqual(expectedRecettes);
 
         })
@@ -83,7 +83,7 @@ describe("Test Queries", () => {  // eslint-disable-line max-lines-per-function
 
             mockPool.query.mockResolvedValue({ rows: mockRecettes });
             const recetteId = "poulet";
-            const response = await getRecetteById(recetteId);
+            const response = await recetteQueries.getRecetteById(recetteId);
             expect(response).toEqual(expectedRecette);
         })
 
@@ -91,7 +91,7 @@ describe("Test Queries", () => {  // eslint-disable-line max-lines-per-function
             mockPool.query.mockResolvedValue({ rows: [] });
 
             const recetteId = "test";
-            const result = await getRecetteById(recetteId);
+            const result = await recetteQueries.getRecetteById(recetteId);
 
             expect(result).toBeUndefined();
         })
@@ -102,7 +102,7 @@ describe("Test Queries", () => {  // eslint-disable-line max-lines-per-function
             const recetteId = "test";
             mockPool.query.mockResolvedValue({});
 
-            await expect(getIngredientsSelonRecetteId(recetteId)).rejects.toThrow('Impossible de fetch les ingredients');
+            await expect(recetteQueries.getIngredientsSelonRecetteId(recetteId)).rejects.toThrow('Impossible de fetch les ingredients');
         });
 
         it("insererDansTableRecette devrait retourner le bon query", async () => {
@@ -115,7 +115,7 @@ describe("Test Queries", () => {  // eslint-disable-line max-lines-per-function
                 portions: 4
             };
 
-            const reponse = await insererDansTableRecette(recette, mockPool);
+            const reponse = await recetteQueries.insererDansTableRecette(recette, mockPool);
             mockPool.query.mockResolvedValue({});
 
             expect(mockPool.query).toHaveBeenCalledWith(
@@ -134,7 +134,7 @@ describe("Test Queries", () => {  // eslint-disable-line max-lines-per-function
             };
             const ordreIngredient = 1;
 
-            const reponse = await insererDansTableRecetteIngredient(idRecette, idIngredient, ingredient, ordreIngredient, mockPool);
+            const reponse = await recetteQueries.insererDansTableRecetteIngredient(idRecette, idIngredient, ingredient, ordreIngredient, mockPool);
             mockPool.query.mockResolvedValue({});
 
             expect(mockPool.query).toHaveBeenCalledWith(
@@ -177,7 +177,7 @@ describe("Test Queries", () => {  // eslint-disable-line max-lines-per-function
 
             mockPool.query.mockResolvedValue({ rows: mockIngredients });
             const recetteId = "poulet";
-            const response = await getIngredientsSelonRecetteId(recetteId);
+            const response = await recetteQueries.getIngredientsSelonRecetteId(recetteId);
             expect(response).toEqual(expectedIngredients);
         })
 
@@ -186,7 +186,7 @@ describe("Test Queries", () => {  // eslint-disable-line max-lines-per-function
             const recetteNom = "poutine";
 
             mockPool.query.mockResolvedValue({ rows: [expectedIngredientId] });
-            const reponse = await getIngredientByNom(recetteNom, mockPool);
+            const reponse = await recetteQueries.getIngredientByNom(recetteNom, mockPool);
 
             expect(reponse).toBe(expectedIngredientId.ingredient_id);
 
@@ -196,7 +196,7 @@ describe("Test Queries", () => {  // eslint-disable-line max-lines-per-function
             const recetteNom = "poutine";
 
             mockPool.query.mockResolvedValue({ rows: [] });
-            const reponse = await getIngredientByNom(recetteNom, mockPool);
+            const reponse = await recetteQueries.getIngredientByNom(recetteNom, mockPool);
 
             expect(reponse).toBe(undefined);
         })
@@ -206,7 +206,7 @@ describe("Test Queries", () => {  // eslint-disable-line max-lines-per-function
             const expectedNom = "poutine";
 
             mockPool.query.mockResolvedValue({ rows: [mockIngredient] });
-            const reponse = await ajouterIngredient(mockIngredient, mockPool);
+            const reponse = await recetteQueries.ajouterIngredient(mockIngredient, mockPool);
 
             expect(reponse).toBe(expectedNom)
         })
@@ -249,7 +249,7 @@ describe("Test Queries", () => {  // eslint-disable-line max-lines-per-function
 
             mockPool.query.mockResolvedValue({ rows: mockEtapes });
             const recetteId = "poulet";
-            const response = await getEtapesSelonRecetteId(recetteId);
+            const response = await recetteQueries.getEtapesSelonRecetteId(recetteId);
             expect(response).toEqual(expectedEtapes);
         })
 
@@ -261,7 +261,7 @@ describe("Test Queries", () => {  // eslint-disable-line max-lines-per-function
             };
             const ordreEtape = 1;
 
-            const reponse = await insererDansTableEtape(idRecette, etape, ordreEtape, mockPool);
+            const reponse = await recetteQueries.insererDansTableEtape(idRecette, etape, ordreEtape, mockPool);
 
             expect(mockPool.query).toHaveBeenCalledWith(
                 `INSERT INTO etape (description, ordre, recette_id) 
@@ -277,7 +277,7 @@ describe("Test Queries", () => {  // eslint-disable-line max-lines-per-function
 
             mockPool.query.mockResolvedValue({ rows: mockMoyenne });
             const recetteId = "poulet";
-            const response = await getMoyenneAppreciationSelonRecetteId(recetteId)
+            const response = await recetteQueries.getMoyenneAppreciationSelonRecetteId(recetteId)
             expect(Number.isInteger(response)).toBe(true);
             expect(response).toEqual(4);
         })
@@ -291,7 +291,7 @@ describe("Test Queries", () => {  // eslint-disable-line max-lines-per-function
 
             mockPool.query.mockResolvedValue({ rows: mockAppreciations });
             const recetteId = "poulet";
-            const response = await aDejaFaitAppreciationSurRecetteId(recetteId)
+            const response = await recetteQueries.aDejaFaitAppreciationSurRecetteId(recetteId)
             expect(response).toBe(true);
         })
 
@@ -300,7 +300,7 @@ describe("Test Queries", () => {  // eslint-disable-line max-lines-per-function
 
             mockPool.query.mockResolvedValue({ rows: mockAppreciations });
             const recetteId = "poulet";
-            const response = await aDejaFaitAppreciationSurRecetteId(recetteId)
+            const response = await recetteQueries.aDejaFaitAppreciationSurRecetteId(recetteId)
             expect(response).toBe(false);
         })
 
@@ -312,7 +312,7 @@ describe("Test Queries", () => {  // eslint-disable-line max-lines-per-function
             };
 
             mockPool.query.mockResolvedValue({ rows: [mockAppreciation] });
-            const appreciation = await ajouterAppreciation(mockAppreciation);
+            const appreciation = await recetteQueries.ajouterAppreciation(mockAppreciation);
             expect(appreciation.nbEtoiles).toEqual(1);
             expect(appreciation.utilisateurId).toEqual(mockAppreciation.utilisateur_id);
             expect(appreciation.recetteId).toEqual(mockAppreciation.recette_id);
@@ -324,7 +324,7 @@ describe("Test Queries", () => {  // eslint-disable-line max-lines-per-function
 
             const champVide = "";
 
-            const reponse = estVide(champVide);
+            const reponse = recetteQueries.estVide(champVide);
 
             expect(reponse).toBe(true);
         })
@@ -333,7 +333,7 @@ describe("Test Queries", () => {  // eslint-disable-line max-lines-per-function
 
             const champVide = "allo";
 
-            const reponse = estVide(champVide);
+            const reponse = recetteQueries.estVide(champVide);
 
             expect(reponse).toBe(false);
         })
@@ -342,7 +342,7 @@ describe("Test Queries", () => {  // eslint-disable-line max-lines-per-function
             const champVide = "";
             const nomChamp = "recetteId";
             
-            const appellerValiderChamp = () => validerChamp(champVide, nomChamp);
+            const appellerValiderChamp = () => recetteQueries.validerChamp(champVide, nomChamp);
             
             expect(appellerValiderChamp).toThrow();
             expect(appellerValiderChamp).toThrow(`Le champ ${nomChamp} est requis`);
