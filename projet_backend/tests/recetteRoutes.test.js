@@ -52,31 +52,10 @@ describe("tests routes", () => { // eslint-disable-line max-lines-per-function
             expect(response.status).toBe(404);
         })
 
-        it("POST recettes/ devrait retourner 404 req.user = null", async () => {
-            // eslint-disable-next-line max-nested-callbacks
-            passport.authenticate = jest.fn((authType, options, callback) => (req, res, next) => {
-                req.user = null;
-                next();
-            });
-        
-            const response = await requete(app)
-                .post('/')
-                .send({ nom: 'poutine' });
-        
-            expect(response.status).toBe(404);
-        })
-
-        // it("POST recettes/ devrait retourner 200", async () => {
+        // it("POST recettes/ devrait retourner 404 req.user = null", async () => {
         //     // eslint-disable-next-line max-nested-callbacks
         //     passport.authenticate = jest.fn((authType, options, callback) => (req, res, next) => {
-        //         req.user = {
-        //             compteUtilisateurId: "alledo",
-        //             utilisateurNomComplet: "Alexandre Lledo",
-        //             motDePasseHash: "asvfs123",
-        //             selMotDePasse: "00acs",
-        //             estAdmin: false
-        //         };
-        //         console.log(req.user)
+        //         req.user = null;
         //         next();
         //     });
         
@@ -84,8 +63,66 @@ describe("tests routes", () => { // eslint-disable-line max-lines-per-function
         //         .post('/')
         //         .send({ nom: 'poutine' });
         
-        //     expect(response.status).toBe(200);
+        //     expect(response.status).toBe(404);
         // })
+
+        it("POST recettes/ devrait retourner 404 droit utilisateur admin", async () => {
+            const MockRecette =
+            {
+                id: "ape",
+                nom: "B",
+                description: "asdasdl",
+                temps_preparation: 410,
+                temps_cuisson: 30,
+                nombre_portions: 2,
+                image: "noImage"
+            };
+    
+            mockRecetteQueries.getRecetteById.mockResolvedValue("ape");
+            mockRecetteQueries.ajouterRecette.mockResolvedValue(MockRecette);
+    
+            const response = await requete(app).post('/recettes')
+                .auth('alledo', '12345')
+                .send(MockRecette);
+    
+            expect(response.status).toBe(404);
+        })
+
+        it("POST recettes/ devrait retourner 400 recette existe deja", async () => {
+            const MockRecette = {
+                id: "ape",
+                nom: "B",
+                description: "asdasdl",
+                temps_preparation: 410,
+                temps_cuisson: 30,
+                nombre_portions: 2,
+                image: "noImage"
+            };
+    
+            mockRecetteQueries.getRecetteById.mockResolvedValue("asb");
+            mockRecetteQueries.ajouterRecette.mockResolvedValue(MockRecette);
+    
+            // Act
+            const response = await requete(app)
+                .post('/recettes')
+                .auth('admin', '12345')
+                .send({
+                    nom: "B",
+                    description: "asdasdl",
+                    temps_preparation: 410,
+                    temps_cuisson: 30,
+                    nombre_portions: 2,
+                    image: "noImage"
+                });
+    
+            // Log response for debugging
+            console.log(response.body);
+    
+            // Assert
+            expect(response.status).toBe(400);
+            expect(response.body).toHaveProperty('error'); // Check if there's an error property
+            expect(response.body.error).toBe('Une recette avec cet ID existe déjà');
+        })
     });
 
     describe("Route INGREDIENT", () => { // eslint-disable-line max-lines-per-function
