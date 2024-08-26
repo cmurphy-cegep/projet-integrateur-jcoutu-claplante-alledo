@@ -30,6 +30,13 @@ describe("tests routes", () => { // eslint-disable-line max-lines-per-function
             expect(response.status).toBe(200);
 
         })
+
+        it("GET all recettes devrait retourner une erreur", async () => {
+            mockRecetteQueries.getAllRecettes.mockRejectedValue(new Error('Erreur lecture database'));
+
+            const response = await requete(app).get('/recettes')
+            expect(response.status).toBe(500);
+        })
         it("GET recettes/:recetteId devrait retourner 200", async () => {
             const mockRecette = [
                 {
