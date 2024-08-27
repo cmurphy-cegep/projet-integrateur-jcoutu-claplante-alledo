@@ -193,7 +193,6 @@ export default {
             });
         },
         ajouterIngredient() {
-            this.transformerAjoutQuantiteNullAZero();
             this.validerAjoutNomIngredient();
 
             if (this.ajoutNomIngredientValide) {
@@ -343,11 +342,6 @@ export default {
                 this.etapesValide = false;
             } else {
                 this.etapesValide = true;
-            }
-        },
-        transformerAjoutQuantiteNullAZero() {
-            if (this.ajoutQuantite === null || this.ajoutQuantite === "") {
-                this.ajoutQuantite = 0;
             }
         },
         validerAjoutNomIngredient() {
