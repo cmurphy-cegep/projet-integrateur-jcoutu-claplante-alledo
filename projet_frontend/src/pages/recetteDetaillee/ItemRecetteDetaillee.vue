@@ -53,7 +53,6 @@
                     <form @submit.prevent="soumettreAppreciation" v-if="session.user">
                         <p>
                         <p>Votre avis:</p>
-
                         <select v-model="selected">
                             <option value="1"><span style="font-size:150%;color:yellow;">&#9733;</span></option>
                             <option value="2"><span style="font-size:150%;color:yellow;">&#9733;</span><span
@@ -74,8 +73,6 @@
                         </p>
                         <button type="submit">Soumettre</button>
                     </form>
-
-
                     <div class="recette-conteneur3">
                         <div class="recette-preparation">
                             <label for="recette-preparation">Préparation</label>
@@ -102,7 +99,6 @@
                             :description="etape.description" :ordre="etape.ordre" />
                     </ol>
                 </div>
-
             </div>
         </div>
     </div>
@@ -276,7 +272,6 @@ export default {
     align-items: flex-start;
     width: 100%;
     height: 100vh;
-    /* Utilisez la hauteur de la fenêtre */
 }
 
 .recette-conteneur {
@@ -284,9 +279,7 @@ export default {
     flex-direction: column;
     align-items: flex-start;
     width: 60vw;
-    /* Utilisez des unités relatives pour la largeur */
     padding: 2vw;
-    /* Utilisez des unités relatives pour le padding */
 }
 
 .recette-conteneur2 {
@@ -294,9 +287,12 @@ export default {
     flex-direction: column;
     align-items: flex-start;
     width: 50vw;
-    /* Utilisez des unités relatives pour la largeur */
     padding: 2vw;
-    /* Utilisez des unités relatives pour le padding */
+}
+
+.bouton-editer {
+    margin-left: 1%;
+    margin-top: 0.5%;
 }
 
 .recette-conteneur3 {
@@ -304,50 +300,27 @@ export default {
     flex-direction: row;
     width: 100%;
     margin-top: 2vh;
-    /* Utilisez des unités relatives pour la marge */
     border-bottom: 0.2vh solid black;
-    /* Utilisez des unités relatives pour la bordure */
     border-top: 0.2vh solid black;
-    /* Utilisez des unités relatives pour la bordure */
 }
 
-/* .image-redimensionnee {
-    max-width: 100%;
-    height: auto;
-    flex: 0 0 auto;
-    /* Utilisez des unités relatives pour la marge 
-} */
 .image-redimensionnee {
     width: 50vw;
-    /* Le conteneur prend 100% de la largeur disponible */
     height: 30vw;
-    /* Définissez la hauteur fixe souhaitée */
     overflow: hidden;
-    /* Cache les parties de l'image qui dépassent */
 }
 
-/* .image-redimensionnee img {
-    width: 100%;
-    height: auto;
-    display: block;
-    object-fit: cover;
-} */
+
 .image-redimensionnee img {
     width: 100%;
-    /* L'image prend 100% de la largeur du conteneur */
     height: 100%;
-    /* L'image prend 100% de la hauteur du conteneur */
     max-height: 100vw;
-    /* La hauteur maximale de l'image ne dépasse jamais la largeur de la fenêtre */
     object-fit: cover;
-    /* L'image s'étire ou se contracte pour remplir le conteneur */
 }
 
 .recette-desc-longue {
     margin-top: 2vh;
-    /* Utilisez des unités relatives pour la marge */
     margin-bottom: 2vh;
-    /* Utilisez des unités relatives pour la marge */
     max-width: 100%;
 }
 
@@ -387,24 +360,20 @@ export default {
 
 .recette-titre {
     font-size: 1.75vw;
-    /* Utilisez des unités relatives pour la taille de la police */
     margin-top: 0;
 }
 
 .recette-titre-ingredient,
 .recette-titre-preparation {
     font-size: 1.5vw;
-    /* Utilisez des unités relatives pour la taille de la police */
 }
 
 .ingredient {
     margin-bottom: 1vh;
-    /* Utilisez des unités relatives pour la marge */
 }
 
 .etape {
     margin-bottom: 1vh;
-    /* Utilisez des unités relatives pour la marge */
 }
 
 .recette-preparation,
@@ -414,7 +383,6 @@ export default {
     box-sizing: border-box;
     padding: 2vw;
     text-align: center;
-    /* Utilisez des unités relatives pour le padding */
 }
 
 .recette-preparation div,
@@ -422,7 +390,6 @@ export default {
 .recette-portions div {
     font-weight: bold;
     margin-top: 1rem;
-    /* Ajustez cette valeur pour un espace plus prononcé */
 }
 
 #commentaire-texte {
