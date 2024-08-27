@@ -26,10 +26,6 @@
                                 <button type="button" @click="annulerAjoutCommentaire">Annuler</button>
                             </form>
                         </div>
-                        <!-- <ListeCommentaires v-if="!loading" v-for="commentaire in commentaires"
-                            :id="commentaire.idCommentaire" :texte="commentaire.texte" :date="commentaire.date"
-                            :utilisateurId="commentaire.utilisateurId" :recetteId="commentaire.recetteId"
-                            :nomComplet="commentaire.nomComplet" /> -->
                         <div v-if="!loading" v-for="(commentaire, index) in commentaires" :key="index"
                             class="commentaire-conteneur">
                             <div class="commentaire-gauche">
@@ -44,6 +40,10 @@
                     </div>
                 </div>
                 <div class="recette-conteneur2">
+                    <div v-if="session.user && session.user.estAdmin">
+                        <router-link :to="redirigerVersEdition" custom v-slot="{ navigate }"><button
+                                class="bouton-editer" @click="navigate" role="link">Éditer</button></router-link>
+                    </div>
                     <h2 class="recette-titre">
                         {{ recette.nom }}
                         <div v-if="appreciation">{{ appreciation }}/5 <span
@@ -103,9 +103,6 @@
                     </ol>
                 </div>
 
-            </div>
-            <div v-if="session.user && session.user.estAdmin">
-                <router-link :to="redirigerVersEdition" custom v-slot="{navigate}"><button @click="navigate" role="link">Éditer</button></router-link>
             </div>
         </div>
     </div>
@@ -430,5 +427,10 @@ export default {
 
 #commentaire-texte {
     resize: none;
+}
+
+.bouton-editer {
+    padding: 5px;
+    margin-bottom: 1vh;
 }
 </style>
