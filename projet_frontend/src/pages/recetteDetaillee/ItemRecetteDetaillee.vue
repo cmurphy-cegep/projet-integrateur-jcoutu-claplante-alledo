@@ -44,12 +44,18 @@
                     </div>
                 </div>
                 <div class="recette-conteneur2">
-                    <h2 class="recette-titre">
-                        {{ recette.nom }}
-                        <div v-if="appreciation">{{ appreciation }}/5 <span
-                                style="font-size:150%;color:yellow;">&#9733;</span>
+                    <div class="recette-titre-container">
+                        <h2 class="recette-titre">
+                            {{ recette.nom }}
+                            <div v-if="appreciation">{{ appreciation }}/5 <span
+                                    style="font-size:150%;color:yellow;">&#9733;</span>
+                            </div>
+                        </h2>
+                        <div class="bouton-editer" v-if="session.user && session.user.estAdmin">
+                            <router-link :to="redirigerVersEdition" custom v-slot="{ navigate }"><button
+                                    @click="navigate" role="link">Éditer</button></router-link>
                         </div>
-                    </h2>
+                    </div>
                     <form @submit.prevent="soumettreAppreciation" v-if="session.user">
                         <p>
                         <p>Votre avis:</p>
@@ -104,9 +110,7 @@
                 </div>
 
             </div>
-            <div v-if="session.user && session.user.estAdmin">
-                <router-link :to="redirigerVersEdition" custom v-slot="{navigate}"><button @click="navigate" role="link">Éditer</button></router-link>
-            </div>
+
         </div>
     </div>
 </template>
@@ -300,6 +304,16 @@ export default {
     /* Utilisez des unités relatives pour la largeur */
     padding: 2vw;
     /* Utilisez des unités relatives pour le padding */
+}
+
+.recette-titre-container {
+    display: flex;
+    align-items: top;
+    width: 100%;
+}
+
+.bouton-editer {
+    margin-left: 1%;
 }
 
 .recette-conteneur3 {

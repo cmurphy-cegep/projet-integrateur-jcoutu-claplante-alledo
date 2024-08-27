@@ -38,24 +38,37 @@
             <h3 class="ingredient"> Ingrédients</h3>
             <span class="form-control" :class="{ invalide: !ingredientsValide }"></span>
             <span v-if="!ingredientsValide">Un minimum d'un ingrédient est requis.</span>
+
             <table class="table-ajout-ingredient">
+
                 <thead>
                     <tr class="table-ajout-titre">
                         <th>Quantité</th>
                         <th>Unité</th>
                         <th>Nom de l'ingrédient</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
                     </tr>
                 </thead>
+                <colgroup>
+                    <col style="width: 25%;">
+                    <col style="width: 25%;">
+                    <col style="width: 25%;">
+                    <col style="width: 8%;">
+                    <col style="width: 8%;">
+                    <col style="width: 8%;">
+                </colgroup>
                 <tbody>
+
                     <tr v-for="(ingredient, index) in ingredients">
                         <td>{{ ingredient.quantite }}</td>
                         <td>{{ ingredient.uniteMesure }}</td>
                         <td>{{ ingredient.nom }}</td>
                         <td><button type="button" v-if="ingredient && index !== 0"
-                                @click="deplacerIngredientVersHaut(index)">Déplacer vers le
-                                haut</button></td>
+                                @click="deplacerIngredientVersHaut(index)">&#x2191;</button></td>
                         <td><button type="button" v-if="ingredient && index !== ingredients.length - 1"
-                                @click="deplacerIngredientVersBas(index)">Déplacer vers le bas</button></td>
+                                @click="deplacerIngredientVersBas(index)">&#x2193;</button></td>
                         <td><button type="button" v-if="ingredient" @click="supprimerIngredient(index)">Supprimer
                                 l'ingrédient</button></td>
                     </tr>
@@ -74,30 +87,46 @@
                             <input id="ingredient-nom" v-model="ajoutNomIngredient" />
                         </td>
                         <td>
-                            <button type="button" @click="ajouterIngredient">Ajouter l'ingrédient</button>
-                            <span v-if="!ajoutNomIngredientValide">Pour ajouter un ingrédient, veuillez saisir le nom de
-                                l'ingrédient</span>
+
+
                         </td>
+                        <td></td>
+                        <td><button type="button" @click="ajouterIngredient">Ajouter l'ingrédient</button></td>
+
                     </tr>
+
                 </tfoot>
+
             </table>
+            <span class="span-ingredient" v-if="!ajoutNomIngredientValide">Pour ajouter un ingrédient, veuillez saisir
+                le
+                nom de
+                l'ingrédient</span>
             <h3 class="etape"> Étapes</h3>
             <span class="form-control" :class="{ invalide: !etapesValide }"></span>
             <span v-if="!etapesValide">Un minimum d'une étape est requise.</span>
-            <table>
+            <table class="table-ajouter-etape">
+                <colgroup>
+                    <col style="width: 20%;">
+                    <col style="width: 5%;">
+                    <col style="width: 5%;">
+                    <col style="width: 10%;">
+                </colgroup>
                 <thead>
                     <tr>
                         <th>Texte de l'étape</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(etape, index) in etapes">
                         <td>{{ etape.description }}</td>
                         <td><button type="button" v-if="etape && index !== 0"
-                                @click="deplacerEtapeVersHaut(index)">Déplacer vers le
-                                haut</button></td>
+                                @click="deplacerEtapeVersHaut(index)">&#x2191;</button></td>
                         <td><button type="button" v-if="etape && index !== etapes.length - 1"
-                                @click="deplacerEtapeVersBas(index)">Déplacer vers le bas</button></td>
+                                @click="deplacerEtapeVersBas(index)">&#x2193;</button></td>
                         <td><button type="button" v-if="etape" @click="supprimerEtape(index)">Supprimer l'étape</button>
                         </td>
                     </tr>
@@ -107,24 +136,29 @@
                         <td :class="{ invalide: !ajoutDescriptionEtapeValide }">
                             <input id="etape-texte" v-model="ajoutDescriptionEtape" />
                         </td>
+                        <td></td>
+
+                        <td></td>
                         <td><button type="button" @click="ajouterEtape">Ajouter une étape</button></td>
-                        <span v-if="!ajoutDescriptionEtapeValide">Pour ajouter une étape, veuillez saisir le texte de
-                            l'étape</span>
                     </tr>
                 </tfoot>
+
             </table>
+            <span class="span-etape" v-if="!ajoutDescriptionEtapeValide">Pour ajouter une étape, veuillez saisir le
+                texte de l'étape</span>
             <div>
                 <button type="submit">Soumettre le formulaire</button>
             </div>
         </form>
         <hr />
         <form v-if="!modeNouvelleRecette" @submit.prevent="soumettreImage">
-            <div>
+            <div class="pied-page">
                 <div>
                     <label for="recette-image">Téléverser l'image : </label>
                 </div>
                 <div>
-                    <input type="file" id="recette-image" accept="image/png, image/jpeg, image/gif" />
+                    <input class="bouton-choix-fichier" type="file" id="recette-image"
+                        accept="image/png, image/jpeg, image/gif" />
                 </div>
                 &nbsp;
                 <div>
@@ -436,37 +470,6 @@ export default {
     box-sizing: border-box;
 }
 
-.table-ajout-ingredient {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-}
-
-.table-ajout-titre {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    margin: 0%;
-    padding-bottom: 1%;
-    padding-top: 1%;
-}
-
-.table-ajout-titre th {
-    width: 20%;
-    text-align: left;
-}
-
-.table-ajout-saisie {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-}
-
-.table-ajout-saisie td {
-    width: 20%;
-    text-align: left;
-}
-
 .form-control.invalide input,
 .form-control.invalide select {
     border-color: red;
@@ -476,7 +479,54 @@ export default {
     color: red;
 }
 
+.table-ajout-ingredient {
+    width: 67%;
+    border-collapse: collapse;
+}
 
+.table-ajout-ingredient th,
+.table-ajout-ingredient td {
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+    text-align: left;
+    /* Align text to the left */
+}
+
+.span-ingredient {
+    margin-top: 1%;
+    text-align: right;
+    max-width: 67%;
+    color: red;
+}
+
+.table-ajouter-etape {
+    width: 60%;
+    border-collapse: collapse;
+    margin-bottom: 1%;
+}
+
+.table-ajouter-etape th,
+.table-ajouter-etape td {
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+    text-align: left;
+    /* Align text to the left */
+}
+
+.span-etape {
+    max-width: 60%;
+    margin-top: 1%;
+    text-align: right;
+    color: red;
+}
+
+.bouton-choix-fichier {
+    padding-top: 1%;
+}
+
+.pied-page {
+    margin-left: 1%;
+}
 
 .boxed-left {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
