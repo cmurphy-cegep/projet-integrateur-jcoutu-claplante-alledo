@@ -82,10 +82,6 @@ export default {
     color: red;
 }
 
-/* form * {
-    margin: 0.3rem;
-} */
-
 .formulaire {
     display: flex;
     flex-direction: column;

@@ -87,16 +87,11 @@
                             <input id="ingredient-nom" v-model="ajoutNomIngredient" />
                         </td>
                         <td>
-
-
                         </td>
                         <td></td>
                         <td><button type="button" @click="ajouterIngredient">Ajouter l'ingrédient</button></td>
-
                     </tr>
-
                 </tfoot>
-
             </table>
             <span class="span-ingredient" v-if="!ajoutNomIngredientValide">Pour ajouter un ingrédient, veuillez saisir
                 le
@@ -489,7 +484,6 @@ export default {
     border: 1px solid #ccc;
     padding: 0.5rem;
     text-align: left;
-    /* Align text to the left */
 }
 
 .span-ingredient {
@@ -510,7 +504,6 @@ export default {
     border: 1px solid #ccc;
     padding: 0.5rem;
     text-align: left;
-    /* Align text to the left */
 }
 
 .span-etape {
