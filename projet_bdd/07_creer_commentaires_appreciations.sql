@@ -15,3 +15,15 @@ INSERT INTO Commentaire (texte, date_publication, utilisateur_id, recette_id) VA
 ('Le poulet au curry était incroyable! La sauce était riche, crémeuse et parfaitement épicée, avec un bel équilibre entre le lait de coco et les épices. Le poulet était tendre et bien imprégné des saveurs. J’ai ajouté un peu de coriandre fraîche pour plus de fraîcheur, et servi avec du riz basmati. C’est devenu un de mes plats préférés!', '2024-08-10 14:22:10+02', 'claplante', 'poulet_au_curry'),
 
 ('TRES BON!!!', '2024-09-21T08:15:30.000Z', 'jscoutu', 'spaghetti_carbonara');
+
+INSERT INTO appreciation (etoiles, recette_id, utilisateur_id) VALUES
+ 
+(4, 'spaghetti_carbonara', 'claplante'),
+ 
+(5, 'spaghetti_carbonara', 'jscoutu'),
+ 
+(3, 'poulet_alfredo', 'jscoutu'),
+ 
+(3, 'pates_a_la_bolognaise', 'claplante'),
+ 
+(5, 'boeuf_stroganoff', 'claplante');

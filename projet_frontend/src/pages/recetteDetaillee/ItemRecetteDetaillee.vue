@@ -40,74 +40,72 @@
                     </div>
                 </div>
                 <div class="recette-conteneur2">
-                    <div class="recette-titre-container">
-                        <h2 class="recette-titre">
-                            {{ recette.nom }}
-                            <div v-if="appreciation">{{ appreciation }}/5 <span
-                                    style="font-size:150%;color:yellow;">&#9733;</span>
-                            </div>
-                        </h2>
-                        <div class="bouton-editer" v-if="session.user && session.user.estAdmin">
-                            <router-link :to="redirigerVersEdition" custom v-slot="{ navigate }"><button
-                                    @click="navigate" role="link">Éditer</button></router-link>
-                        </div>
+                    <div v-if="session.user && session.user.estAdmin">
+                        <router-link :to="redirigerVersEdition" custom v-slot="{ navigate }"><button
+                                class="bouton-editer" @click="navigate" role="link">Éditer</button></router-link>
                     </div>
-                    <form @submit.prevent="soumettreAppreciation" v-if="session.user">
-                        <p>
-                        <p>Votre avis:</p>
-
-                        <select v-model="selected">
-                            <option value="1"><span style="font-size:150%;color:yellow;">&#9733;</span></option>
-                            <option value="2"><span style="font-size:150%;color:yellow;">&#9733;</span><span
-                                    style="font-size:150%;color:yellow;">&#9733;</span></option>
-                            <option value="3"><span style="font-size:150%;color:yellow;">&#9733;</span><span
-                                    style="font-size:150%;color:yellow;">&#9733;</span><span
-                                    style="font-size:150%;color:yellow;">&#9733;</span></option>
-                            <option value="4"><span style="font-size:150%;color:yellow;">&#9733;</span><span
-                                    style="font-size:150%;color:yellow;">&#9733;</span><span
-                                    style="font-size:150%;color:yellow;">&#9733;</span><span
-                                    style="font-size:150%;color:yellow;">&#9733;</span></option>
-                            <option value="5"><span style="font-size:150%;color:yellow;">&#9733;</span><span
-                                    style="font-size:150%;color:yellow;">&#9733;</span><span
-                                    style="font-size:150%;color:yellow;">&#9733;</span><span
-                                    style="font-size:150%;color:yellow;">&#9733;</span><span
-                                    style="font-size:150%;color:yellow;">&#9733;</span></option>
-                        </select>
-                        </p>
-                        <button type="submit">Soumettre</button>
-                    </form>
-
-
-                    <div class="recette-conteneur3">
-                        <div class="recette-preparation">
-                            <label for="recette-preparation">Préparation</label>
-                            <div> {{ recette.preparation }} min</div>
+                    <h2 class="recette-titre">
+                        {{ recette.nom }}
+                        <div v-if="appreciation">{{ appreciation }}/5 <span
+                                style="font-size:150%;color:yellow;">&#9733;</span>
                         </div>
-                        <div class="recette-cuisson">
-                            <label for="recette-cuisson">Cuisson</label>
-                            <div> {{ recette.cuisson }} min</div>
-                        </div>
-                        <div class="recette-portions">
-                            <label for="recette-portions">Portions</label>
-                            <div> {{ recette.portions }}</div>
-                        </div>
-                    </div>
-                    <h3 class="ingredient"> Ingrédients</h3>
-                    <ul class="recette-ingredients">
-                        <ListeIngredients v-if="!loading" v-for="ingredient in ingredients"
-                            :id="ingredient.idIngredient" :nom="ingredient.nom" :quantite="ingredient.quantite"
-                            :uniteMesure="ingredient.uniteMesure" />
-                    </ul>
-                    <h3 class="etape"> Étapes</h3>
-                    <ol class="recette-etapes">
-                        <ListeEtapes v-if="!loading" v-for="etape in etapes" :id="etape.idEtape"
-                            :description="etape.description" :ordre="etape.ordre" />
-                    </ol>
+                    </h2>
                 </div>
+                <form @submit.prevent="soumettreAppreciation" v-if="session.user">
+                    <p>
+                    <p>Votre avis:</p>
 
+                    <select v-model="selected">
+                        <option value="1"><span style="font-size:150%;color:yellow;">&#9733;</span></option>
+                        <option value="2"><span style="font-size:150%;color:yellow;">&#9733;</span><span
+                                style="font-size:150%;color:yellow;">&#9733;</span></option>
+                        <option value="3"><span style="font-size:150%;color:yellow;">&#9733;</span><span
+                                style="font-size:150%;color:yellow;">&#9733;</span><span
+                                style="font-size:150%;color:yellow;">&#9733;</span></option>
+                        <option value="4"><span style="font-size:150%;color:yellow;">&#9733;</span><span
+                                style="font-size:150%;color:yellow;">&#9733;</span><span
+                                style="font-size:150%;color:yellow;">&#9733;</span><span
+                                style="font-size:150%;color:yellow;">&#9733;</span></option>
+                        <option value="5"><span style="font-size:150%;color:yellow;">&#9733;</span><span
+                                style="font-size:150%;color:yellow;">&#9733;</span><span
+                                style="font-size:150%;color:yellow;">&#9733;</span><span
+                                style="font-size:150%;color:yellow;">&#9733;</span><span
+                                style="font-size:150%;color:yellow;">&#9733;</span></option>
+                    </select>
+                    </p>
+                    <button type="submit">Soumettre</button>
+                </form>
+
+
+                <div class="recette-conteneur3">
+                    <div class="recette-preparation">
+                        <label for="recette-preparation">Préparation</label>
+                        <div> {{ recette.preparation }} min</div>
+                    </div>
+                    <div class="recette-cuisson">
+                        <label for="recette-cuisson">Cuisson</label>
+                        <div> {{ recette.cuisson }} min</div>
+                    </div>
+                    <div class="recette-portions">
+                        <label for="recette-portions">Portions</label>
+                        <div> {{ recette.portions }}</div>
+                    </div>
+                </div>
+                <h3 class="ingredient"> Ingrédients</h3>
+                <ul class="recette-ingredients">
+                    <ListeIngredients v-if="!loading" v-for="ingredient in ingredients" :id="ingredient.idIngredient"
+                        :nom="ingredient.nom" :quantite="ingredient.quantite" :uniteMesure="ingredient.uniteMesure" />
+                </ul>
+                <h3 class="etape"> Étapes</h3>
+                <ol class="recette-etapes">
+                    <ListeEtapes v-if="!loading" v-for="etape in etapes" :id="etape.idEtape"
+                        :description="etape.description" :ordre="etape.ordre" />
+                </ol>
             </div>
 
         </div>
+        <<<<<<< HEAD=======>>>>>>> main
+    </div>
     </div>
 </template>
 
@@ -407,5 +405,10 @@ export default {
 
 #commentaire-texte {
     resize: none;
+}
+
+.bouton-editer {
+    padding: 5px;
+    margin-bottom: 1vh;
 }
 </style>
