@@ -9,7 +9,7 @@ export async function creerCompteUtilisateur(compte) {
     });
 
     if (response.ok) {
-      return await reponse.json();
+      return await response.json();
     } else if (response.status >= 400 && response.status < 500) {
       const contentType = response.headers.get("content-type");
       if (contentType && contentType.includes("application/json")) {
