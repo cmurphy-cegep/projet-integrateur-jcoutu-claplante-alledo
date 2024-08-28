@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites errors="0"
+            failures="0"
+            tests="4">
+
+  <testsuite name="recettesRodrigo"
+    errors="0" failures="0" hostname="" id="" package="recettesRodrigo" skipped="0"
+    tests="4" time="10.78" timestamp="">
+  
+    <testcase name="connexion d&#39;un utilisateur" classname="recettesRodrigo" time="1.064" assertions="3">
+
+    
+
+    
+
+    
+    </testcase>
+  
+    <testcase name="vérification de la présence de l&#39;appréciation" classname="recettesRodrigo" time="1.527" assertions="2">
+
+    
+
+    
+    </testcase>
+  
+    <testcase name="redirection correcte vers la page de recette detaillee selon la recette choisie" classname="recettesRodrigo" time="0.7210" assertions="2">
+
+    
+
+    
+    </testcase>
+  
+    <testcase name="ajouter un commentaire" classname="recettesRodrigo" time="2.076" assertions="3">
+
+    
+
+    
+
+    
+    </testcase>
+  
+
+  
+
+    
+
+  
+  </testsuite>
+</testsuites>
