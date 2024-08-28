@@ -1,6 +1,5 @@
 <template>
   <div id="recette-liste">
-    <h2>Catalogue de recettes</h2>
     <LoadingSpinner :error="loadError" :loading="loading" />
     <div v-if="!loading" class="recette-grille">
       <div v-for="recette in recettes" :key="recette.id" class="recette-conteneur">
