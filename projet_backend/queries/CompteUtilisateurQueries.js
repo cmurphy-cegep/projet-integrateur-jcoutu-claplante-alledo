@@ -62,8 +62,6 @@ exports.verifierExistenceUtilisateur = verifierExistenceUtilisateur;
 
 const creerCompteUtilisateur = async (utilisateurId, motDePasse, utilisateurNomComplet) => {
 
-   
-
     const selEtHash = creerSelEtHash(motDePasse);
 
     await pool.query(

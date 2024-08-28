@@ -27,6 +27,7 @@ export default [
       "no-duplicate-imports": "error",
       "require-await": "error",
       "curly": "error",
+      "no-undef": "warn"
     }
   }
 ];

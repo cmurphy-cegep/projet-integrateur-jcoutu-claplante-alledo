@@ -105,7 +105,6 @@ const getEtapesSelonRecetteId = async (recetteId) => {
 };
 exports.getEtapesSelonRecetteId = getEtapesSelonRecetteId;
 
-
 const getCommentairesSelonRecetteId = async (recetteId) => {
     const result = await pool.query(
         `SELECT commentaire_id, texte, to_char(date_publication, 'YYYY-MM-DD HH24:MI') AS date_formatee, c.utilisateur_id, recette_id, nom_complet 
@@ -167,7 +166,8 @@ async function getIngredientByNom(nom, client) {
     else {
         return undefined;
     }
-}
+};
+exports.getIngredientByNom = getIngredientByNom;
 
 const ajouterIngredient = async (ingredient, client) => {
 
@@ -188,6 +188,7 @@ async function insererDansTableRecette(recette, client) {
         [recette.id, recette.nom, recette.desc, recette.preparation, recette.cuisson, recette.portions]
     );
 };
+exports.insererDansTableRecette = insererDansTableRecette;
 
 async function insererDansTableRecetteIngredient(idRecette, idIngredient, ingredient, ordreIngredient, client) {
     if (ingredient.quantite === '') {
@@ -199,6 +200,7 @@ async function insererDansTableRecetteIngredient(idRecette, idIngredient, ingred
         [idRecette, idIngredient, ingredient.quantite, ingredient.uniteMesure, ordreIngredient]
     );
 };
+exports.insererDansTableRecetteIngredient = insererDansTableRecetteIngredient;
 
 async function insererDansTableEtape(idRecette, etape, ordreEtape, client) {
     return await client.query(
@@ -207,22 +209,26 @@ async function insererDansTableEtape(idRecette, etape, ordreEtape, client) {
         [etape.description, ordreEtape, idRecette]
     );
 };
+exports.insererDansTableEtape = insererDansTableEtape;
 
 function estVide(champ) {
     return !champ || champ === '';
 }
+exports.estVide = estVide;
 
 function validerChamp(champ, nomChamp) {
     if (estVide(champ)) {
         throw new HttpError(400, `Le champ ${nomChamp} est requis`);
     }
 }
+exports.validerChamp = validerChamp;
 
 function validerSousChamps(champs, nomTableau, nomChamp) {
     champs.forEach((champ, index) => {
         validerChamp(champ[nomChamp], `${nomChamp} pour ${nomTableau} à l'index ${index}`)
     });
 }
+exports.validerSousChamps = validerSousChamps;
 
 function validerChampsRecette(recette) {
     validerChamp(recette.id, 'id');
@@ -282,13 +288,15 @@ async function modifierDansTableRecette(recette, client) {
         [recette.id, recette.nom, recette.desc, recette.preparation, recette.cuisson, recette.portions]
     );
 };
+exports.modifierDansTableRecette = modifierDansTableRecette;
 
 async function supprimerLignesTableRecetteIngredientSelonIdRecette(idRecette, client) {
     return await client.query(
         `DELETE FROM recette_ingredient WHERE recette_id = $1`,
         [idRecette]
     );
-}
+};
+exports.supprimerLignesTableRecetteIngredientSelonIdRecette = supprimerLignesTableRecetteIngredientSelonIdRecette;
 
 async function supprimerLignesTableEtapeSelonIdRecette(idRecette, client) {
     return await client.query(
@@ -296,6 +304,7 @@ async function supprimerLignesTableEtapeSelonIdRecette(idRecette, client) {
         [idRecette]
     );
 }
+exports.supprimerLignesTableEtapeSelonIdRecette = supprimerLignesTableEtapeSelonIdRecette;
 
 const modifierRecette = async (recette) => {
     validerChampsRecette(recette);
@@ -437,11 +446,9 @@ const modifierRecetteImage = async (idRecette, file) => {
         WHERE recette_id = $1`,
         [idRecette, imageNom]
     );
-
     if (result.rowCount === 0) {
         throw new Error("Erreur lors de la mise-à-jour de l'image");
     }
-
     return result;
 };
 exports.modifierRecetteImage = modifierRecetteImage;
@@ -451,36 +458,34 @@ async function supprimerLignesTableCommentaireSelonIdRecette(idRecette, client) 
         `DELETE FROM commentaire WHERE recette_id = $1`,
         [idRecette]
     );
-}
+};
+exports.supprimerLignesTableCommentaireSelonIdRecette = supprimerLignesTableCommentaireSelonIdRecette;
 
 async function supprimerLignesTableAppreciationSelonIdRecette(idRecette, client) {
     return await client.query(
         `DELETE FROM appreciation WHERE recette_id = $1`,
         [idRecette]
     );
-}
+};
+exports.supprimerLignesTableAppreciationSelonIdRecette = supprimerLignesTableAppreciationSelonIdRecette;
 
 async function supprimerDansTableRecette(idRecette, client) {
     return await client.query(
         `DELETE FROM recette WHERE recette_id = $1`,
         [idRecette]
     );
-}
+};
+exports.supprimerDansTableRecette = supprimerDansTableRecette;
 
 const supprimerRecette = async (idRecette) => {
     const client = await pool.connect();
 
     try {
         await client.query('BEGIN');
-
         await supprimerLignesTableRecetteIngredientSelonIdRecette(idRecette, client);
-
         await supprimerLignesTableEtapeSelonIdRecette(idRecette, client);
-
         await supprimerLignesTableCommentaireSelonIdRecette(idRecette, client);
-
         await supprimerLignesTableAppreciationSelonIdRecette(idRecette, client);
-
         await supprimerDansTableRecette(idRecette, client);
 
         await client.query('COMMIT');

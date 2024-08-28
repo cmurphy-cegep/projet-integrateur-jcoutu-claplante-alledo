@@ -22,7 +22,6 @@ router.get('/', (req, res, next) => {
 
 router.get('/:id', (req, res, next) => {
     const id = req.params.id;
-    console.log("id:", id);
     recetteQueries.getRecetteById(id).then(recette => {
         if (recette) {
             res.json(recette);
@@ -36,34 +35,9 @@ router.get('/:id', (req, res, next) => {
 
 const onePixelTransparentPngImage = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAA1JREFUGFdj+P///38ACfsD/QVDRcoAAAAASUVORK5CYII=", "base64");
 
-router.get('/images/:imageId', (req, res, next) => {
-    const imageName = req.params.imageName;
-
-
-    const imagePath = `../images/recettes/${imageName}`
-    // read binary data
-    const imageBase64 = fs.readFileSync(imagePath, 'base64');
-
-    productQueries.getProductImageContent(id).then(imageInfo => {
-        if (imageInfo && imageInfo.imageContent) {
-            if (imageInfo.imageContentType) {
-                res.header('Content-Type', 'image/png');
-            }
-            res.send(imageInfo.imageContent);
-        } else {
-            // Si le produit n'a pas d'image, on va retourner une image transparente de 1 pixel
-            // afin d'éviter d'avoir une image brisée dans le front-end
-            res.header('Content-Type', 'image/png');
-            res.send(onePixelTransparentPngImage);
-        }
-    }).catch(err => {
-        return next(err);
-    });
-});
-
 router.post('/',
     passport.authenticate('basic', { session: false }),
-    (req, res, next) => {
+    async (req, res, next) => {
         const utilisateur = req.user;
 
         if (!utilisateur || !utilisateur.estAdmin) {
@@ -75,17 +49,19 @@ router.post('/',
             return next(new HttpError(400, 'Le champ id est requis'));
         }
 
-        recetteQueries.getRecetteById(id).then(recette => {
+        try {
+            const recette = await recetteQueries.getRecetteById(id);
             if (recette) {
                 throw new HttpError(400, `Une recette avec l'id ${id} existe déjà`);
             }
-        })
 
-        recetteQueries.ajouterRecette(req.body).then(nouvelleRecette => {
+            const nouvelleRecette = await recetteQueries.ajouterRecette(req.body);
             res.json(nouvelleRecette);
-        }).catch(err => {
+        } catch (err) {
             return next(err);
-        })
+        }
+
+
     });
 
 router.put('/:id',
